@@ -2,6 +2,5 @@
     "./node_modules/angular/angular.js",
     "./node_modules/angular-route/angular-route.js",
     "./node_modules/@uirouter/core/_bundles/ui-router-core.min.js",
-    "./node_modules/mobile-angular-ui/dist/js/mobile-angular.js",
     "./src/js/**/*.js"
   ]
