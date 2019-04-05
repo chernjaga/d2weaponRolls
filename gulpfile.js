@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const concat = require('gulp-concat');
 const sass = require('gulp-sass');
 const uglify = require('gulp-uglify');
+const uglifycss = require('gulp-uglifycss');
 const browserSync = require('browser-sync').create();
 const scripts = require('./scripts');
 const styles = require('./styles');
