@@ -6,7 +6,6 @@ const uglifycss = require('gulp-uglifycss');
 const browserSync = require('browser-sync').create();
 const scripts = require('./scripts');
 const styles = require('./styles');
-const uglifycss = require('gulp-uglifycss');
 
 var devMode = false;
 

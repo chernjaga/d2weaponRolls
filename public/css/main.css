@@ -7021,5 +7021,11 @@ a.text-dark:hover, a.text-dark:focus {
     border-color: #dee2e6; } }
 
 body {
-  background-color: #afafaf; }
+  background-color: #f0e7d6; }
 
+
+[footer-panel] {
+  background-color: #c9c3b6; }
+
+.weapon-list-item.exotic {
+  background-color: #f1c32c; }
