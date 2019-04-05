@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="d2RollsApp">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>rolls</title>
+    <link rel="stylesheet" href="./css/main.css">
     <script src="./js/scipts.js"></script>
 
 </head>
-<body ng-app="d2RollsApp">
-    <h1>Собака сутулая</h1>
+<body>
+    <div class="row">
+        <ui-view></ui-view>
+    </div>
+    <div class="row" footer-panel></div>
 </body>
 </html>
