@@ -2,14 +2,17 @@ const gulp = require('gulp');
 const concat = require('gulp-concat');
 const sass = require('gulp-sass');
 const uglify = require('gulp-uglify');
+const uglifycss = require('gulp-uglifycss');
 const browserSync = require('browser-sync').create();
 const scripts = require('./scripts');
 const styles = require('./styles');
 var devMode = false;
+
 gulp.task('sass', function() {
   gulp.src(styles)
       .pipe(sass())
-      .pipe(concat('main.scss'))
+      .pipe(concat('main.css'))
+      .pipe(uglifycss())
       .pipe(gulp.dest('./public/css'))
       .pipe(browserSync.reload({
         stream: true
@@ -47,5 +50,5 @@ gulp.task('start', function() {
   gulp.start(['build', 'browser-sync']);
   gulp.watch(['./src/scss/**/*.scss'], ['sass']);
   gulp.watch(['./src/js/**/*.js'], ['js']);
-  gulp.watch(['./src/templates/**/*.html'], ['html']);
+//   gulp.watch(['./src/templates/**/*.html'], ['html']);
 });
