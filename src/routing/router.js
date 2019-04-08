@@ -1,17 +1,18 @@
 angular.module('d2RollsApp', ['ui.router'])
 .config(function (
+    $locationProvider,
     $stateProvider,
     $urlRouterProvider
 ) {
     var weaponListState = {
         name: 'weaponList',
-        url: '/weapon_list',
+        url: '/weaponList',
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',
-        controller: function(){
-            console.log('test');
-        }
+        controller: 'weaponListCtrl',
+        controllerAs: 'weapons'
     };
 
     $stateProvider.state(weaponListState);
-    $urlRouterProvider.otherwise('/weapon_list');
+    $urlRouterProvider.otherwise('/weaponList');
+    // $locationProvider.html5Mode(true);
 });

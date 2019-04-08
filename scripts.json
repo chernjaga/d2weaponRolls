@@ -1,5 +1,5 @@
 [
-    "./node_modules/angular/angular.js",
-    "./node_modules/@uirouter/angularjs/release/angular-ui-router.js",
+    "./node_modules/angular/angular.min.js",
+    "./node_modules/@uirouter/angularjs/release/angular-ui-router.min.js",
     "./src/**/*.js"
   ]

@@ -13,7 +13,7 @@ gulp.task('sass', function () {
     return gulp.src(styles)
         .pipe(sass())
         .pipe(concat('main.css'))
-        // .pipe(uglifycss())
+        .pipe(uglifycss())
         .pipe(gulp.dest('./public/css'))
         .pipe(browserSync.reload({
             stream: true
