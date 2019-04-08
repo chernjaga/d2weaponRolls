@@ -6,7 +6,6 @@ angular.module('d2RollsApp')
             controller: 'footerPanelCtrl',
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html',
             link: function (scope) {
-                console.log(scope.string);
             }
         }
     })

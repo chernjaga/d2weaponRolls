@@ -47182,7 +47182,7 @@ angular.module('d2RollsApp', ['ui.router'])
 });
 angular.module('d2RollsApp')
     .controller('footerPanelCtrl', ['$scope','$state', function ($scope, $state) {
-        $scope.string = 'asdasdasdasd'
+        $scope.string = 'Footer panel'
     }])
 angular.module('d2RollsApp')
     .directive('footerPanel', function () {
@@ -47192,7 +47192,6 @@ angular.module('d2RollsApp')
             controller: 'footerPanelCtrl',
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html',
             link: function (scope) {
-                console.log(scope.string);
             }
         }
     })

@@ -1,5 +1,22 @@
 @import '../../common/commonStyles/vars.style.scss';
 
-.weapon-list-item.exotic {
-    background-color: $cl-exotic-yellow;
+.weapon-list-item {
+    margin-bottom: 1rem;
+
+    &.exotic {
+        background-color: $cl-exotic-yellow;
+    }
+}
+
+.weapon-list-box {
+    padding: 2rem 0.9rem;
+}
+
+.search-area {
+    background-color: $cl-gray-tint1;
+    padding: 1rem;
+    input {
+        border-radius: 4px;
+        border-style: none;
+    }
 }
