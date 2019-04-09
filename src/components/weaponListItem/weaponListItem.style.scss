@@ -4,6 +4,8 @@
     margin-bottom: $body-padding;
     box-sizing: border-box;
     padding: 0.3rem;
+    color: $cl-white-tint1;
+    font-size: $fs-weapon-list-item;
     &.exotic {
         background-color: $cl-exotic-yellow;
     }
@@ -18,6 +20,21 @@
     }
     &.common {
         background-color: $cl-common-white;
+        color: $cl-black-tint1;
+    }
+    .list-item-elemental-icon {
+        height: $fs-weapon-list-item;
+    }
+    .weapon-list-item-icon {
+        height: $fs-weapon-list-item*4.5;
+    }
+    .weapon-list-item-name {
+        font-size: $fs-weapon-list-item*1.2;
+        font-weight: 900;
+    }
+    .weapon-list-item-description {
+        font-size: $fs-weapon-list-item*0.8;
+        font-weight: 300;
     }
 }
 
@@ -27,6 +44,7 @@
 
 .search-area {
     background-color: $cl-gray-tint1;
+    font-size: 1.2rem;
     padding: 1rem 1rem 0.5rem;
     z-index: 2;
     position: fixed;
@@ -39,7 +57,7 @@
     }
 }
 .weapon-list-margin {
-    margin-top: 2.5rem;
+    margin-top: 3rem;
 }
 
 @media (max-width: 720px) {
