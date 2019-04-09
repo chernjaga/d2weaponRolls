@@ -22,12 +22,12 @@
 }
 
 .weapon-list-box {
-    padding: $body-padding;
+    padding: $body-padding*4;
 }
 
 .search-area {
     background-color: $cl-gray-tint1;
-    padding: 1rem 0 0.5rem;
+    padding: 1rem 1rem 0.5rem;
     z-index: 2;
     position: fixed;
     top: 0;
@@ -44,10 +44,7 @@
 
 @media (max-width: 720px) {
     .weapon-list-box{
-        padding: 2rem 0;
+        padding: $body-padding*4 0;
     }
-    
-    .search-area {
-        padding: 1rem 1rem 0.5rem;
-    }
+
 }

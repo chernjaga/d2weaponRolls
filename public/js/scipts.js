@@ -406,20 +406,6 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', function(
         getWeaponList: getWeaponList
     };
 }]);
-angular.module('d2RollsApp')
-    .controller('footerPanelCtrl', ['$scope','$state', function ($scope, $state) {
-        $scope.string = 'Footer panel'
-    }])
-angular.module('d2RollsApp')
-    .directive('footerPanel', function () {
-        return {
-            restrict: 'C',
-            controller: 'footerPanelCtrl',
-            templateUrl: '../html/components/footerPanel/footerPanel.tpl.html',
-            link: function (scope) {
-            }
-        }
-    })
 angular.module('d2RollsApp').controller('weaponListCtrl', ['$state', 'fetchManifestService', function(
     $state,
     fetchManifestService
@@ -444,3 +430,28 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$state', 'fetchManif
         return rarityMap[hash];
     }
 }]);
+angular.module('d2RollsApp')
+    .controller('footerPanelCtrl', ['$scope','$state', function ($scope, $state) {
+        $scope.string = 'Footer panel'
+    }])
+angular.module('d2RollsApp')
+    .directive('footerPanel', function () {
+        return {
+            restrict: 'C',
+            controller: 'footerPanelCtrl',
+            templateUrl: '../html/components/footerPanel/footerPanel.tpl.html',
+            link: function (scope) {
+            }
+        }
+    })
+angular.module('d2RollsApp')
+    .directive('weaponListItem', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                listItem: '='
+            },
+            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
+        }
+    })
