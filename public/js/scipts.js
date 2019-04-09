@@ -394,6 +394,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', function(
 
         $http.post('/getWeaponList', JSON.stringify({language: language})).then(function(response) {
             weaponListArray = response.data;
+            console.log(weaponListArray);
             callback(weaponListArray);
         }).catch(function(error) {
             console.log(error);
