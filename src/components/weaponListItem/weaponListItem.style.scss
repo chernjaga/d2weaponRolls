@@ -47,16 +47,19 @@
     // background: -webkit-linear-gradient(top, rgba(169,169,169,1) 0%,rgba(188,188,188,0.62) 59%,rgba(182,182,182,0.61) 61%,rgba(212,212,212,0.43) 89%,rgba(215,215,215,0.43) 92%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom, rgba(201, 195, 182,1) 0%,rgba(201, 195, 182, 1) 10%,rgba(201, 195, 182,0.85) 40%,rgba(201, 195, 182,0.60) 70%,rgba(201, 195, 182,0.50) 90%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a9a9a9', endColorstr='#6ed7d7d7',GradientType=0 ); /* IE6-9 */
-    font-size: 1.2rem;
+    font-size: 1rem;
     padding: 1rem 1rem 0.5rem;
     z-index: 2;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    input {
-        border-radius: 4px;
-        border-style: none;
+    input.form-control {
+        text-align: center;
+        &:focus {
+            border-color: $cl-gray-tint2 !important;
+            box-shadow: 0px 0px 7px rgba(99,96,96,1) inset !important;
+        }
     }
 }
 .weapon-list-margin {

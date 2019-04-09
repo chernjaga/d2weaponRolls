@@ -11,3 +11,7 @@ body {
     padding: $body-padding;
 }
 
+.form-control:focus {
+    border-color: $cl-gray-tint2;
+}
+

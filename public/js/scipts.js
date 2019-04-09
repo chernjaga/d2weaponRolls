@@ -406,30 +406,6 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', function(
         getWeaponList: getWeaponList
     };
 }]);
-angular.module('d2RollsApp').controller('weaponListCtrl', ['$state', 'fetchManifestService', function(
-    $state,
-    fetchManifestService
-){
-    var vm = this;
-    vm.getRarityClass = getRarityClass;
-
-    var rarityMap = {
-        2: 'common',
-        3: 'uncommon',
-        4: 'rare',
-        5: 'legendary',
-        6: 'exotic'
-    }
-    vm.test = 'test';
-    fetchManifestService.getWeaponList('ru', function(arrayOfItems){
-        vm.list = arrayOfItems;
-    });
-    
-    function getRarityClass(hash) {
-
-        return rarityMap[hash];
-    }
-}]);
 angular.module('d2RollsApp')
     .controller('footerPanelCtrl', ['$scope','$state', function ($scope, $state) {
         $scope.string = 'Footer panel'
@@ -455,3 +431,27 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
         }
     })
+angular.module('d2RollsApp').controller('weaponListCtrl', ['$state', 'fetchManifestService', function(
+    $state,
+    fetchManifestService
+){
+    var vm = this;
+    vm.getRarityClass = getRarityClass;
+
+    var rarityMap = {
+        2: 'common',
+        3: 'uncommon',
+        4: 'rare',
+        5: 'legendary',
+        6: 'exotic'
+    }
+    vm.test = 'test';
+    fetchManifestService.getWeaponList('ru', function(arrayOfItems){
+        vm.list = arrayOfItems;
+    });
+    
+    function getRarityClass(hash) {
+
+        return rarityMap[hash];
+    }
+}]);
