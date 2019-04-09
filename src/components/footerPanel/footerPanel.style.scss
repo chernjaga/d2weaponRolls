@@ -3,6 +3,7 @@
 .footer-panel {
     background-color: $cl-gray-tint1;
     position: fixed;
+    z-index: 2;
     width: 100%;
     bottom: 0;
 }

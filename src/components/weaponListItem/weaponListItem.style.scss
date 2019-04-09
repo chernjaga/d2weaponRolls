@@ -1,25 +1,33 @@
 @import '../../common/commonStyles/vars.style.scss';
 
 .weapon-list-item {
-    margin-bottom: 1rem;
+    margin-bottom: $body-padding;
     box-sizing: border-box;
-    padding: 0.4rem;
+    padding: 0.3rem;
     &.exotic {
         background-color: $cl-exotic-yellow;
     }
 }
 
 .weapon-list-box {
-    padding: 2rem 0.9rem;
+    padding: $body-padding;
 }
 
 .search-area {
     background-color: $cl-gray-tint1;
-    padding: 1rem;
+    padding: 1rem 0 0.5rem;
+    z-index: 2;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     input {
         border-radius: 4px;
         border-style: none;
     }
+}
+.weapon-list-margin {
+    margin-top: 2.5rem;
 }
 
 @media (max-width: 720px) {
@@ -28,6 +36,6 @@
     }
     
     .search-area {
-        padding: 1rem 1rem;
+        padding: 1rem 1rem 0.5rem;
     }
 }

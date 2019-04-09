@@ -3,5 +3,10 @@
 body {
     background-color: $cl-white-tint1;
     overflow-x: hidden;
+    overflow-y: scroll; 
+}
+
+.body-padding {
+    padding: $body-padding;
 }
 

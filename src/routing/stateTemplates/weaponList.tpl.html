@@ -1,9 +1,14 @@
 
-<div class="row search-area">
-    <input type="text" class="col-10 offset-1" ng-model="weaponSearch">
+<div class="search-area row ">
+    <div class="col-12">
+        <div class="row body-padding">
+            <input type="text" class="col-sm-12 col-md-10 offset-sm-1 col-lg-8 offset-lg-2" ng-model="weaponSearch"/>
+        </div>
+    </div>
 </div>
-<div class="row">
-    <div class="col-10 offset-1">
+
+<div class="row body body-padding weapon-list-margin ">
+    <div class="col-12">
         <div class="row weapon-list-box">
             <div 
                 ng-repeat="item in weapons.list | filter: weaponSearch" 
