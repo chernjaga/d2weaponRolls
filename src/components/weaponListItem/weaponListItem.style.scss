@@ -7,6 +7,18 @@
     &.exotic {
         background-color: $cl-exotic-yellow;
     }
+    &.legendary {
+        background-color: $cl-legendary-purple;
+    }
+    &.rare {
+        background-color: $cl-rare-blue;
+    }
+    &.uncommon {
+        background-color: $cl-uncommon-green;
+    }
+    &.common {
+        background-color: $cl-common-white;
+    }
 }
 
 .weapon-list-box {

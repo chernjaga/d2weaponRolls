@@ -425,9 +425,22 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$state', 'fetchManif
     fetchManifestService
 ){
     var vm = this;
+    vm.getRarityClass = getRarityClass;
+
+    var rarityMap = {
+        2: 'common',
+        3: 'uncommon',
+        4: 'rare',
+        5: 'legendary',
+        6: 'exotic'
+    }
     vm.test = 'test';
     fetchManifestService.getWeaponList('ru', function(arrayOfItems){
         vm.list = arrayOfItems;
     });
-    console.log('test');
+    
+    function getRarityClass(hash) {
+
+        return rarityMap[hash];
+    }
 }]);

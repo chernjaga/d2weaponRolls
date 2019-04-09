@@ -13,7 +13,7 @@
             <div 
                 ng-repeat="item in weapons.list | filter: weaponSearch" 
                 class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
-                    <div class="weapon-list-item exotic">
+                    <div class="weapon-list-item" ng-class="weapons.getRarityClass(item.rarity.hash)">
                         {{item.displayedProperties.name}}
                     </div>
             </div>
