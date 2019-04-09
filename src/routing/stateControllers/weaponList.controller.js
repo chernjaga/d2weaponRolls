@@ -1,9 +1,14 @@
-angular.module('d2RollsApp').controller('weaponListCtrl', ['$state', 'fetchManifestService', function(
-    $state,
+angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'languageMapService', 'fetchManifestService',  function(
+    $stateParams,
+    languageMapService,
     fetchManifestService
 ){
     var vm = this;
+    var lang = $stateParams.language;
+    var dictionary = languageMapService.getDictionary(lang);
+
     vm.getRarityClass = getRarityClass;
+    vm.searchPlaceHolder = dictionary[lang].search;
 
     var rarityMap = {
         2: 'common',
@@ -13,7 +18,7 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$state', 'fetchManif
         6: 'exotic'
     }
     vm.test = 'test';
-    fetchManifestService.getWeaponList('ru', function(arrayOfItems){
+    fetchManifestService.getWeaponList(lang, function(arrayOfItems){
         vm.list = arrayOfItems;
     });
     

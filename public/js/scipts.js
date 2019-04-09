@@ -370,31 +370,34 @@ angular.module('d2RollsApp', ['ui.router'])
 ) {
     var weaponListState = {
         name: 'weaponList',
-        url: '/weaponList',
+        url: '/weaponList/:language',
+        params: {
+            language: 'en'
+        },
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',
         controller: 'weaponListCtrl',
         controllerAs: 'weapons'
     };
 
     $stateProvider.state(weaponListState);
-    $urlRouterProvider.otherwise('/weaponList');
+    $urlRouterProvider.otherwise('/weaponList/en');
     // $locationProvider.html5Mode(true);
 });
 angular.module('d2RollsApp').factory('fetchManifestService', ['$http', function($http) {
     var weaponListArray = [];
+    var lastLanguage;
 
     function getWeaponList (language, callback) {
-        if (weaponListArray.length) {
+        if (weaponListArray.length && lastLanguage === language) {
 
             callback(weaponListArray);
 
             return;
         }
 
-
+        lastLanguage = language;
         $http.post('/getWeaponList', JSON.stringify({language: language})).then(function(response) {
             weaponListArray = response.data;
-            console.log(weaponListArray);
             callback(weaponListArray);
         }).catch(function(error) {
             console.log(error);
@@ -405,6 +408,32 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', function(
     return {
         getWeaponList: getWeaponList
     };
+}]);
+angular.module('d2RollsApp').factory('languageMapService', [ function() {
+    var dictionary = {};
+    var vocabulary = {
+                        search: {
+                            ru: 'Поиск',
+                            en: 'Search'
+                        }
+                    };
+
+    function getDictionary (lang) {
+
+        if (dictionary[lang] && dictionary[lang].length) {
+
+            return dictionary;
+        }
+        for (let word in vocabulary) {
+            dictionary[lang] = {};
+            dictionary[lang][word] = vocabulary[word][lang];    
+        }
+
+        return dictionary;
+    }
+    return {
+        getDictionary: getDictionary
+    }
 }]);
 angular.module('d2RollsApp')
     .controller('footerPanelCtrl', ['$scope','$state', function ($scope, $state) {
@@ -431,12 +460,17 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
         }
     })
-angular.module('d2RollsApp').controller('weaponListCtrl', ['$state', 'fetchManifestService', function(
-    $state,
+angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'languageMapService', 'fetchManifestService',  function(
+    $stateParams,
+    languageMapService,
     fetchManifestService
 ){
     var vm = this;
+    var lang = $stateParams.language;
+    var dictionary = languageMapService.getDictionary(lang);
+
     vm.getRarityClass = getRarityClass;
+    vm.searchPlaceHolder = dictionary[lang].search;
 
     var rarityMap = {
         2: 'common',
@@ -446,7 +480,7 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$state', 'fetchManif
         6: 'exotic'
     }
     vm.test = 'test';
-    fetchManifestService.getWeaponList('ru', function(arrayOfItems){
+    fetchManifestService.getWeaponList(lang, function(arrayOfItems){
         vm.list = arrayOfItems;
     });
     

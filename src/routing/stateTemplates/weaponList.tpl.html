@@ -4,8 +4,8 @@
         <div class="row body-padding">
             <input class="form-control col-md-10 offset-md-1 col-lg-8 offset-lg-2" 
                    type="text" 
-                   placeholder="Search"
-                   ng-model="weaponSearch"/>
+                   placeholder="{{::weapons.searchPlaceHolder}}"
+                   ng-model="weaponSearch.displayedProperties.name"/>
         </div>
     </div>
 </div>
@@ -17,7 +17,7 @@
                 ng-repeat="item in weapons.list | filter: weaponSearch" 
                 class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
                     <weapon-list-item 
-                         list-item="item"
+                         list-item="::item"
                          class="weapon-list-item"
                          ng-class="weapons.getRarityClass(item.rarity.hash)">
                     </weapon-list-item >
