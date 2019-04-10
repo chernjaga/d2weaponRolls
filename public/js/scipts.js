@@ -393,7 +393,7 @@ angular.module('d2RollsApp', ['ui.router'])
     $stateProvider.state(weaponListState);
     $stateProvider.state(weaponViewState);
     $urlRouterProvider.otherwise('/weaponList/en');
-    // $locationProvider.html5Mode(true);
+    $locationProvider.html5Mode(true);
 });
 angular.module('d2RollsApp').factory('fetchManifestService', ['$http', function($http) {
     var weaponListArray = [];
