@@ -15,7 +15,19 @@ angular.module('d2RollsApp', ['ui.router'])
         controllerAs: 'weapons'
     };
 
+    var weaponViewState = {
+        name: 'weaponView',
+        url: '/weaponView/:language/{weaponHash}/',
+        params: {
+            language: 'en', 
+        },
+        templateUrl: '../html/routing/stateTemplates/weaponView.tpl.html',
+        controller: 'weaponViewCtrl',
+        controllerAs: 'weapon'
+    };
+
     $stateProvider.state(weaponListState);
+    $stateProvider.state(weaponViewState);
     $urlRouterProvider.otherwise('/weaponList/en');
-    // $locationProvider.html5Mode(true);
+    $locationProvider.html5Mode(true);
 });

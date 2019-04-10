@@ -379,7 +379,19 @@ angular.module('d2RollsApp', ['ui.router'])
         controllerAs: 'weapons'
     };
 
+    var weaponViewState = {
+        name: 'weaponView',
+        url: '/weaponView/:language/{weaponHash}/',
+        params: {
+            language: 'en', 
+        },
+        templateUrl: '../html/routing/stateTemplates/weaponView.tpl.html',
+        controller: 'weaponViewCtrl',
+        controllerAs: 'weapon'
+    };
+
     $stateProvider.state(weaponListState);
+    $stateProvider.state(weaponViewState);
     $urlRouterProvider.otherwise('/weaponList/en');
     // $locationProvider.html5Mode(true);
 });
@@ -468,18 +480,18 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     var vm = this;
     var lang = $stateParams.language;
     var dictionary = languageMapService.getDictionary(lang);
-
-    vm.getRarityClass = getRarityClass;
-    vm.searchPlaceHolder = dictionary[lang].search;
-
     var rarityMap = {
         2: 'common',
         3: 'uncommon',
         4: 'rare',
         5: 'legendary',
         6: 'exotic'
-    }
-    vm.test = 'test';
+    };
+
+    vm.getRarityClass = getRarityClass;
+    vm.searchPlaceHolder = dictionary[lang].search;
+    vm.lang = lang;
+
     fetchManifestService.getWeaponList(lang, function(arrayOfItems){
         vm.list = arrayOfItems;
     });
@@ -488,4 +500,9 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
 
         return rarityMap[hash];
     }
+}]);
+angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', function(
+    $stateParams
+) {
+    var vm = this;
 }]);

@@ -7,11 +7,6 @@ body {
     font-family: sans-serif;
 }
 
-.body-padding {
-    padding: $body-padding;
+a {
+    text-decoration: none !important;
 }
-
-.form-control:focus {
-    border-color: $cl-gray-tint2;
-}
-
