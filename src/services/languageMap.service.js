@@ -1,25 +1,41 @@
 angular.module('d2RollsApp').factory('languageMapService', [ function() {
-    var dictionary = {};
-    var vocabulary = {
-                        search: {
-                            ru: 'Поиск',
-                            en: 'Search'
-                        }
-                    };
-
-    function getDictionary (lang) {
-
-        if (dictionary[lang] && dictionary[lang].length) {
-
-            return dictionary;
+    var dictionary = {
+        ru: {
+            search: 'Поиск',
+            weaponRarity: {
+                exotic: 'Экзотическое',
+                legendary: 'Легендарное',
+                rare: 'Редкое',
+                uncommon: 'Необычное',
+                common: 'Обычное'
+            }
+        },
+        en: {
+            search: 'Search',
+             weaponRarity: {
+                exotic: 'Exotic',
+                legendary: 'Legendary',
+                rare: 'Rare',
+                uncommon: 'Uncommon',
+                common: 'Common'
+            }
         }
-        for (let word in vocabulary) {
-            dictionary[lang] = {};
-            dictionary[lang][word] = vocabulary[word][lang];    
-        }
-
-        return dictionary;
     }
+
+    function getDictionary (lang, sectionPath) {
+        try {
+            if (sectionPath) {
+
+                return dictionary[lang][sectionPath];
+            }
+            
+            return dictionary[lang];
+        } catch (err) {
+            console.log('Error in dictionary: ' + err.message);
+        }
+       
+    }
+
     return {
         getDictionary: getDictionary
     }
