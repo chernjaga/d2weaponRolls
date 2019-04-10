@@ -393,7 +393,7 @@ angular.module('d2RollsApp', ['ui.router'])
     $stateProvider.state(weaponListState);
     $stateProvider.state(weaponViewState);
     $urlRouterProvider.otherwise('/weaponList/en');
-    $locationProvider.html5Mode(true);
+    // $locationProvider.html5Mode(true);
 });
 angular.module('d2RollsApp').factory('fetchManifestService', ['$http', function($http) {
     var weaponListArray = [];
@@ -447,6 +447,31 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
         getDictionary: getDictionary
     }
 }]);
+angular.module('d2RollsApp')
+    .controller('footerPanelCtrl', ['$scope','$state', function ($scope, $state) {
+        $scope.string = 'Footer panel'
+    }])
+angular.module('d2RollsApp')
+    .directive('footerPanel', function () {
+        return {
+            restrict: 'C',
+            controller: 'footerPanelCtrl',
+            templateUrl: '../html/components/footerPanel/footerPanel.tpl.html',
+            link: function (scope) {
+            }
+        }
+    })
+angular.module('d2RollsApp')
+    .directive('weaponListItem', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                listItem: '='
+            },
+            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
+        }
+    })
 angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'languageMapService', 'fetchManifestService',  function(
     $stateParams,
     languageMapService,
@@ -481,28 +506,3 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', funct
 ) {
     var vm = this;
 }]);
-angular.module('d2RollsApp')
-    .controller('footerPanelCtrl', ['$scope','$state', function ($scope, $state) {
-        $scope.string = 'Footer panel'
-    }])
-angular.module('d2RollsApp')
-    .directive('footerPanel', function () {
-        return {
-            restrict: 'C',
-            controller: 'footerPanelCtrl',
-            templateUrl: '../html/components/footerPanel/footerPanel.tpl.html',
-            link: function (scope) {
-            }
-        }
-    })
-angular.module('d2RollsApp')
-    .directive('weaponListItem', function () {
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                listItem: '='
-            },
-            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
-        }
-    })

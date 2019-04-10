@@ -29,5 +29,5 @@ angular.module('d2RollsApp', ['ui.router'])
     $stateProvider.state(weaponListState);
     $stateProvider.state(weaponViewState);
     $urlRouterProvider.otherwise('/weaponList/en');
-    $locationProvider.html5Mode(true);
+    // $locationProvider.html5Mode(true);
 });
