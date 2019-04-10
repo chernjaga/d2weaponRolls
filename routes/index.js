@@ -6,7 +6,7 @@ var weaponList = {
     en: require('../data/en/weaponMainList.json')
 };
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/*', function (req, res, next) {
     res.sendFile(path.join(__dirname, '../', 'public', 'index.html'));
 });
 

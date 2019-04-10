@@ -15,7 +15,7 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     };
 
     vm.getRarityClass = getRarityClass;
-    vm.searchPlaceHolder = '🔎︎  ' + dictionary[lang].search;
+    vm.searchPlaceHolder = dictionary[lang].search;
     vm.lang = lang;
 
     fetchManifestService.getWeaponList(lang, function(arrayOfItems){

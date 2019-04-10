@@ -395,7 +395,7 @@ angular.module('d2RollsApp', ['ui.router'])
     $stateProvider.state(weaponListState);
     $stateProvider.state(weaponViewState);
     $urlRouterProvider.otherwise('/weaponList/en');
-    // $locationProvider.html5Mode(true);
+    $locationProvider.html5Mode(true);
 });
 angular.module('d2RollsApp').factory('fetchManifestService', ['$http', function($http) {
     var weaponListArray = [];
@@ -491,7 +491,7 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     };
 
     vm.getRarityClass = getRarityClass;
-    vm.searchPlaceHolder = '🔎︎  ' + dictionary[lang].search;
+    vm.searchPlaceHolder = dictionary[lang].search;
     vm.lang = lang;
 
     fetchManifestService.getWeaponList(lang, function(arrayOfItems){
