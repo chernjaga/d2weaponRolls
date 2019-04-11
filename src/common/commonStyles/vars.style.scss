@@ -19,16 +19,21 @@ $fs-weapon-list-item: $body-padding*2;
 // classes
 .bg.exotic {
     background-color: $cl-exotic-yellow;
+    color: $cl-white-tint1;
 }
 .bg.legendary {
     background-color: $cl-legendary-purple;
+    color: $cl-white-tint1;
 }
 .bg.rare {
     background-color: $cl-rare-blue;
+    color: $cl-white-tint1;
 }
 .bg.uncommon {
     background-color: $cl-uncommon-green;
+    color: $cl-white-tint1;
 }
 .bg.common {
     background-color: $cl-common-white;
+    color: $cl-black-tint1;
 }

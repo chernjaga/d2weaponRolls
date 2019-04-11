@@ -6,10 +6,9 @@ angular.module('d2RollsApp', ['ui.router'])
 ) {
     var weaponListState = {
         name: 'weaponList',
-        url: '/weaponList/:language',
+        url: '/weaponList/{language}',
         params: {
-            language: 'en',
-            squash: true
+            language: 'en'
         },
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',
         controller: 'weaponListCtrl',
@@ -18,10 +17,9 @@ angular.module('d2RollsApp', ['ui.router'])
 
     var weaponViewState = {
         name: 'weaponView',
-        url: '/weaponView/:language/{weaponHash}/',
+        url: '/weaponView/{language}/{weaponHash}',
         params: {
-            language: 'en', 
-            squash: true
+            language: 'en'
         },
         templateUrl: '../html/routing/stateTemplates/weaponView.tpl.html',
         controller: 'weaponViewCtrl',

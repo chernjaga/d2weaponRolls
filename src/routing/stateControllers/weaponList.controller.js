@@ -6,13 +6,7 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     var vm = this;
     var lang = $stateParams.language;
     var dictionary = languageMapService.getDictionary(lang);
-    var rarityMap = {
-        2: 'common',
-        3: 'uncommon',
-        4: 'rare',
-        5: 'legendary',
-        6: 'exotic'
-    };
+    var rarityMap = fetchManifestService.rarityMap
 
     vm.getRarityClass = getRarityClass;
     vm.searchPlaceHolder = dictionary.search;

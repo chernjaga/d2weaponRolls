@@ -1,4 +1,5 @@
-angular.module('d2RollsApp')
-    .controller('footerPanelCtrl', ['$scope','$state', function ($scope, $state) {
-        $scope.string = 'Footer panel'
-    }])
+angular.module('d2RollsApp').controller('footerPanelCtrl', [function () {
+    var vm = this;
+    vm.text = '< To weapon list';
+    vm.lang = location.pathname.split('/')[2] || 'en';
+}]);

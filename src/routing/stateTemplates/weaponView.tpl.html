@@ -1,6 +1,11 @@
-<div class="row weapon-view-header bg"
-     ng-class="{{::}}">
+
+<div class="row weapon-view-header">
     <div class="col">
-        Weapon view
+            <img ng-src="{{::weapon.data.screenshot}}" alt="">
+    </div>
+</div>
+<div class="row bg"  ng-class="::weapon.rarityClass">
+    <div class="col">
+        {{::weapon.data.displayedProperties.name}}
     </div>
 </div>

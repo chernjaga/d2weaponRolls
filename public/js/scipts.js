@@ -6,10 +6,9 @@ angular.module('d2RollsApp', ['ui.router'])
 ) {
     var weaponListState = {
         name: 'weaponList',
-        url: '/weaponList/:language',
+        url: '/weaponList/{language}',
         params: {
-            language: 'en',
-            squash: true
+            language: 'en'
         },
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',
         controller: 'weaponListCtrl',
@@ -18,10 +17,9 @@ angular.module('d2RollsApp', ['ui.router'])
 
     var weaponViewState = {
         name: 'weaponView',
-        url: '/weaponView/:language/{weaponHash}/',
+        url: '/weaponView/{language}/{weaponHash}',
         params: {
-            language: 'en', 
-            squash: true
+            language: 'en'
         },
         templateUrl: '../html/routing/stateTemplates/weaponView.tpl.html',
         controller: 'weaponViewCtrl',
@@ -34,13 +32,20 @@ angular.module('d2RollsApp', ['ui.router'])
     $locationProvider.html5Mode(true);
 });
 angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', function($http, $q) {
-    var weaponListArray = [];
+    var weaponListObject = [];
     var lastLanguage;
     var weaponData = {};
+    var rarityMap = {
+        2: 'common',
+        3: 'uncommon',
+        4: 'rare',
+        5: 'legendary',
+        6: 'exotic'
+    };
 
     function getWeaponList (language, callback) {
-        if (weaponListArray.length && lastLanguage === language && callback) {
-            callback(weaponListArray);
+        if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
+            callback(weaponListObject);
 
             return;
         }
@@ -51,21 +56,47 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
             $http.post('/getWeaponList', JSON.stringify({language: language})),
             $http.post('/getWeaponData', JSON.stringify({language: language}))
         ]).then(function(responses) {
-            weaponListArray = responses[0].data;
+            weaponListObject = responses[0].data;
             weaponData = responses[1].data;
-            callback(weaponListArray);
+            if (callback) {
+                callback(weaponListObject);
+            }
         }).catch(function(error) {
             console.log(error);
         });
     };
 
-    function getSingleWeaponData (language, callback) {
+    function getSingleWeaponData (language, hash, callback) {
+        if (Object.keys(weaponListObject).length && Object.keys(weaponData).length && lastLanguage === language && callback) {
 
+            callback({
+                primaryData:  weaponListObject[hash],
+                secondaryData: weaponData[hash]
+            })
+
+            return;
+        }
+
+        lastLanguage = language;
+
+        $q.when(
+            $http.post('/getSingleWeapon', JSON.stringify({language: language, hash: hash}))
+        ).then(function(response) {
+            if (callback) {
+                callback(response.data);
+            }
+        }).then(function(){
+            getWeaponList(language);
+        }).catch(function(error) {
+            console.log(error);
+        });
     }
 
     return {
         getWeaponList: getWeaponList,
-        weaponData: weaponData
+        weaponData: weaponData,
+        getSingleWeaponData: getSingleWeaponData,
+        rarityMap: rarityMap
     };
 }]);
 angular.module('d2RollsApp').factory('languageMapService', [ function() {
@@ -110,18 +141,19 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
         getDictionary: getDictionary
     }
 }]);
-angular.module('d2RollsApp')
-    .controller('footerPanelCtrl', ['$scope','$state', function ($scope, $state) {
-        $scope.string = 'Footer panel'
-    }])
+angular.module('d2RollsApp').controller('footerPanelCtrl', [function () {
+    var vm = this;
+    vm.text = '< To weapon list';
+    vm.lang = location.pathname.split('/')[2] || 'en';
+}]);
 angular.module('d2RollsApp')
     .directive('footerPanel', function () {
         return {
-            restrict: 'C',
+            restrict: 'E',
+            replace: false,
             controller: 'footerPanelCtrl',
-            templateUrl: '../html/components/footerPanel/footerPanel.tpl.html',
-            link: function (scope) {
-            }
+            controllerAs: 'footer',
+            templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
     })
 angular.module('d2RollsApp')
@@ -130,7 +162,8 @@ angular.module('d2RollsApp')
             restrict: 'E',
             replace: true,
             scope: {
-                listItem: '='
+                listItem: '<',
+                language: '<'
             },
             templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
         }
@@ -143,13 +176,7 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     var vm = this;
     var lang = $stateParams.language;
     var dictionary = languageMapService.getDictionary(lang);
-    var rarityMap = {
-        2: 'common',
-        3: 'uncommon',
-        4: 'rare',
-        5: 'legendary',
-        6: 'exotic'
-    };
+    var rarityMap = fetchManifestService.rarityMap
 
     vm.getRarityClass = getRarityClass;
     vm.searchPlaceHolder = dictionary.search;
@@ -168,9 +195,21 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
         return rarityMap[hash];
     }
 }]);
-angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', function(
-    $stateParams
-) {
-    console.log($stateParams);
+angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetchManifestService', function(
+    $stateParams,
+    fetchManifestService
+) {  
     var vm = this;
+    var rarityMap = fetchManifestService.rarityMap;
+    var lang = $stateParams.language;
+    var weaponHash = $stateParams.weaponHash;
+    
+    fetchManifestService.getSingleWeaponData(lang, weaponHash, function(incomingData){
+        var rarityHash = incomingData.primaryData.rarity.hash
+        vm.rarityClass = rarityMap[rarityHash];
+        vm.data = Object.assign(incomingData.primaryData, incomingData.secondaryData);
+        
+        console.log(vm.data);
+    });
+
 }]);

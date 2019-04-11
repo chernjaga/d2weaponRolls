@@ -1,10 +1,10 @@
 angular.module('d2RollsApp')
     .directive('footerPanel', function () {
         return {
-            restrict: 'C',
+            restrict: 'E',
+            replace: false,
             controller: 'footerPanelCtrl',
-            templateUrl: '../html/components/footerPanel/footerPanel.tpl.html',
-            link: function (scope) {
-            }
+            controllerAs: 'footer',
+            templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
     })

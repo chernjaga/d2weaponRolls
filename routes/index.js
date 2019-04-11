@@ -23,7 +23,15 @@ router.post('/getWeaponList', function (req, res) {
 
 router.post('/getWeaponData', function (req, res) {
     var lang = req.body.language;
-    res.send(JSON.stringify(weaponList[lang]));
+    res.send(JSON.stringify(weaponData[lang]));
+});
+router.post('/getSingleWeapon', function (req, res) {
+    var lang = req.body.language;
+    var hash = req.body.hash;
+    res.send(JSON.stringify({
+        primaryData: weaponList[lang][hash],
+        secondaryData: weaponData[lang][hash]
+    }));
 });
 
 module.exports = router;

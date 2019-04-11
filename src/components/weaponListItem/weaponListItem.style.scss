@@ -4,13 +4,9 @@
     margin-bottom: $body-padding;
     box-sizing: border-box;
     padding: $body-padding;
-    color: $cl-white-tint1;
     font-size: $fs-weapon-list-item;
     a {
         color: inherit !important;
-    }
-    &.common {
-        color: $cl-black-tint1;
     }
     .list-item-elemental-icon {
         height: $fs-weapon-list-item;

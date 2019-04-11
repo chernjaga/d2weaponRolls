@@ -4,7 +4,8 @@ angular.module('d2RollsApp')
             restrict: 'E',
             replace: true,
             scope: {
-                listItem: '='
+                listItem: '<',
+                language: '<'
             },
             templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
         }
