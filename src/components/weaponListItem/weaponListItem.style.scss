@@ -5,6 +5,11 @@
     box-sizing: border-box;
     padding: $body-padding;
     font-size: $fs-weapon-list-item;
+    &.weapon-view {
+        // .weapon-list-item-icon {
+        //     margin-top: -$fs-weapon-list-item;
+        // }
+    }
     a {
         color: inherit !important;
     }
@@ -12,14 +17,14 @@
         height: $fs-weapon-list-item;
     }
     .weapon-list-item-icon {
-        height: $fs-weapon-list-item*4.5;
+        height: $fs-weapon-list-item*4.0;
     }
     .weapon-list-item-name {
-        font-size: $fs-weapon-list-item*1.2;
+        font-size: $fs-weapon-list-item*1;
         font-weight: 900;
     }
     .weapon-list-item-description {
-        font-size: $fs-weapon-list-item*0.8;
+        font-size: $fs-weapon-list-item*0.7;
         font-weight: 300;
     }
 }

@@ -21,13 +21,16 @@
                 ng-repeat="item in weapons.list | filter: weaponSearch" 
                 class="col-sm-12 col-md-6 col-lg-4 col-xl-3"
                 role="menuitem">
-                    
-                <weapon-list-item 
-                    list-item="::item"
-                    language="::weapons.lang"
-                    class="weapon-list-item bg"
-                    ng-class="weapons.getRarityClass(item.rarity.hash)">
-                </weapon-list-item > 
+                <a ui-sref="weaponView({weaponHash: item.hash, language: weapons.lang})"
+                    role="link" 
+                    title="{{::listItem.displayedProperties.name}}">
+                    <weapon-list-item 
+                        list-item="::item"
+                        language="::weapons.lang"
+                        class="weapon-list-item bg"
+                        ng-class="weapons.getRarityClass(item.rarity.hash)">
+                    </weapon-list-item > 
+                </a>
             </div>
         </div>
     </div>

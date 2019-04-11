@@ -5,7 +5,12 @@
     </div>
 </div>
 <div class="row bg"  ng-class="::weapon.rarityClass">
-    <div class="col">
-        {{::weapon.data.displayedProperties.name}}
+    <div class="col-12 offset-1">
+        <weapon-list-item 
+            list-item="::weapon.data"
+            language="::weapon.lang"
+            class="weapon-list-item weapon-view bg">
+        </weapon-list-item > 
+    
     </div>
 </div>
