@@ -10,8 +10,25 @@ $cl-rare-blue: #5075A3;
 $cl-uncommon-green: #366F42;
 $cl-common-white: #C4BDB5;
 
-// paddings
-$body-padding: 0.4rem;
+// paddings 16px;
+$body-padding: 0.5rem;
 
 // font sizes
-$fs-weapon-list-item: 1.0rem;
+$fs-weapon-list-item: $body-padding*2;
+
+// classes
+.bg.exotic {
+    background-color: $cl-exotic-yellow;
+}
+.bg.legendary {
+    background-color: $cl-legendary-purple;
+}
+.bg.rare {
+    background-color: $cl-rare-blue;
+}
+.bg.uncommon {
+    background-color: $cl-uncommon-green;
+}
+.bg.common {
+    background-color: $cl-common-white;
+}

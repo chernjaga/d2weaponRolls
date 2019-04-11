@@ -3,26 +3,13 @@
 .weapon-list-item {
     margin-bottom: $body-padding;
     box-sizing: border-box;
-    padding: 0.3rem;
+    padding: $body-padding;
     color: $cl-white-tint1;
     font-size: $fs-weapon-list-item;
     a {
         color: inherit !important;
     }
-    &.exotic {
-        background-color: $cl-exotic-yellow;
-    }
-    &.legendary {
-        background-color: $cl-legendary-purple;
-    }
-    &.rare {
-        background-color: $cl-rare-blue;
-    }
-    &.uncommon {
-        background-color: $cl-uncommon-green;
-    }
     &.common {
-        background-color: $cl-common-white;
         color: $cl-black-tint1;
     }
     .list-item-elemental-icon {
@@ -50,8 +37,8 @@
     // background: -webkit-linear-gradient(top, rgba(169,169,169,1) 0%,rgba(188,188,188,0.62) 59%,rgba(182,182,182,0.61) 61%,rgba(212,212,212,0.43) 89%,rgba(215,215,215,0.43) 92%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom, rgba(201, 195, 182,1) 0%,rgba(201, 195, 182, 1) 10%,rgba(201, 195, 182,0.85) 40%,rgba(201, 195, 182,0.60) 70%,rgba(201, 195, 182,0.50) 90%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a9a9a9', endColorstr='#6ed7d7d7',GradientType=0 ); /* IE6-9 */
-    font-size: 1rem;
-    padding: 1rem 1rem 0.5rem;
+    font-size: $body-padding*2;
+    padding: $body-padding*2  $body-padding*2 $body-padding;
     z-index: 2;
     position: fixed;
     top: 0;
@@ -63,10 +50,11 @@
             border-color: $cl-gray-tint2 !important;
             box-shadow: 0px 0px 7px rgba(99,96,96,1) inset !important;
         }
+        padding: $body-padding $body-padding*2 !important;
     }
 }
 .weapon-list-margin {
-    margin-top: 3rem;
+    margin-top: $body-padding*6;
 }
 
 @media (max-width: 720px) {
