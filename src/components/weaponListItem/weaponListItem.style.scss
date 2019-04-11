@@ -6,6 +6,9 @@
     padding: 0.3rem;
     color: $cl-white-tint1;
     font-size: $fs-weapon-list-item;
+    a {
+        color: inherit !important;
+    }
     &.exotic {
         background-color: $cl-exotic-yellow;
     }
