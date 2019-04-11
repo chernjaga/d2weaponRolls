@@ -21,8 +21,7 @@ angular.module('d2RollsApp', ['ui.router'])
         url: '/weaponView/:language/{weaponHash}/',
         params: {
             language: 'en', 
-            squash: true,
-            itemObject: {}
+            squash: true
         },
         templateUrl: '../html/routing/stateTemplates/weaponView.tpl.html',
         controller: 'weaponViewCtrl',
