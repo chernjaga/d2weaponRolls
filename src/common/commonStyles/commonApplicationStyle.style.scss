@@ -14,3 +14,54 @@ body {
 a {
     text-decoration: none !important;
 }
+
+// class mixin
+@mixin list-item-style-component ($rarityColor) {
+    background-color: $rarityColor;
+    @if $rarityColor == $cl-common-white {
+        color:  $cl-black-tint1;
+    } @else {
+        color: $cl-white-tint1;
+    }
+    &.weapon-view .weapon-view-banner {
+        background-color: $rarityColor;
+    }
+    img {
+        border-color: $rarityColor;
+        background-color: $rarityColor;
+    }
+}
+
+// background colors 
+.bg.exotic {
+    background-color: $cl-exotic-yellow;
+}
+.bg.legendary {
+    background-color: $cl-legendary-purple;
+}
+.bg.rare {
+    background-color: $cl-rare-blue; 
+}
+.bg.uncommon {
+    background-color: $cl-uncommon-green; 
+}
+.bg.common {
+    background-color: $cl-common-white; 
+}
+
+// classes background component
+.bgc.exotic {
+    @include list-item-style-component ($cl-exotic-yellow);
+}
+.bgc.legendary {
+    @include list-item-style-component ($cl-legendary-purple);
+}
+.bgc.rare {
+    @include list-item-style-component ($cl-rare-blue); 
+}
+.bgc.uncommon {
+    @include list-item-style-component ($cl-uncommon-green); 
+}
+.bgc.common {
+    @include list-item-style-component ($cl-common-white); 
+}

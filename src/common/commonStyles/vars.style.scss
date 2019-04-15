@@ -14,48 +14,4 @@ $cl-common-white: #C4BDB5;
 $body-padding: 0.5rem;
 
 // font sizes
-
 $fs-weapon-list-item: $body-padding*2.25;
-
-
-// classes
-.bg.exotic {
-    background-color: $cl-exotic-yellow;
-    color: $cl-white-tint1;
-    img {
-        border-color: $cl-exotic-yellow;
-        background-color: $cl-exotic-yellow;
-    }
-}
-.bg.legendary {
-    background-color: $cl-legendary-purple;
-    color: $cl-white-tint1;
-    img {
-        border-color: $cl-legendary-purple;
-        background-color: $cl-legendary-purple;
-    }
-}
-.bg.rare {
-    background-color: $cl-rare-blue;
-    color: $cl-white-tint1;
-    img {
-        border-color: $cl-rare-blue;
-        background-color: $cl-rare-blue;
-    }
-}
-.bg.uncommon {
-    background-color: $cl-uncommon-green;
-    color: $cl-white-tint1;
-    img {
-        border-color: $cl-uncommon-green;
-        background-color: $cl-uncommon-green;
-    }
-}
-.bg.common {
-    background-color: $cl-common-white;
-    color: $cl-black-tint1;
-    img {
-        border-color: $cl-common-white;
-        background-color: $cl-common-white;
-    }
-}

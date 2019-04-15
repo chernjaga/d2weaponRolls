@@ -10,29 +10,43 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         6: 'exotic'
     };
 
+
     function getWeaponList (language, callback) {
         if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
             callback(weaponListObject);
 
             return;
         }
+        var weaponListPromise = $q(function(resolve){
+            $http.post('/getWeaponList', JSON.stringify({language: language})).then(function(response) {
+                weaponListObject = response.data;
+                if (callback) {
+                    callback(weaponListObject);
+                }
+                resolve();
+            });
+        });
+
+        var weaponDataPromise = $q(function(resolve){
+            $http.post('/getWeaponData', JSON.stringify({language: language})).then(function(response) {
+                weaponData = response.data;
+                if (callback) {
+                    callback(weaponListObject);
+                }
+                resolve();
+            });
+        });
 
         lastLanguage = language;
         
         $q.all([
-            $http.post('/getWeaponList', JSON.stringify({language: language})),
-            $http.post('/getWeaponData', JSON.stringify({language: language}))
-        ]).then(function(responses) {
-            weaponListObject = responses[0].data;
-            weaponData = responses[1].data;
-            if (callback) {
-                callback(weaponListObject);
-            }
-        }).catch(function(error) {
+            weaponListPromise,
+            weaponDataPromise
+        ]).catch(function(error) {
             console.log(error);
         });
     };
-
+    
     function getSingleWeaponData (language, hash, callback) {
         if (Object.keys(weaponListObject).length && Object.keys(weaponData).length && lastLanguage === language && callback) {
 
@@ -42,6 +56,9 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
             })
 
             return;
+        }
+        if (!Object.keys(weaponData).length) {
+            console.log('ne uspel');
         }
 
         lastLanguage = language;

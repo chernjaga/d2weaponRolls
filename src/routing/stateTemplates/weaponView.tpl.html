@@ -1,16 +1,20 @@
 
-<div class="row weapon-view-header">
+<div class="row weapon-view-header bg" ng-class="::weapon.rarityClass">
     <div class="col">
             <img ng-src="{{::weapon.data.screenshot}}" alt="">
     </div>
 </div>
-<div class="row bg"  ng-class="::weapon.rarityClass">
-    <div class="col-12 offset-1">
-        <weapon-list-item 
-            list-item="::weapon.data"
-            language="::weapon.lang"
-            class="weapon-list-item weapon-view bg">
-        </weapon-list-item > 
-    
+<div class="row bgc"  ng-class="::weapon.rarityClass">
+    <div class="row">
+        <div class="col-12 offset-1">
+            <weapon-list-item 
+                list-item="::weapon.data"
+                language="::weapon.lang"
+                class="weapon-list-item weapon-view bg">
+            </weapon-list-item > 
+        </div>
+    </div>
+    <div class="row">
+        
     </div>
 </div>
