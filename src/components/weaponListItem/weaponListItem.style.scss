@@ -6,9 +6,12 @@
     padding: $body-padding;
     font-size: $fs-weapon-list-item;
     &.weapon-view {
-        // .weapon-list-item-icon {
-        //     margin-top: -$fs-weapon-list-item;
-        // }
+        .weapon-list-item-icon {
+            margin-top: -$fs-weapon-list-item*2;
+            border-style: solid;
+            border-width: $body-padding;
+            box-sizing: content-box;
+        }
     }
     a {
         color: inherit !important;
@@ -62,5 +65,4 @@
     .weapon-list-box{
         padding: $body-padding*4 0;
     }
-
 }
