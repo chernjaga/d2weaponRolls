@@ -5,7 +5,8 @@ angular.module('d2RollsApp')
             replace: true,
             scope: {
                 listItem: '<',
-                language: '<'
+                language: '<',
+                offset: '@'
             },
             templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
         }

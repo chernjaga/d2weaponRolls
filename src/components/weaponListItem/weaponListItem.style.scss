@@ -12,6 +12,9 @@
             border-width: $body-padding;
             box-sizing: content-box;
         }
+        .weapon-list-item-name, .list-item-elemental-icon  {
+            margin-left: $fs-weapon-list-item;
+        }
     }
     a {
         color: inherit !important;
