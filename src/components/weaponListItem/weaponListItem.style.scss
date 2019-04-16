@@ -21,6 +21,7 @@
     }
     .weapon-list-item-icon {
         height: $fs-weapon-list-item*4.0;
+        margin-right: $body-padding*6;
     }
     .weapon-list-item-name {
         font-size: $fs-weapon-list-item*1;
