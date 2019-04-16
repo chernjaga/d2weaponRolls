@@ -9,7 +9,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         5: 'legendary',
         6: 'exotic'
     };
-
+    var dataDownloadEvent = new Event('weaponDataReady');
 
     function getWeaponList (language, callback) {
         if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
@@ -33,6 +33,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                 if (callback) {
                     callback(weaponListObject);
                 }
+                document.dispatchEvent(dataDownloadEvent);
                 resolve();
             });
         });
@@ -47,18 +48,34 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         });
     };
     
-    function getSingleWeaponData (language, hash, callback) {
-        if (Object.keys(weaponListObject).length && Object.keys(weaponData).length && lastLanguage === language && callback) {
+    function getSingleWeaponData (language, hash, listCallback, dataCallback, singleDataCallback) {
+        if (
+            Object.keys(weaponListObject).length && 
+            Object.keys(weaponData).length && 
+            lastLanguage === language && 
+            listCallback && dataCallback
+        ) {
 
-            callback({
-                primaryData:  weaponListObject[hash],
-                secondaryData: weaponData[hash]
-            })
+            listCallback(weaponListObject[hash]);
+            dataCallback(weaponData[hash]);
 
             return;
         }
-        if (!Object.keys(weaponData).length) {
-            console.log('ne uspel');
+        if (
+            Object.keys(weaponListObject).length && 
+            !Object.keys(weaponData).length && 
+            lastLanguage === language && 
+            listCallback && dataCallback
+        ) {
+            listCallback(weaponListObject[hash]);
+                document.addEventListener('weaponDataReady', function(){
+                    dataCallback(weaponData[hash]);
+                     document.removeEventListener('weaponDataReady', function(){
+                        dataCallback(weaponData[hash]);
+                    });
+                });
+
+            return;
         }
 
         lastLanguage = language;
@@ -66,8 +83,8 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         $q.when(
             $http.post('/getSingleWeapon', JSON.stringify({language: language, hash: hash}))
         ).then(function(response) {
-            if (callback) {
-                callback(response.data);
+            if (singleDataCallback) {
+                singleDataCallback(response.data);
             }
         }).then(function(){
             getWeaponList(language);
