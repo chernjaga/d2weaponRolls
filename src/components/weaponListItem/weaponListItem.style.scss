@@ -9,6 +9,9 @@
         .weapon-list-item-icon {
             height: $fs-weapon-list-item*5.0;
             margin-top: -$fs-weapon-list-item*2-$body-padding;
+            border-width: $body-padding;
+            border-style: solid;
+            
         }
         .weapon-list-item-name, .list-item-elemental-icon  {
             margin-left: $fs-weapon-list-item;
