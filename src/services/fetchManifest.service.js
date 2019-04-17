@@ -38,11 +38,16 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
             });
         });
 
+        var weaponPerksPromise = $q(function(resolve) {
+            $http.post('/getWeaponPerks', JSON.stringify({language: language})).then(function(response) {});
+        });
+
         lastLanguage = language;
-        
+
         $q.all([
             weaponListPromise,
-            weaponDataPromise
+            weaponDataPromise,
+            weaponPerksPromise
         ]).catch(function(error) {
             console.log(error);
         });
@@ -91,7 +96,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         }).catch(function(error) {
             console.log(error);
         });
-    }
+    };
 
     return {
         getWeaponList: getWeaponList,

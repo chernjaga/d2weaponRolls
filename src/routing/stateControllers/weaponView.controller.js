@@ -23,6 +23,4 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
         vm.data = incomingData;
     });
 
-        
-
 }]);

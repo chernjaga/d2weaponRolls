@@ -15,12 +15,13 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
 
     fetchManifestService.getWeaponList(lang, function(arrayOfItems){
         vm.list = [];
-        for (let item in arrayOfItems) {
+        for (var item in arrayOfItems) {
             vm.list.push(arrayOfItems[item]);
-        }
+        };
+
         vm.isLoaded = !!vm.list.length;
     });
-    
+
     function getRarityClass(hash) {
 
         return rarityMap[hash];
