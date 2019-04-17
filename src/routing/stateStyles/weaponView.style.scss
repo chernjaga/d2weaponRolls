@@ -1,5 +1,12 @@
+@import '../../common/commonStyles/vars.style.scss';
+
 .weapon-view-header {
+    .weapon-view-header-banner {
+        margin-bottom: -22%;
+    }
     img {
         width: 100%;
+        height: 56%;
+        object-fit: cover;
     }
 }

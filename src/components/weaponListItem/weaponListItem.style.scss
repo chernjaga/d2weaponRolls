@@ -7,10 +7,8 @@
     font-size: $fs-weapon-list-item;
     &.weapon-view {
         .weapon-list-item-icon {
-            margin-top: -$fs-weapon-list-item*2;
-            border-style: solid;
-            border-width: $body-padding;
-            box-sizing: content-box;
+            height: $fs-weapon-list-item*5.0;
+            margin-top: -$fs-weapon-list-item*2-$body-padding;
         }
         .weapon-list-item-name, .list-item-elemental-icon  {
             margin-left: $fs-weapon-list-item;
