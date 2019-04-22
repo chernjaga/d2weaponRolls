@@ -1,32 +1,21 @@
 
 <div>
-    <div class="row">
-        <div class="col-3 row align-items-center">
-            <div class="col">
-                    <img ng-src="https://www.bungie.net{{::listItem.displayedProperties.icon}}"
-                        alt="destiny2 weapon icon"
-                        class="weapon-list-item-icon"/>
+        <img ng-src="https://www.bungie.net{{::listItem.displayedProperties.icon}}"
+            alt="destiny2 weapon icon"
+            class="weapon-list-item-icon"/>
+
+        <div>
+            <div class="weapon-list-item-name">
+                {{::listItem.displayedProperties.name}}
             </div>
+
+            <img ng-if="::listItem.damageType.icon"                           
+                ng-src="https://www.bungie.net{{::listItem.damageType.icon}}"
+                alt="destiny2 weapon icon" 
+                class="list-item-elemental-icon"/> 
+            <span class="weapon-list-item-description">
+                {{::listItem.slot.name}}
+            </span>
+
         </div>
-        <div class="col-8 align-items-center row" ng-class="offset">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-12 weapon-list-item-name">
-                        {{::listItem.displayedProperties.name}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <img ng-if="::listItem.damageType.icon"                           
-                            ng-src="https://www.bungie.net{{::listItem.damageType.icon}}"
-                            alt="destiny2 weapon icon" 
-                            class="list-item-elemental-icon"/> 
-                            <span class="weapon-list-item-description">
-                                {{::listItem.slot.name}}
-                            </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
