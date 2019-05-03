@@ -3,6 +3,8 @@
 body {
     background-color: $cl-white-tint1;
     font-family: sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 .body-padding {
@@ -10,7 +12,18 @@ body {
 }
 
 a {
-    text-decoration: none !important;
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+// screen adaptive container
+.style-screen-adaptor {
+    max-width: 768px;
+    margin: 0 auto;
 }
 
 // class mixin
