@@ -1,5 +1,5 @@
 
-// colors 
+// cl - colors 
 $cl-gray-tint1: #c9c3b6;
 $cl-gray-tint2: #94918a;
 $cl-black-tint1: rgb(46, 46, 46);
@@ -10,8 +10,14 @@ $cl-rare-blue: #5075A3;
 $cl-uncommon-green: #366F42;
 $cl-common-white: #C4BDB5;
 
-// paddings 16px;
+// paddings. 1rem ~ 16px;
 $body-padding: 0.5rem;
 
-// font sizes
+// mg - margins. weapon view constants
+$mg-weapon-view-content-offset:  3%;
+
+// wd - width. max body size (width)
+$wd-body-max: 768px;
+
+// fs - font sizes
 $fs-weapon-list-item: $body-padding*2.25;

@@ -99,6 +99,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
 
             return;
         }
+
         if (
             Object.keys(weaponListObject).length && 
             !Object.keys(weaponData).length && 

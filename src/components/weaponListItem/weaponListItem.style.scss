@@ -1,47 +1,63 @@
 @import '../../common/commonStyles/vars.style.scss';
 
+$word-spacing-damage-type: $body-padding*0.25;
+
 .weapon-list-item {
     margin-bottom: $body-padding;
     display: flex;
     box-sizing: border-box;
     padding: $body-padding;
     font-size: $fs-weapon-list-item;
+    line-height: $fs-weapon-list-item;
+
     &.weapon-view {
         max-width: 100%;
+
         &.list-item-content {
-            margin: 0 auto;
+            margin-left: $mg-weapon-view-content-offset;
             width: max-content;
         }
+
         .weapon-list-item-icon {
             height: $fs-weapon-list-item*5.0;
             margin-top: -2.5*$fs-weapon-list-item;
         }
+
         .weapon-list-item-name, .list-item-elemental-icon  {
             margin-left: $fs-weapon-list-item;
         }
     }
+
+    
+
     .weapon-list-item-elemental {
         margin-top: $body-padding;
+        word-spacing: $word-spacing-damage-type;
         display: flex;
         align-items: center;
         width: max-content;
     }
+
     a {
         color: inherit;
     }
+
     .list-item-elemental-icon {
         height: $fs-weapon-list-item;
-        max-width: 25%;
-        margin-right: $body-padding*0.5;
+        max-width: (100% - 2*$mg-weapon-view-content-offset)*0.25;
+        margin-right: $word-spacing-damage-type*2;
     }
+
     .weapon-list-item-text {
         position: relative;
-        max-width: 70%;
-        margin-left: 5%;
+        max-width: (100% - 2*$mg-weapon-view-content-offset)*0.75;
+        margin-left: $mg-weapon-view-content-offset;
     }
+
     .weapon-list-item-icon {
         height: $fs-weapon-list-item*4.0;
     }
+
     .weapon-list-item-name {
         font-size: $fs-weapon-list-item*1;
         max-width: 100%;
@@ -50,6 +66,7 @@
         width: max-content;
         font-weight: 900;
     }
+
     .weapon-list-item-description {
         font-size: $fs-weapon-list-item*0.7;
         font-weight: 300;

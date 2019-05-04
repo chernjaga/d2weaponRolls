@@ -21,8 +21,9 @@ ul {
 }
 
 // screen adaptive container
+
 .style-screen-adaptor {
-    max-width: 768px;
+    max-width: $wd-body-max;
     margin: 0 auto;
 }
 
