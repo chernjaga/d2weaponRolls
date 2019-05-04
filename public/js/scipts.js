@@ -42,7 +42,8 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         5: 'legendary',
         6: 'exotic'
     };
-    var dataDownloadEvent = new Event('weaponDataReady');
+
+    var dataDownloadDeferred = $q.defer();
 
     function getWeaponList (language, callback) {
         if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
@@ -66,7 +67,8 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                 if (callback) {
                     callback(weaponListObject);
                 }
-                document.dispatchEvent(dataDownloadEvent);
+
+                dataDownloadDeferred.resolve();
                 resolve();
             });
         });
@@ -107,12 +109,9 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
             listCallback && dataCallback
         ) {
             listCallback(weaponListObject[hash]);
-                document.addEventListener('weaponDataReady', function(){
-                    dataCallback(weaponData[hash]);
-                     document.removeEventListener('weaponDataReady', function(){
-                        dataCallback(weaponData[hash]);
-                    });
-                });
+            $q.when(dataDownloadDeferred.promise).then(function() {
+                dataCallback(weaponData[hash]);
+            });
 
             return;
         }
