@@ -132,11 +132,18 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         });
     };
 
+    function getPerksForSingleWeapon(bucket, perksPanelCallback) {
+
+        console.log(bucket);
+        perksPanelCallback();
+    }
+
     return {
-        getWeaponList: getWeaponList,
-        weaponData: weaponData,
+        getPerksForSingleWeapon: getPerksForSingleWeapon,
         getSingleWeaponData: getSingleWeaponData,
-        rarityMap: rarityMap
+        getWeaponList: getWeaponList,
+        rarityMap: rarityMap,
+        weaponData: weaponData
     };
 }]);
 angular.module('d2RollsApp').factory('languageMapService', [ function() {
@@ -214,6 +221,9 @@ angular.module('d2RollsApp')
         return {
             restrict: 'E',
             replace: false,
+            scope: {
+                pool: '<'
+            },
             templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html'
         }
     })
@@ -264,11 +274,19 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
 
     }, function(incomingData) {
         vm.data.secondaryData = incomingData;
+        getPerksBucket(vm.data.secondaryData.perks);
 
     }, function(incomingData) {
         var rarityHash = incomingData.primaryData.rarity.hash
         vm.rarityClass = rarityMap[rarityHash];
         vm.data = incomingData;
+        getPerksBucket(vm.data.secondaryData.perks);
     });
+
+    function getPerksBucket(data) {
+        fetchManifestService.getPerksForSingleWeapon(data, function() {
+            
+        });
+    };
 
 }]);

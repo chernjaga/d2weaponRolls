@@ -99,10 +99,17 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         });
     };
 
+    function getPerksForSingleWeapon(bucket, perksPanelCallback) {
+
+        console.log(bucket);
+        perksPanelCallback();
+    }
+
     return {
-        getWeaponList: getWeaponList,
-        weaponData: weaponData,
+        getPerksForSingleWeapon: getPerksForSingleWeapon,
         getSingleWeaponData: getSingleWeaponData,
-        rarityMap: rarityMap
+        getWeaponList: getWeaponList,
+        rarityMap: rarityMap,
+        weaponData: weaponData
     };
 }]);

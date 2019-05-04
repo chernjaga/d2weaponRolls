@@ -3,6 +3,9 @@ angular.module('d2RollsApp')
         return {
             restrict: 'E',
             replace: false,
+            scope: {
+                pool: '<'
+            },
             templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html'
         }
     })
