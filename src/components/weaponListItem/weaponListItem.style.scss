@@ -3,12 +3,13 @@
 $word-spacing-damage-type: $body-padding*0.25;
 
 .weapon-list-item {
-    margin-bottom: $body-padding;
+    margin: 0 auto $body-padding;
     display: flex;
     box-sizing: border-box;
     padding: $body-padding;
     font-size: $fs-weapon-list-item;
     line-height: $fs-weapon-list-item;
+    max-width: $wd-body-max*0.8;
 
     &.weapon-view {
         max-width: 100%;
