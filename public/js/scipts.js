@@ -33,6 +33,7 @@ angular.module('d2RollsApp', ['ui.router'])
 });
 angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', function($http, $q) {
     var weaponListObject = [];
+    var perksBucket = {};
     var lastLanguage;
     var weaponData = {};
     var rarityMap = {
@@ -44,6 +45,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
     };
 
     var dataDownloadDeferred = $q.defer();
+    var perksDownloadDeferred = $q.defer();
 
     function getWeaponList (language, callback) {
         if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
@@ -74,7 +76,10 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         });
 
         var weaponPerksPromise = $q(function(resolve) {
-            $http.post('/getWeaponPerks', JSON.stringify({language: language})).then(function(response) {});
+            $http.post('/getWeaponPerks', JSON.stringify({language: language})).then(function(response) {
+                perksBucket = response.data;
+                perksDownloadDeferred.resolve();
+            });
         });
 
         lastLanguage = language;
@@ -132,9 +137,24 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
     };
 
     function getPerksForSingleWeapon(bucket, perksPanelCallback) {
+        var bucketToReturn = [];
+    
+        if (!Object.keys(perksBucket).length) {
+            perksPanelCallback(mapPerksName());
+            return ;
+        }
 
-        console.log(bucket);
-        perksPanelCallback();
+        $q.when(perksDownloadDeferred).then(function() {
+            perksPanelCallback(mapPerksName());
+        });
+
+        function mapPerksName() {
+            for (var perk of bucket) {
+                bucketToReturn.push(perksBucket[perk.vendorPerk]);
+            }
+            
+            return bucketToReturn;
+        }
     }
 
     return {
@@ -283,8 +303,9 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
     });
 
     function getPerksBucket(data) {
-        fetchManifestService.getPerksForSingleWeapon(data, function() {
-            
+        fetchManifestService.getPerksForSingleWeapon(data, function(perksBucket) {
+            vm.perksBucket = perksBucket;
+            console.log(perksBucket);
         });
     };
 

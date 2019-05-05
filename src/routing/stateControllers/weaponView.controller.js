@@ -26,8 +26,9 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
     });
 
     function getPerksBucket(data) {
-        fetchManifestService.getPerksForSingleWeapon(data, function() {
-            
+        fetchManifestService.getPerksForSingleWeapon(data, function(perksBucket) {
+            vm.perksBucket = perksBucket;
+            console.log(perksBucket);
         });
     };
 
