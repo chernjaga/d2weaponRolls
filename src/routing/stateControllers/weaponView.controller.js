@@ -1,12 +1,19 @@
-angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetchManifestService', function(
+angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', function(
     $stateParams,
-    fetchManifestService
+    fetchManifestService,
+    languageMapService
 ) {  
     var vm = this;
     var rarityMap = fetchManifestService.rarityMap;
     var lang = $stateParams.language;
     var weaponHash = $stateParams.weaponHash;
-    
+
+    var perksPanel = languageMapService.getDictionary(lang, 'perksPanel');
+
+    vm.perksPanelTextContent = {
+        perksPanelHeader: perksPanel.header,
+        perksPanelExpand: perksPanel.expand
+    }
     fetchManifestService.getSingleWeaponData(lang, weaponHash, function(incomingData){
         var rarityHash = incomingData.rarity.hash;
         vm.rarityClass = rarityMap[rarityHash];
@@ -28,7 +35,6 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
     function getPerksBucket(data) {
         fetchManifestService.getPerksForSingleWeapon(data, function(perksBucket) {
             vm.perksBucket = perksBucket;
-            console.log(perksBucket);
         });
     };
 

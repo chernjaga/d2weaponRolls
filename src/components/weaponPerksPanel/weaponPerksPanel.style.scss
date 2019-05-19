@@ -1,5 +1,36 @@
 @import '../../common/commonStyles/vars.style.scss';
 
 .perks-panel {
-    margin: 0 $mg-weapon-view-content-offset;
+    margin: 0 $mg-weapon-view-content-offset*0.5;
+}
+
+.all-perks-bucket {
+    width: 100%;
+    display: flex;
+    li {
+        
+        width: 18%;
+        margin-right: 2.5%;
+    }
+    li:last-child {
+        margin-right: 0;
+    }
+}
+
+.all-perks-categories {
+    display: inline-block;
+    width: 100%;
+    li {
+        width: 100%
+    }
+    img {
+        width: 100%;
+    }
+}
+.show-all-perks-button {
+    text-align: center;
+    cursor: pointer;
+}
+.randomized-perks {
+    width: 100%;
 }

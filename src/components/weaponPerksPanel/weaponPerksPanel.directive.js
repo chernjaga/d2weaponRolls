@@ -4,7 +4,11 @@ angular.module('d2RollsApp')
             restrict: 'E',
             replace: false,
             scope: {
-                pool: '<'
+                pool: '<',
+                text: '<',
+            },
+            controller: function($scope) {
+                $scope.isExpanded = false;
             },
             templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html'
         }

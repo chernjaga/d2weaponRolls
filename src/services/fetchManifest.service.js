@@ -45,7 +45,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         var weaponPerksPromise = $q(function(resolve) {
             $http.post('/getWeaponPerks', JSON.stringify({language: language})).then(function(response) {
                 perksBucket = response.data;
-                perksDownloadDeferred.resolve();
+                perksDownloadDeferred.resolve(perksBucket);
             });
         });
 
@@ -106,18 +106,28 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
     function getPerksForSingleWeapon(bucket, perksPanelCallback) {
         var bucketToReturn = [];
     
-        if (!Object.keys(perksBucket).length) {
+        if (!!Object.keys(perksBucket).length) {
             perksPanelCallback(mapPerksName());
             return ;
         }
 
-        $q.when(perksDownloadDeferred).then(function() {
+        $q.when(perksDownloadDeferred.promise).then(function() {
             perksPanelCallback(mapPerksName());
         });
 
         function mapPerksName() {
             for (var perk of bucket) {
-                bucketToReturn.push(perksBucket[perk.vendorPerk]);
+                var objectToPush = {};
+                objectToPush.vendorPerk = perksBucket[perk.vendorPerk];
+                if (perk.randomizedPerks.length) {
+                    var randomizedPerks = [];
+                    for (var randomPerk of perk.randomizedPerks) {
+                        randomizedPerks.push(perksBucket[randomPerk])
+                    }
+                    objectToPush.randomizedPerks = randomizedPerks
+                }
+                console.log(objectToPush);
+                bucketToReturn.push(objectToPush);
             }
             
             return bucketToReturn;

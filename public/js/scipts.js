@@ -78,7 +78,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         var weaponPerksPromise = $q(function(resolve) {
             $http.post('/getWeaponPerks', JSON.stringify({language: language})).then(function(response) {
                 perksBucket = response.data;
-                perksDownloadDeferred.resolve();
+                perksDownloadDeferred.resolve(perksBucket);
             });
         });
 
@@ -139,18 +139,28 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
     function getPerksForSingleWeapon(bucket, perksPanelCallback) {
         var bucketToReturn = [];
     
-        if (!Object.keys(perksBucket).length) {
+        if (!!Object.keys(perksBucket).length) {
             perksPanelCallback(mapPerksName());
             return ;
         }
 
-        $q.when(perksDownloadDeferred).then(function() {
+        $q.when(perksDownloadDeferred.promise).then(function() {
             perksPanelCallback(mapPerksName());
         });
 
         function mapPerksName() {
             for (var perk of bucket) {
-                bucketToReturn.push(perksBucket[perk.vendorPerk]);
+                var objectToPush = {};
+                objectToPush.vendorPerk = perksBucket[perk.vendorPerk];
+                if (perk.randomizedPerks.length) {
+                    var randomizedPerks = [];
+                    for (var randomPerk of perk.randomizedPerks) {
+                        randomizedPerks.push(perksBucket[randomPerk])
+                    }
+                    objectToPush.randomizedPerks = randomizedPerks
+                }
+                console.log(objectToPush);
+                bucketToReturn.push(objectToPush);
             }
             
             return bucketToReturn;
@@ -175,37 +185,59 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 rare: 'Редкое',
                 uncommon: 'Необычное',
                 common: 'Обычное'
+            },
+            interfaces: {
+                perksPanel: {
+                    header: 'Перки оружия',
+                    expand: 'Показать все варианты'
+                }
             }
         },
         en: {
             search: 'Search',
-             weaponRarity: {
+            weaponRarity: {
                 exotic: 'Exotic',
                 legendary: 'Legendary',
                 rare: 'Rare',
                 uncommon: 'Uncommon',
                 common: 'Common'
+            },
+            interfaces: {
+                perksPanel: {
+                    header: 'Weapon perks',
+                    expand: 'All perks'
+                }
             }
         }
-    }
+    };
 
-    function getDictionary (lang, sectionPath) {
-        try {
-            if (sectionPath) {
+    var categoryToReturn;
 
-                return dictionary[lang][sectionPath];
-            }
-            
-            return dictionary[lang];
-        } catch (err) {
-            console.log('Error in dictionary: ' + err.message);
+    function getDictionary(lang, section) {
+        if (section) {
+            return searchForSection(dictionary[lang], section);
         }
+        
+        return dictionary[lang];
        
-    }
+    };
+
+    function searchForSection(target, section) {
+        for (var property in target) {
+            if (property === section) {
+                categoryToReturn = target[property];
+                break;
+            } else if (typeof target[property] === 'object') {
+                searchForSection(target[property], section);
+            }
+        };
+
+        return categoryToReturn;
+    };
 
     return {
         getDictionary: getDictionary
-    }
+    };
 }]);
 angular.module('d2RollsApp').controller('footerPanelCtrl', [function () {
     var vm = this;
@@ -241,7 +273,11 @@ angular.module('d2RollsApp')
             restrict: 'E',
             replace: false,
             scope: {
-                pool: '<'
+                pool: '<',
+                text: '<',
+            },
+            controller: function($scope) {
+                $scope.isExpanded = false;
             },
             templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html'
         }
@@ -275,15 +311,22 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
         return rarityMap[hash];
     }
 }]);
-angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetchManifestService', function(
+angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', function(
     $stateParams,
-    fetchManifestService
+    fetchManifestService,
+    languageMapService
 ) {  
     var vm = this;
     var rarityMap = fetchManifestService.rarityMap;
     var lang = $stateParams.language;
     var weaponHash = $stateParams.weaponHash;
-    
+
+    var perksPanel = languageMapService.getDictionary(lang, 'perksPanel');
+
+    vm.perksPanelTextContent = {
+        perksPanelHeader: perksPanel.header,
+        perksPanelExpand: perksPanel.expand
+    }
     fetchManifestService.getSingleWeaponData(lang, weaponHash, function(incomingData){
         var rarityHash = incomingData.rarity.hash;
         vm.rarityClass = rarityMap[rarityHash];
@@ -305,7 +348,6 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
     function getPerksBucket(data) {
         fetchManifestService.getPerksForSingleWeapon(data, function(perksBucket) {
             vm.perksBucket = perksBucket;
-            console.log(perksBucket);
         });
     };
 

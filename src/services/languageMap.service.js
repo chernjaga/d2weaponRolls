@@ -8,35 +8,57 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 rare: 'Редкое',
                 uncommon: 'Необычное',
                 common: 'Обычное'
+            },
+            interfaces: {
+                perksPanel: {
+                    header: 'Перки оружия',
+                    expand: 'Показать все варианты'
+                }
             }
         },
         en: {
             search: 'Search',
-             weaponRarity: {
+            weaponRarity: {
                 exotic: 'Exotic',
                 legendary: 'Legendary',
                 rare: 'Rare',
                 uncommon: 'Uncommon',
                 common: 'Common'
+            },
+            interfaces: {
+                perksPanel: {
+                    header: 'Weapon perks',
+                    expand: 'All perks'
+                }
             }
         }
-    }
+    };
 
-    function getDictionary (lang, sectionPath) {
-        try {
-            if (sectionPath) {
+    var categoryToReturn;
 
-                return dictionary[lang][sectionPath];
-            }
-            
-            return dictionary[lang];
-        } catch (err) {
-            console.log('Error in dictionary: ' + err.message);
+    function getDictionary(lang, section) {
+        if (section) {
+            return searchForSection(dictionary[lang], section);
         }
+        
+        return dictionary[lang];
        
-    }
+    };
+
+    function searchForSection(target, section) {
+        for (var property in target) {
+            if (property === section) {
+                categoryToReturn = target[property];
+                break;
+            } else if (typeof target[property] === 'object') {
+                searchForSection(target[property], section);
+            }
+        };
+
+        return categoryToReturn;
+    };
 
     return {
         getDictionary: getDictionary
-    }
+    };
 }]);
