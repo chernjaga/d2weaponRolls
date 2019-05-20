@@ -189,7 +189,8 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
             interfaces: {
                 perksPanel: {
                     header: 'Перки оружия',
-                    expand: 'Показать все варианты'
+                    expand: 'Показать все варианты',
+                    collapse: 'Скрыть'
                 }
             }
         },
@@ -205,7 +206,8 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
             interfaces: {
                 perksPanel: {
                     header: 'Weapon perks',
-                    expand: 'All perks'
+                    expand: 'All perks',
+                    collapse: 'Hide'
                 }
             }
         }
@@ -239,19 +241,6 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
         getDictionary: getDictionary
     };
 }]);
-angular.module('d2RollsApp')
-    .directive('weaponListItem', function () {
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                listItem: '<',
-                language: '<',
-                offset: '@'
-            },
-            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
-        }
-    })
 angular.module('d2RollsApp').controller('footerPanelCtrl', [function () {
     var vm = this;
     vm.text = '< To weapon list';
@@ -265,6 +254,19 @@ angular.module('d2RollsApp')
             controller: 'footerPanelCtrl',
             controllerAs: 'footer',
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
+        }
+    })
+angular.module('d2RollsApp')
+    .directive('weaponListItem', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                listItem: '<',
+                language: '<',
+                offset: '@'
+            },
+            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
         }
     })
 angular.module('d2RollsApp')
@@ -325,7 +327,8 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
 
     vm.perksPanelTextContent = {
         perksPanelHeader: perksPanel.header,
-        perksPanelExpand: perksPanel.expand
+        perksPanelExpand: perksPanel.expand,
+        perksPanelCollapse: perksPanel.collapse
     }
     fetchManifestService.getSingleWeaponData(lang, weaponHash, function(incomingData){
         var rarityHash = incomingData.rarity.hash;

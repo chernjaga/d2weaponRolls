@@ -6,12 +6,12 @@
     transition: max-height 0.15s ease-out; 
 }
 .perks-panel.active {
-    max-height: 600px;
+    max-height: 800px;
     transition: max-height 0.15s ease-out;
 }
 .randomized-perks-container.ng-hide {
     opacity: 0;
-    transition: opacity 0.15s step-start;
+    transition: opacity 0.1s step-start;
 }
 .randomized-perks-container {
     opacity: 1;

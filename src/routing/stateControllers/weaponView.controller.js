@@ -12,7 +12,8 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
 
     vm.perksPanelTextContent = {
         perksPanelHeader: perksPanel.header,
-        perksPanelExpand: perksPanel.expand
+        perksPanelExpand: perksPanel.expand,
+        perksPanelCollapse: perksPanel.collapse
     }
     fetchManifestService.getSingleWeaponData(lang, weaponHash, function(incomingData){
         var rarityHash = incomingData.rarity.hash;

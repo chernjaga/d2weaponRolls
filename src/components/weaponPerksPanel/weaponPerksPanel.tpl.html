@@ -17,6 +17,6 @@
         </li>
     </ul>
     <div class="show-all-perks-button" role="button" ng-click="isExpanded = !isExpanded">
-        {{::text.perksPanelExpand}} <span ng-show="isExpanded">&#9651;</span><span ng-show="!isExpanded">&#9661;</span>
+        <span ng-show="!isExpanded">{{::text.perksPanelExpand}}</span><span ng-show="isExpanded">{{::text.perksPanelCollapse}}</span> <span ng-show="isExpanded">&#9651;</span><span ng-show="!isExpanded">&#9661;</span>
     </div>
 </div>

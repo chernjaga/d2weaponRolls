@@ -12,7 +12,8 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
             interfaces: {
                 perksPanel: {
                     header: 'Перки оружия',
-                    expand: 'Показать все варианты'
+                    expand: 'Показать все варианты',
+                    collapse: 'Скрыть'
                 }
             }
         },
@@ -28,7 +29,8 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
             interfaces: {
                 perksPanel: {
                     header: 'Weapon perks',
-                    expand: 'All perks'
+                    expand: 'All perks',
+                    collapse: 'Hide'
                 }
             }
         }
