@@ -1,17 +1,32 @@
 @import '../../common/commonStyles/vars.style.scss';
 
 .perks-panel {
+    max-height: 200px;
     margin: 0 $mg-weapon-view-content-offset*0.5;
+    transition: max-height 0.15s ease-out; 
 }
-
+.perks-panel.active {
+    max-height: 600px;
+    transition: max-height 0.15s ease-out;
+}
+.randomized-perks-container.ng-hide {
+    opacity: 0;
+    transition: opacity 0.15s step-start;
+}
+.randomized-perks-container {
+    opacity: 1;
+    transition: opacity 0.15s ease-out 0.1s;
+}
 .all-perks-bucket {
     width: 100%;
     display: flex;
+
     li {
-        
+
         width: 18%;
         margin-right: 2.5%;
     }
+
     li:last-child {
         margin-right: 0;
     }
@@ -20,28 +35,24 @@
 .all-perks-categories {
     display: inline-block;
     width: 100%;
+
     li {
         width: 100%;
         max-width: 100px;
     }
+
     img {
         width: 100%;
     }
 }
+
 .show-all-perks-button {
     text-align: center;
     cursor: pointer;
 }
+
 .randomized-perks {
     width: 100%;
 }
-@keyframes animation-slide-vertical {
-//   from {
-//       margin-top: -500px;
-//   } to {
-//        margin-top: 0;
-//   }
-}
-.randomized-perks-container.ng-hide {
-    animation: 0.5s animation-slide-vertical;
-}
+
+
