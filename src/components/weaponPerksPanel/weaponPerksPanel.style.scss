@@ -21,7 +21,8 @@
     display: inline-block;
     width: 100%;
     li {
-        width: 100%
+        width: 100%;
+        max-width: 100px;
     }
     img {
         width: 100%;
@@ -33,4 +34,14 @@
 }
 .randomized-perks {
     width: 100%;
+}
+@keyframes animation-slide-vertical {
+//   from {
+//       margin-top: -500px;
+//   } to {
+//        margin-top: 0;
+//   }
+}
+.randomized-perks-container.ng-hide {
+    animation: 0.5s animation-slide-vertical;
 }

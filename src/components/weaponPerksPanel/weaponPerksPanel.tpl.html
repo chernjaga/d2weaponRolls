@@ -6,7 +6,7 @@
                 <li>
                     <img ng-src="https://www.bungie.net{{::perk.vendorPerk.icon}}" alt="destiny2 weapon perk icon"/>
                 </li>
-                <li ng-show="isExpanded">
+                <li ng-show="isExpanded" class="randomized-perks-container">
                     <ul>
                         <li ng-repeat="randomPerk in perk.randomizedPerks track by $index" class="randomized-perks">
                             <img ng-if="::randomPerk.icon" ng-src="https://www.bungie.net{{::randomPerk.icon}}" alt="destiny2 weapon perk icon"/>

@@ -1,4 +1,4 @@
-angular.module('d2RollsApp', ['ui.router'])
+angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
 .config(function (
     $locationProvider,
     $stateProvider,
