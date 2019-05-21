@@ -27,7 +27,7 @@ angular.module('d2RollsApp')
                         if (isHolding && target === event.target) {
                             addToolTip(target);
                             isCompletedEvent = true;
-                            event.returnValue = false;
+                            event.preventDefault();
                         }
                     }, 300, 1, true);
                 });
@@ -35,6 +35,7 @@ angular.module('d2RollsApp')
                     isHolding = false;
                     $interval.cancel(timer);
                     if (isCompletedEvent) {
+                        event.preventDefault();
                         event.returnValue = false;
                     }
                 });
