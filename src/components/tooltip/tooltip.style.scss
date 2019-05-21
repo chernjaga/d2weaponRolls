@@ -1,0 +1,11 @@
+@import '../../common/commonStyles/vars.style.scss';
+
+.tooltip {
+    display: none;
+}
+.has-tooltip {
+    .tooltip {
+        position: absolute;
+        display: block
+    }
+}

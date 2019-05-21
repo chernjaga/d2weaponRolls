@@ -7,4 +7,4 @@ angular.module('d2RollsApp')
             controllerAs: 'footer',
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
-    })
+    });

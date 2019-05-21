@@ -241,49 +241,6 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
         getDictionary: getDictionary
     };
 }]);
-angular.module('d2RollsApp').controller('footerPanelCtrl', [function () {
-    var vm = this;
-    vm.text = '< To weapon list';
-    vm.lang = location.pathname.split('/')[2] || 'en';
-}]);
-angular.module('d2RollsApp')
-    .directive('footerPanel', function () {
-        return {
-            restrict: 'E',
-            replace: false,
-            controller: 'footerPanelCtrl',
-            controllerAs: 'footer',
-            templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
-        }
-    })
-angular.module('d2RollsApp')
-    .directive('weaponListItem', function () {
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                listItem: '<',
-                language: '<',
-                offset: '@'
-            },
-            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
-        }
-    })
-angular.module('d2RollsApp')
-    .directive('weaponPerksPanel', function () {
-        return {
-            restrict: 'E',
-            replace: false,
-            scope: {
-                pool: '<',
-                text: '<',
-            },
-            controller: function($scope) {
-                $scope.isExpanded = false;
-            },
-            templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html'
-        }
-    })
 angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'languageMapService', 'fetchManifestService',  function(
     $stateParams,
     languageMapService,
@@ -355,3 +312,85 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
     };
 
 }]);
+angular.module('d2RollsApp').controller('footerPanelCtrl', [function () {
+    var vm = this;
+    vm.text = '< To weapon list';
+    vm.lang = location.pathname.split('/')[2] || 'en';
+}]);
+angular.module('d2RollsApp')
+    .directive('footerPanel', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: 'footerPanelCtrl',
+            controllerAs: 'footer',
+            templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
+        }
+    });
+angular.module('d2RollsApp')
+    .directive('perkTooltip', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            scope:{
+                title: '<',
+                description: '<'
+            },
+            templateUrl: '../html/components/tooltip/tooltip.tpl.html',
+            link: function(scope, element) {
+                element.find('button').on('click', function(event) {
+                    element[0].parentElement.classList.remove('has-tooltip');
+                });
+            } 
+        };
+    });
+angular.module('d2RollsApp')
+    .directive('weaponListItem', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                listItem: '<',
+                language: '<',
+                offset: '@'
+            },
+            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
+        }
+    })
+angular.module('d2RollsApp').controller('perksPanelCtrl', ['$scope', '$interval', function($scope, $interval) {
+
+}]);
+angular.module('d2RollsApp')
+    .directive('weaponPerksPanel', [ '$interval', function($interval) {
+        return {
+            restrict: 'E',
+            replace: false,
+            scope: {
+                pool: '<',
+                text: '<'
+            },
+            controller: 'perksPanelCtrl',
+            templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html',
+            link: function(scope, element, attr) {
+                var timer;
+                var isHolding = false;
+                element.on('mousedown', function(ev) {
+                    isHolding = true;
+                    timer = $interval(function() {
+                        if (isHolding) {
+                            addToolTip(ev);
+                        }
+                    }, 600, 1, true)
+                });
+                element.on('mouseup', function() {
+                    isHolding = false
+                });
+
+                function addToolTip(event) {
+                    if (event.target.className.includes('perk-icon')) {
+                            event.target.parentElement.classList.add('has-tooltip')
+                    }
+                }
+            }
+        }
+    }])
