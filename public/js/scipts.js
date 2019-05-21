@@ -304,11 +304,15 @@ angular.module('d2RollsApp')
                 var timer;
                 var isHolding = false;
                 var target;
-                var isCompletedEvent = false;
+                element.on('contextmenu', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation(); // not necessary in my case, could leave in case stopImmediateProp isn't available? 
+                    event.stopImmediatePropagation();
+                    return false;
+                });
                 element.on('mousedown touchstart', function(event) {
                     isHolding = true;
                     target = event.target;
-                    console.log(event.type);
                     timer = $interval(function() {
                         var previousElement = element[0].getElementsByClassName('has-tooltip')[0];
                         if (previousElement) {
