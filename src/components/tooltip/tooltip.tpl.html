@@ -1,11 +1,13 @@
 <div class="tooltip">
-    <p>
-        {{title}}
-    </p>
-    <p>
-        {{description}}
-    </p>
-    <button>
-        Close
-    </button>
+    <div class="text">
+        <p>
+            <b>{{::title}}</b>
+        </p>
+        <p>
+            {{::description}}
+        </p>
+    </div>
+    <div role="button" class="tooltip-close-button">
+        <span class="close-symbol">+</span> <span> CLOSE</span>
+    </div>
 </div>

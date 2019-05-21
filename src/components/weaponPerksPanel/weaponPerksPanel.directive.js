@@ -7,7 +7,6 @@ angular.module('d2RollsApp')
                 pool: '<',
                 text: '<'
             },
-            controller: 'perksPanelCtrl',
             templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html',
             link: function(scope, element, attr) {
                 var timer;

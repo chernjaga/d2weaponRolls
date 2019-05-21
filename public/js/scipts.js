@@ -273,9 +273,19 @@ angular.module('d2RollsApp')
             } 
         };
     });
-angular.module('d2RollsApp').controller('perksPanelCtrl', ['$scope', '$interval', function($scope, $interval) {
-
-}]);
+angular.module('d2RollsApp')
+    .directive('weaponListItem', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                listItem: '<',
+                language: '<',
+                offset: '@'
+            },
+            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
+        }
+    })
 angular.module('d2RollsApp')
     .directive('weaponPerksPanel', [ '$interval', function($interval) {
         return {
@@ -285,7 +295,6 @@ angular.module('d2RollsApp')
                 pool: '<',
                 text: '<'
             },
-            controller: 'perksPanelCtrl',
             templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html',
             link: function(scope, element, attr) {
                 var timer;
@@ -324,19 +333,6 @@ angular.module('d2RollsApp')
             }
         };
     }]);
-angular.module('d2RollsApp')
-    .directive('weaponListItem', function () {
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                listItem: '<',
-                language: '<',
-                offset: '@'
-            },
-            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
-        }
-    })
 angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'languageMapService', 'fetchManifestService',  function(
     $stateParams,
     languageMapService,

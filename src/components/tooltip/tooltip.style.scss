@@ -2,13 +2,49 @@
 
 .tooltip {
     display: none;
-}
-.has-tooltip {
-    .tooltip {
-        left: $body-padding;
-        right: $body-padding;
-        position: absolute;
-        display: block;
-        background: $cl-tooltip-bg;
+    left: $body-padding;
+    right: $body-padding;
+    position: absolute;
+    background: $cl-tooltip-bg;
+    color: $cl-gray-tint3;
+    font-size: $fs-weapon-list-item*0.75;
+    .text {
+        padding: 0 2*$body-padding;
     }
+}
+.perk-icon-arrow {
+    display: none;
+}
+
+.has-tooltip {
+    .perk-icon-arrow {
+        display: block;
+        width: 0; 
+        height: 0; 
+        border-left: $body-padding solid transparent;
+        border-right: $body-padding solid transparent;
+        border-bottom: $body-padding solid $cl-tooltip-bg;
+        margin: 0 auto;
+    }
+    .tooltip {
+        display: block;
+    }
+}
+
+.tooltip-close-button {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    background: $cl-white-tint0;
+    padding: $body-padding 0;
+    color: $cl-black-tint1;
+    span {
+        line-height: $fs-weapon-list-item*1.25
+    }
+}
+
+.close-symbol {
+    transform: rotate(45deg);
+    display: inline-block;
+    font-size: $fs-weapon-list-item*1.25;
 }
