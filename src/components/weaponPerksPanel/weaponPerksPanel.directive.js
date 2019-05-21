@@ -17,27 +17,21 @@ angular.module('d2RollsApp')
                 element.on('mousedown touchstart', function(event) {
                     isHolding = true;
                     target = event.target;
-                    var previousElement = element[0].getElementsByClassName('has-tooltip')[0];
-
-                    if (previousElement) {
-                        previousElement.classList.remove('has-tooltip');
-                    }
-
+                    console.log(event.type);
                     timer = $interval(function() {
+                        var previousElement = element[0].getElementsByClassName('has-tooltip')[0];
+                        if (previousElement) {
+                            previousElement.classList.remove('has-tooltip');
+                        }
                         if (isHolding && target === event.target) {
                             addToolTip(target);
-                            isCompletedEvent = true;
-                            event.preventDefault();
+                            
                         }
                     }, 300, 1, true);
                 });
                 element.on('mouseup touchend', function(event) {
                     isHolding = false;
                     $interval.cancel(timer);
-                    if (isCompletedEvent) {
-                        event.preventDefault();
-                        event.returnValue = false;
-                    }
                 });
 
                 function addToolTip(eventTarget) {
