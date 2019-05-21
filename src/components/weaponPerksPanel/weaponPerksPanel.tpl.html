@@ -5,6 +5,8 @@
             <ul class="all-perks-categories">
                 <li>
                     <img ng-src="https://www.bungie.net{{::perk.vendorPerk.icon}}" alt="destiny2 weapon perk icon" class="perk-icon"/>
+                    <perk-tooltip title="::perk.vendorPerk.name" 
+                                  description="::perk.vendorPerk.description"></perk-tooltip>
                 </li>
                 <li ng-show="isExpanded" class="randomized-perks-container">
                     <ul>

@@ -6,6 +6,8 @@
 .has-tooltip {
     .tooltip {
         position: absolute;
-        display: block
+        display: block;
+        background: $cl-tooltip-bg;
+        width: 100%;
     }
 }

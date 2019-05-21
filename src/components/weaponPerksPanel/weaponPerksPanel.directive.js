@@ -12,21 +12,24 @@ angular.module('d2RollsApp')
             link: function(scope, element, attr) {
                 var timer;
                 var isHolding = false;
-                element.on('mousedown', function(ev) {
+                var target;
+                element.on('mousedown', function(event) {
                     isHolding = true;
+                    target = event.target
                     timer = $interval(function() {
-                        if (isHolding) {
-                            addToolTip(ev);
+                        if (isHolding && target === event.target) {
+                            addToolTip(target);
                         }
                     }, 600, 1, true)
                 });
                 element.on('mouseup', function() {
-                    isHolding = false
+                    isHolding = false;
+                    $interval.cancel(timer);
                 });
 
-                function addToolTip(event) {
-                    if (event.target.className.includes('perk-icon')) {
-                            event.target.parentElement.classList.add('has-tooltip')
+                function addToolTip(eventTarget) {
+                    if (eventTarget.className.includes('perk-icon')) {
+                            eventTarget.parentElement.classList.add('has-tooltip')
                     }
                 }
             }
