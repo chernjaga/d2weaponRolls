@@ -5,9 +5,10 @@
 }
 .has-tooltip {
     .tooltip {
+        left: $body-padding;
+        right: $body-padding;
         position: absolute;
         display: block;
         background: $cl-tooltip-bg;
-        width: 100%;
     }
 }
