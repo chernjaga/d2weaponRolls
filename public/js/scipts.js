@@ -318,9 +318,9 @@ angular.module('d2RollsApp')
                         if (isHolding && target === event.target) {
                             addToolTip(target);
                             isCompletedEvent = true;
+                            event.returnValue = false;
                         }
-                    }, 600, 1, true);
-                    event.stopPropagation();
+                    }, 300, 1, true);
                 });
                 element.on('mouseup touchend', function(event) {
                     isHolding = false;
