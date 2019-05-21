@@ -304,28 +304,40 @@ angular.module('d2RollsApp')
                 var timer;
                 var isHolding = false;
                 var target;
-                element.on('mousedown', function(event) {
+                var isCompletedEvent = false;
+                element.on('mousedown touchstart', function(event) {
                     isHolding = true;
-                    target = event.target
+                    target = event.target;
+                    var previousElement = element[0].getElementsByClassName('has-tooltip')[0];
+
+                    if (previousElement) {
+                        previousElement.classList.remove('has-tooltip');
+                    }
+
                     timer = $interval(function() {
                         if (isHolding && target === event.target) {
                             addToolTip(target);
+                            isCompletedEvent = true;
                         }
-                    }, 600, 1, true)
+                    }, 600, 1, true);
+                    event.stopPropagation();
                 });
-                element.on('mouseup', function() {
+                element.on('mouseup touchend', function(event) {
                     isHolding = false;
                     $interval.cancel(timer);
+                    if (isCompletedEvent) {
+                        event.returnValue = false;
+                    }
                 });
 
                 function addToolTip(eventTarget) {
                     if (eventTarget.className.includes('perk-icon')) {
-                            eventTarget.parentElement.classList.add('has-tooltip')
+                            eventTarget.parentElement.classList.add('has-tooltip');
                     }
-                }
+                };
             }
-        }
-    }])
+        };
+    }]);
 angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'languageMapService', 'fetchManifestService',  function(
     $stateParams,
     languageMapService,
