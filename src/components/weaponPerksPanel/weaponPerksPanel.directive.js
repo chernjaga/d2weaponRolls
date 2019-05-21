@@ -36,6 +36,7 @@ angular.module('d2RollsApp')
                 element.on('mouseup touchend', function(event) {
                     isHolding = false;
                     $interval.cancel(timer);
+                    return false;
                 });
 
                 function addToolTip(eventTarget) {
