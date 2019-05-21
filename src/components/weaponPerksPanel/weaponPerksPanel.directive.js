@@ -20,16 +20,15 @@ angular.module('d2RollsApp')
                     return false;
                 });
                 element.on('mousedown touchstart', function(event) {
+                    var previousElement = element[0].getElementsByClassName('has-tooltip')[0];
                     isHolding = true;
                     target = event.target;
-                    timer = $interval(function() {
-                        var previousElement = element[0].getElementsByClassName('has-tooltip')[0];
-                        if (previousElement) {
-                            previousElement.classList.remove('has-tooltip');
-                        }
+                    if (previousElement && previousElement != target.parentElement) {
+                        previousElement.classList.remove('has-tooltip');
+                    }
+                    timer = $interval(function() {                   
                         if (isHolding && target === event.target) {
-                            addToolTip(target);
-                            
+                            addToolTip(target);       
                         }
                     }, 300, 1, true);
                 });

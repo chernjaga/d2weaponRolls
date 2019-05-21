@@ -273,19 +273,6 @@ angular.module('d2RollsApp')
             } 
         };
     });
-angular.module('d2RollsApp')
-    .directive('weaponListItem', function () {
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                listItem: '<',
-                language: '<',
-                offset: '@'
-            },
-            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
-        }
-    })
 angular.module('d2RollsApp').controller('perksPanelCtrl', ['$scope', '$interval', function($scope, $interval) {
 
 }]);
@@ -311,22 +298,22 @@ angular.module('d2RollsApp')
                     return false;
                 });
                 element.on('mousedown touchstart', function(event) {
+                    var previousElement = element[0].getElementsByClassName('has-tooltip')[0];
                     isHolding = true;
                     target = event.target;
-                    timer = $interval(function() {
-                        var previousElement = element[0].getElementsByClassName('has-tooltip')[0];
-                        if (previousElement) {
-                            previousElement.classList.remove('has-tooltip');
-                        }
+                    if (previousElement && previousElement != target.parentElement) {
+                        previousElement.classList.remove('has-tooltip');
+                    }
+                    timer = $interval(function() {                   
                         if (isHolding && target === event.target) {
-                            addToolTip(target);
-                            
+                            addToolTip(target);       
                         }
                     }, 300, 1, true);
                 });
                 element.on('mouseup touchend', function(event) {
                     isHolding = false;
                     $interval.cancel(timer);
+                    return false;
                 });
 
                 function addToolTip(eventTarget) {
@@ -337,6 +324,19 @@ angular.module('d2RollsApp')
             }
         };
     }]);
+angular.module('d2RollsApp')
+    .directive('weaponListItem', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                listItem: '<',
+                language: '<',
+                offset: '@'
+            },
+            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
+        }
+    })
 angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'languageMapService', 'fetchManifestService',  function(
     $stateParams,
     languageMapService,
