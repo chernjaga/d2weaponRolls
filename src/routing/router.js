@@ -6,9 +6,10 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
 ) {
     var weaponListState = {
         name: 'weaponList',
-        url: '/weaponList/{language}',
+        url: '/weaponList/{language}?sortBy',
         params: {
-            language: 'en'
+            language: 'en',
+            sortBy: 'weaponClass'
         },
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',
         controller: 'weaponListCtrl',
@@ -26,8 +27,20 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
         controllerAs: 'weapon'
     };
 
+    var homeState = {
+        name: 'home',
+        url: '/home/{language}',
+        params: {
+            language: 'en'
+        },
+        controller: 'homeCtrl',
+        controllerAs: 'home',
+        templateUrl: '../html/routing/stateTemplates/home.tpl.html'
+    };
+
+    $stateProvider.state(homeState);
     $stateProvider.state(weaponListState);
     $stateProvider.state(weaponViewState);
-    $urlRouterProvider.otherwise('/weaponList/en');
+    $urlRouterProvider.otherwise('/home/en');
     $locationProvider.html5Mode(true);
 });

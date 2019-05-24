@@ -6,9 +6,10 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
 ) {
     var weaponListState = {
         name: 'weaponList',
-        url: '/weaponList/{language}',
+        url: '/weaponList/{language}?sortBy',
         params: {
-            language: 'en'
+            language: 'en',
+            sortBy: 'weaponClass'
         },
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',
         controller: 'weaponListCtrl',
@@ -26,9 +27,21 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
         controllerAs: 'weapon'
     };
 
+    var homeState = {
+        name: 'home',
+        url: '/home/{language}',
+        params: {
+            language: 'en'
+        },
+        controller: 'homeCtrl',
+        controllerAs: 'home',
+        templateUrl: '../html/routing/stateTemplates/home.tpl.html'
+    };
+
+    $stateProvider.state(homeState);
     $stateProvider.state(weaponListState);
     $stateProvider.state(weaponViewState);
-    $urlRouterProvider.otherwise('/weaponList/en');
+    $urlRouterProvider.otherwise('/home/en');
     $locationProvider.html5Mode(true);
 });
 angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', function($http, $q) {
@@ -192,6 +205,12 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                     expand: 'Показать все варианты',
                     collapse: 'Скрыть'
                 }
+            },
+            home: {
+                sortByWeaponClass: 'Сортировать по классу оружия',
+                sortByRarity: 'Сортировать по редкости',
+                sortBySource: 'Сортировать по источнику получения',
+                sortBySeasons: 'Сортировать по сезонам'
             }
         },
         en: {
@@ -209,6 +228,12 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                     expand: 'All perks',
                     collapse: 'Hide'
                 }
+            },
+            home: {
+                sortByWeaponClass: 'Sort by weapon class',
+                sortByRarity: 'Sort by rarity',
+                sortBySource: 'Sort by source',
+                sortBySeasons: 'Sort by seasons'
             }
         }
     };
@@ -243,7 +268,7 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
 }]);
 angular.module('d2RollsApp').controller('footerPanelCtrl', [function () {
     var vm = this;
-    vm.text = '< To weapon list';
+    vm.text = ' To weapon list';
     vm.lang = location.pathname.split('/')[2] || 'en';
 }]);
 angular.module('d2RollsApp')
@@ -333,6 +358,32 @@ angular.module('d2RollsApp')
             }
         };
     }]);
+angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', function(
+    $stateParams,
+    fetchManifestService,
+    languageMapService
+) {
+    var vm = this;
+    var lang = $stateParams.language;
+    var homeText = languageMapService.getDictionary(lang, 'home');
+    var footer = document.getElementsByClassName('footer-menu')[0];
+    var bodyHeight = footer.getBoundingClientRect().bottom;
+    var footerHeight = getComputedStyle(footer).height.replace('px', '');
+    var menuHeight = bodyHeight - footerHeight
+    var homeMenu = document.getElementsByClassName('home-sorting-menu')[0];
+    homeMenu.style.height = menuHeight - 32 + 'px';
+
+    vm.text = {
+        sortByWeaponClass: homeText.sortByWeaponClass,
+        sortByRarity: homeText.sortByRarity,
+        sortBySource: homeText.sortBySource,
+        sortBySeasons: homeText.sortBySeasons
+    };
+
+    fetchManifestService.getWeaponList(lang, function(){
+        
+    });
+}]);
 angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'languageMapService', 'fetchManifestService',  function(
     $stateParams,
     languageMapService,

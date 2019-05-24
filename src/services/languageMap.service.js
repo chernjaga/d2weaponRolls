@@ -15,6 +15,12 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                     expand: 'Показать все варианты',
                     collapse: 'Скрыть'
                 }
+            },
+            home: {
+                sortByWeaponClass: 'Сортировать по классу оружия',
+                sortByRarity: 'Сортировать по редкости',
+                sortBySource: 'Сортировать по источнику получения',
+                sortBySeasons: 'Сортировать по сезонам'
             }
         },
         en: {
@@ -32,6 +38,12 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                     expand: 'All perks',
                     collapse: 'Hide'
                 }
+            },
+            home: {
+                sortByWeaponClass: 'Sort by weapon class',
+                sortByRarity: 'Sort by rarity',
+                sortBySource: 'Sort by source',
+                sortBySeasons: 'Sort by seasons'
             }
         }
     };

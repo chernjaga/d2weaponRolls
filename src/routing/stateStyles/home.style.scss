@@ -1,0 +1,19 @@
+@import '../../common/commonStyles/vars.style.scss';
+
+.home-sorting-link {
+    background: $cl-exotic-yellow;
+    margin-bottom: $body-padding;
+    display: flex;
+    color: $cl-white-tint1;
+    justify-content: center;
+    align-items: center;
+    vertical-align: middle;
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+}
+
+.home-sorting-menu {
+    display: grid;
+}
