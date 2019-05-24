@@ -2,6 +2,10 @@
 
 $word-spacing-damage-type: $body-padding*0.25;
 
+.category-title {
+    color: $cl-gray-tint3;
+    margin-bottom: $body-padding;
+}
 .weapon-list-item {
     margin: 0 auto $body-padding;
     display: flex;

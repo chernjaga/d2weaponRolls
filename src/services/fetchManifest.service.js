@@ -126,7 +126,6 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                     }
                     objectToPush.randomizedPerks = randomizedPerks
                 }
-                console.log(objectToPush);
                 bucketToReturn.push(objectToPush);
             }
             

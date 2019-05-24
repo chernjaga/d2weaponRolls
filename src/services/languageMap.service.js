@@ -2,12 +2,14 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
     var dictionary = {
         ru: {
             search: 'Поиск',
-            weaponRarity: {
-                exotic: 'Экзотическое',
-                legendary: 'Легендарное',
-                rare: 'Редкое',
-                uncommon: 'Необычное',
-                common: 'Обычное'
+            sorting: {
+                weaponRarity: {
+                    exotic: 'Экзотический',
+                    legendary: 'Легендарный',
+                    rare: 'Редкий',
+                    uncommon: 'Необычный',
+                    common: 'Обычный'
+                }
             },
             interfaces: {
                 perksPanel: {
@@ -25,12 +27,20 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
         },
         en: {
             search: 'Search',
-            weaponRarity: {
-                exotic: 'Exotic',
-                legendary: 'Legendary',
-                rare: 'Rare',
-                uncommon: 'Uncommon',
-                common: 'Common'
+            sorting: {
+                weaponRarity: {
+                    exotic: 'Exotic',
+                    legendary: 'Legendary',
+                    rare: 'Rare',
+                    uncommon: 'Uncommon',
+                    common: 'Common'
+                },
+                weaponClasses: {
+                    traceRifles: 'Trace Rifles',
+                    pulseRifle: 'Pulse Rifle',
+                    scoutRifle: 'Scout Rifle',
+                    autoRifle: 'Auto Rifle'
+                } 
             },
             interfaces: {
                 perksPanel: {

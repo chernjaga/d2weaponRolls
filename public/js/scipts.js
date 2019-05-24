@@ -9,7 +9,7 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
         url: '/weaponList/{language}?sortBy',
         params: {
             language: 'en',
-            sortBy: 'weaponClass'
+            sortBy: 'rarity'
         },
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',
         controller: 'weaponListCtrl',
@@ -172,7 +172,6 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                     }
                     objectToPush.randomizedPerks = randomizedPerks
                 }
-                console.log(objectToPush);
                 bucketToReturn.push(objectToPush);
             }
             
@@ -192,12 +191,14 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
     var dictionary = {
         ru: {
             search: 'Поиск',
-            weaponRarity: {
-                exotic: 'Экзотическое',
-                legendary: 'Легендарное',
-                rare: 'Редкое',
-                uncommon: 'Необычное',
-                common: 'Обычное'
+            sorting: {
+                weaponRarity: {
+                    exotic: 'Экзотический',
+                    legendary: 'Легендарный',
+                    rare: 'Редкий',
+                    uncommon: 'Необычный',
+                    common: 'Обычный'
+                }
             },
             interfaces: {
                 perksPanel: {
@@ -215,12 +216,20 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
         },
         en: {
             search: 'Search',
-            weaponRarity: {
-                exotic: 'Exotic',
-                legendary: 'Legendary',
-                rare: 'Rare',
-                uncommon: 'Uncommon',
-                common: 'Common'
+            sorting: {
+                weaponRarity: {
+                    exotic: 'Exotic',
+                    legendary: 'Legendary',
+                    rare: 'Rare',
+                    uncommon: 'Uncommon',
+                    common: 'Common'
+                },
+                weaponClasses: {
+                    traceRifles: 'Trace Rifles',
+                    pulseRifle: 'Pulse Rifle',
+                    scoutRifle: 'Scout Rifle',
+                    autoRifle: 'Auto Rifle'
+                } 
             },
             interfaces: {
                 perksPanel: {
@@ -391,23 +400,29 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
 ){
     var vm = this;
     var lang = $stateParams.language;
-    var dictionary = languageMapService.getDictionary(lang);
-    var rarityMap = fetchManifestService.rarityMap
+    var search = languageMapService.getDictionary(lang).search;
+    var rarityMap = fetchManifestService.rarityMap;
+    var sortingType = $stateParams.sortBy;
 
     vm.getRarityClass = getRarityClass;
-    vm.searchPlaceHolder = dictionary.search;
+    vm.searchPlaceHolder = search;
     vm.lang = lang;
     vm.isLoaded = false;
 
-    fetchManifestService.getWeaponList(lang, function(arrayOfItems){
+    fetchManifestService.getWeaponList(lang, function(arrayOfItems) {
+        var sortObject = {}
         vm.list = [];
         for (var item in arrayOfItems) {
-            vm.list.push(arrayOfItems[item]);
+            var itemObject = arrayOfItems[item];
+            if (!sortObject[itemObject[sortingType].name]) {
+                sortObject[itemObject[sortingType].name] = true;
+            }
+            itemObject.sortingCategory = itemObject[sortingType].name;
+            vm.list.push(itemObject);
         };
-
+        vm.categoryHeaders = sortObject;
         vm.isLoaded = !!vm.list.length;
     });
-
     function getRarityClass(hash) {
 
         return rarityMap[hash];
