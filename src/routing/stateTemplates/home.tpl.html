@@ -1,16 +1,18 @@
 <div class="style-screen-adaptor body-padding">
     <div class="home-sorting-menu">
-        <a class="home-sorting-link" ui-sref="weaponList({language: footer.lang, sortBy: 'class'})" role="link" title="To weapon list sorted by class">
-            {{::home.text.sortByWeaponClass}}
+        <a ng-repeat="(category, description) in ::home.sort"
+           ui-sref="categories({language: footer.lang, sortBy: [category]})"
+           role="link"
+           class="home-sorting-link"
+           ng-class="::{disabled: description === 'Sort by seasons' }"
+           title="{{::description}}">
+                {{::description}}
         </a>
-        <a class="home-sorting-link" ui-sref="weaponList({language: footer.lang, sortBy: 'rarity'})" role="link" title="To weapon list sorted by rarity">
-            {{::home.text.sortByRarity}}
-        </a>
-        <a class="home-sorting-link" ui-sref="weaponList({language: footer.lang, sortBy: 'source'})" role="link" title="To weapon list sorted by source">
-            {{::home.text.sortBySource}}
-        </a>
-        <a class="home-sorting-link" ui-sref="weaponList({language: footer.lang, sortBy: 'season'})" role="link" title="To weapon list sorted by season">
-            {{::home.text.sortBySeasons}}
+        <a ui-sref="weaponList({language: footer.lang, isFullList: true})"
+           role="link"
+           class="home-sorting-link"
+           title="Show All list">
+                All
         </a>
     </div>
 </div>

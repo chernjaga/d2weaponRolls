@@ -20,7 +20,7 @@
                 <ul class="weapon-list-box" role="menu" ng-show="isExpanded">
                     <li 
                         ng-repeat="item in weapons.list | filter: weaponSearch"
-                        ng-if="::(item.sortingCategory === key)"
+                        ng-if="::(item.sortingCategory === key && item.sortingKey)"
                         role="menuitem">
                         <a ui-sref="weaponView({weaponHash: item.hash, language: weapons.lang})"
                             role="link" 

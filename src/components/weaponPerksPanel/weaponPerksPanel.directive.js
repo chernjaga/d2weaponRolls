@@ -8,7 +8,7 @@ angular.module('d2RollsApp')
                 text: '<'
             },
             templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html',
-            link: function(scope, element, attr) {
+            link: function(scope, element) {
                 var timer;
                 var isHolding = false;
                 var target;

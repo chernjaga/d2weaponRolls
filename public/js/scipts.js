@@ -6,10 +6,12 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
 ) {
     var weaponListState = {
         name: 'weaponList',
-        url: '/weaponList/{language}?sortBy',
+        url: '/weaponList/{language}?sortBy&categories',
         params: {
             language: 'en',
-            sortBy: 'rarity'
+            sortBy: [],
+            categories: [],
+            isFullList: false
         },
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',
         controller: 'weaponListCtrl',
@@ -35,10 +37,22 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
         },
         controller: 'homeCtrl',
         controllerAs: 'home',
-        templateUrl: '../html/routing/stateTemplates/home.tpl.html'
+        templateUrl: '../html/routing/stateTemplates/home.tpl.html',
     };
 
+    var categories = {
+        name: 'categories',
+        url: '/categories/{language}?sortBy',
+        params: {
+            language: 'en',
+            sortBy: 'rarity'
+        },
+        controller: 'categoriesCtrl as sorting',
+        templateUrl: '../html/routing/stateTemplates/categories.tpl.html'
+    }
+
     $stateProvider.state(homeState);
+    $stateProvider.state(categories);
     $stateProvider.state(weaponListState);
     $stateProvider.state(weaponViewState);
     $urlRouterProvider.otherwise('/home/en');
@@ -330,7 +344,7 @@ angular.module('d2RollsApp')
                 text: '<'
             },
             templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html',
-            link: function(scope, element, attr) {
+            link: function(scope, element) {
                 var timer;
                 var isHolding = false;
                 var target;
@@ -367,6 +381,36 @@ angular.module('d2RollsApp')
             }
         };
     }]);
+angular
+.module('d2RollsApp')
+.controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', function(
+    $stateParams,
+    fetchManifestService,
+    languageMapService
+) {
+    var vm = this;
+    var sortingType = $stateParams.sortBy;
+    var lang = $stateParams.language;
+
+    vm.isLoaded = false;
+    vm.categories = [];
+    vm.lang = lang;
+    vm.sortingType = sortingType;
+
+    fetchManifestService.getWeaponList(lang, function(arrayOfItems) {
+        var sortObject = {};
+        var categoriesArray = [];
+        for (var item in arrayOfItems) {
+            var itemObject = arrayOfItems[item];
+            if (!sortObject[itemObject[sortingType].name]) {
+                sortObject[itemObject[sortingType].name] = true;
+                categoriesArray.push(itemObject[sortingType].name);
+            }
+        };
+        vm.categories = categoriesArray;
+        vm.isLoaded = !!vm.categories.length;
+    });
+}]);
 angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', function(
     $stateParams,
     fetchManifestService,
@@ -381,17 +425,14 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
     var menuHeight = bodyHeight - footerHeight
     var homeMenu = document.getElementsByClassName('home-sorting-menu')[0];
     homeMenu.style.height = menuHeight - 32 + 'px';
+    vm.sort = {
+        rarity: homeText.sortByRarity,
+        class: homeText.sortByWeaponClass,
+        source: homeText.sortBySource,
+        season: homeText.sortBySeasons
+    } 
 
-    vm.text = {
-        sortByWeaponClass: homeText.sortByWeaponClass,
-        sortByRarity: homeText.sortByRarity,
-        sortBySource: homeText.sortBySource,
-        sortBySeasons: homeText.sortBySeasons
-    };
-
-    fetchManifestService.getWeaponList(lang, function(){
-        
-    });
+    fetchManifestService.getWeaponList(lang, function(){});
 }]);
 angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'languageMapService', 'fetchManifestService',  function(
     $stateParams,
@@ -403,7 +444,9 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     var search = languageMapService.getDictionary(lang).search;
     var rarityMap = fetchManifestService.rarityMap;
     var sortingType = $stateParams.sortBy;
-
+    var sortingCategory = $stateParams.categories;
+    var isFullList = $stateParams.isFullList;
+    
     vm.getRarityClass = getRarityClass;
     vm.searchPlaceHolder = search;
     vm.lang = lang;
@@ -412,17 +455,37 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     fetchManifestService.getWeaponList(lang, function(arrayOfItems) {
         var sortObject = {}
         vm.list = [];
+
         for (var item in arrayOfItems) {
             var itemObject = arrayOfItems[item];
-            if (!sortObject[itemObject[sortingType].name]) {
-                sortObject[itemObject[sortingType].name] = true;
+            if (!isFullList) {
+                if (!sortObject[itemObject[sortingType].name] && itemObject[sortingType].name === sortingCategory) {
+                    sortObject[itemObject[sortingType].name] = true;
+                }
+            } else {
+                sortObject.all = true;
             }
-            itemObject.sortingCategory = itemObject[sortingType].name;
+            itemObject.sortingCategory = itemObject[sortingType] ? itemObject[sortingType].name : 'all';
+            itemObject.sortingKey = getSortingKey(itemObject, sortingType, sortingCategory);
             vm.list.push(itemObject);
         };
+
         vm.categoryHeaders = sortObject;
         vm.isLoaded = !!vm.list.length;
     });
+
+    function getSortingKey(dataObject, sortingType, category) {
+        if (!$stateParams.isFullList) {
+            if (dataObject[sortingType].name === category) {
+                return true;
+            }
+        } else {
+            return true;
+        }
+
+        return false;
+    }
+
     function getRarityClass(hash) {
 
         return rarityMap[hash];

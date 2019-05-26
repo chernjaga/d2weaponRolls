@@ -12,15 +12,12 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
     var menuHeight = bodyHeight - footerHeight
     var homeMenu = document.getElementsByClassName('home-sorting-menu')[0];
     homeMenu.style.height = menuHeight - 32 + 'px';
+    vm.sort = {
+        rarity: homeText.sortByRarity,
+        class: homeText.sortByWeaponClass,
+        source: homeText.sortBySource,
+        season: homeText.sortBySeasons
+    } 
 
-    vm.text = {
-        sortByWeaponClass: homeText.sortByWeaponClass,
-        sortByRarity: homeText.sortByRarity,
-        sortBySource: homeText.sortBySource,
-        sortBySeasons: homeText.sortBySeasons
-    };
-
-    fetchManifestService.getWeaponList(lang, function(){
-        
-    });
+    fetchManifestService.getWeaponList(lang, function(){});
 }]);

@@ -31,6 +31,11 @@ ul {
     margin: 0 auto;
 }
 
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 // class mixin
 @mixin list-item-style-component ($rarityColor) {
     background-color: $rarityColor;
