@@ -507,12 +507,12 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
         }
 
         return isApplied;
-    }
+    };
 
     function getRarityClass(hash) {
 
         return rarityMap[hash];
-    }
+    };
 }]);
 angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', function(
     $stateParams,
