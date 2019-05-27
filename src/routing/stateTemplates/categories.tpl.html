@@ -1,7 +1,7 @@
 <div class="style-screen-adaptor body-padding">
     <div class="home-sorting-menu">
         <a ng-repeat="category in ::sorting.categories | orderBy: category"
-            ui-sref="weaponList({language: footer.lang, sortBy: [sorting.sortingType], categories: [category]})"
+            ui-sref="weaponList({language: footer.lang, isFullList: false ,filters: sorting.sortingType+':'+category})"
             role="link"
             class="home-sorting-link"
             title="{{::category}}">

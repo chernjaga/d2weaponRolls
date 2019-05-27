@@ -6,12 +6,11 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
 ) {
     var weaponListState = {
         name: 'weaponList',
-        url: '/weaponList/{language}?sortBy&categories',
+        url: '/weaponList/{language}?sortBy&categories&filters',
         params: {
             language: 'en',
-            sortBy: [],
-            categories: [],
-            isFullList: false
+            filters: [],
+            isFullList: true
         },
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',
         controller: 'weaponListCtrl',
@@ -42,10 +41,10 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
 
     var categories = {
         name: 'categories',
-        url: '/categories/{language}?sortBy',
+        url: '/categories/language?sortBy',
         params: {
             language: 'en',
-            sortBy: 'rarity'
+            sortBy: 'class'
         },
         controller: 'categoriesCtrl as sorting',
         templateUrl: '../html/routing/stateTemplates/categories.tpl.html'

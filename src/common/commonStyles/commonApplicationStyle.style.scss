@@ -35,6 +35,9 @@ ul {
     opacity: 0.5;
     pointer-events: none;
 }
+.pointer {
+    cursor: pointer;
+}
 
 // class mixin
 @mixin list-item-style-component ($rarityColor) {

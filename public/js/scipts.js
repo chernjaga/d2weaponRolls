@@ -6,12 +6,11 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
 ) {
     var weaponListState = {
         name: 'weaponList',
-        url: '/weaponList/{language}?sortBy&categories',
+        url: '/weaponList/{language}?sortBy&categories&filters',
         params: {
             language: 'en',
-            sortBy: [],
-            categories: [],
-            isFullList: false
+            filters: [],
+            isFullList: true
         },
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',
         controller: 'weaponListCtrl',
@@ -42,10 +41,10 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
 
     var categories = {
         name: 'categories',
-        url: '/categories/{language}?sortBy',
+        url: '/categories/language?sortBy',
         params: {
             language: 'en',
-            sortBy: 'rarity'
+            sortBy: 'class'
         },
         controller: 'categoriesCtrl as sorting',
         templateUrl: '../html/routing/stateTemplates/categories.tpl.html'
@@ -225,7 +224,8 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 sortByWeaponClass: 'Сортировать по классу оружия',
                 sortByRarity: 'Сортировать по редкости',
                 sortBySource: 'Сортировать по источнику получения',
-                sortBySeasons: 'Сортировать по сезонам'
+                sortBySeasons: 'Сортировать по сезонам',
+                all: 'Весь список'
             }
         },
         en: {
@@ -256,7 +256,8 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 sortByWeaponClass: 'Sort by weapon class',
                 sortByRarity: 'Sort by rarity',
                 sortBySource: 'Sort by source',
-                sortBySeasons: 'Sort by seasons'
+                sortBySeasons: 'Sort by seasons',
+                all: 'All'
             }
         }
     };
@@ -287,6 +288,26 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
 
     return {
         getDictionary: getDictionary
+    };
+}]);
+angular.module('d2RollsApp').factory('varsStore', [ function() {
+    var contentHeight;
+
+    function setContentHeight() {
+        if (contentHeight) {
+            return contentHeight
+        }
+      
+        var footer = document.getElementsByClassName('footer-menu')[0];
+        var bodyHeight = footer.getBoundingClientRect().bottom;
+        var footerHeight = getComputedStyle(footer).height.replace('px', '');
+        var menuHeight = bodyHeight - footerHeight
+        var view = document.getElementsByClassName('view')[0];
+        view.style.height = menuHeight - 32 + 'px';
+    }
+
+    return {
+        setContentHeight: setContentHeight
     };
 }]);
 angular.module('d2RollsApp').controller('footerPanelCtrl', [function () {
@@ -383,14 +404,16 @@ angular.module('d2RollsApp')
     }]);
 angular
 .module('d2RollsApp')
-.controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', function(
+.controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'varsStore', function(
     $stateParams,
     fetchManifestService,
-    languageMapService
+    varsStore
 ) {
     var vm = this;
     var sortingType = $stateParams.sortBy;
     var lang = $stateParams.language;
+
+    varsStore.setContentHeight();
 
     vm.isLoaded = false;
     vm.categories = [];
@@ -411,20 +434,18 @@ angular
         vm.isLoaded = !!vm.categories.length;
     });
 }]);
-angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', function(
+angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'varsStore', function(
     $stateParams,
     fetchManifestService,
-    languageMapService
+    languageMapService,
+    varsStore
 ) {
     var vm = this;
     var lang = $stateParams.language;
     var homeText = languageMapService.getDictionary(lang, 'home');
-    var footer = document.getElementsByClassName('footer-menu')[0];
-    var bodyHeight = footer.getBoundingClientRect().bottom;
-    var footerHeight = getComputedStyle(footer).height.replace('px', '');
-    var menuHeight = bodyHeight - footerHeight
-    var homeMenu = document.getElementsByClassName('home-sorting-menu')[0];
-    homeMenu.style.height = menuHeight - 32 + 'px';
+
+    varsStore.setContentHeight();
+    vm.textSortAll = homeText.all;
     vm.sort = {
         rarity: homeText.sortByRarity,
         class: homeText.sortByWeaponClass,
@@ -443,9 +464,8 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     var lang = $stateParams.language;
     var search = languageMapService.getDictionary(lang).search;
     var rarityMap = fetchManifestService.rarityMap;
-    var sortingType = $stateParams.sortBy;
-    var sortingCategory = $stateParams.categories;
     var isFullList = $stateParams.isFullList;
+    var filters = $stateParams.filters;
     
     vm.getRarityClass = getRarityClass;
     vm.searchPlaceHolder = search;
@@ -458,21 +478,36 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
 
         for (var item in arrayOfItems) {
             var itemObject = arrayOfItems[item];
-            if (!isFullList) {
-                if (!sortObject[itemObject[sortingType].name] && itemObject[sortingType].name === sortingCategory) {
-                    sortObject[itemObject[sortingType].name] = true;
+            if (isShownByFilter(itemObject, filters) || isFullList) {
+                vm.list.push(itemObject);
+                if (!itemObject[itemObject.class.name]) {
+                    sortObject[itemObject.class.name] = true;
                 }
-            } else {
-                sortObject.all = true;
             }
-            itemObject.sortingCategory = itemObject[sortingType] ? itemObject[sortingType].name : 'all';
-            itemObject.sortingKey = getSortingKey(itemObject, sortingType, sortingCategory);
-            vm.list.push(itemObject);
-        };
-
+        }
         vm.categoryHeaders = sortObject;
         vm.isLoaded = !!vm.list.length;
     });
+
+    function isShownByFilter(item, filters) {
+        var filtersArray = [];
+        var isApplied = false;
+        if (typeof filters === 'string') {
+            filtersArray.push(filters)
+        } else {
+            filtersArray = filters;
+        }
+        for (var filter in filtersArray) {
+            var categoryName = filtersArray[filter].split(':')[0];
+            var categoryValue = filtersArray[filter].split(':')[1];
+            if (item[categoryName].name === categoryValue) {
+                isApplied = true;
+                break;
+            }
+        }
+
+        return isApplied;
+    }
 
     function getSortingKey(dataObject, sortingType, category) {
         if (!$stateParams.isFullList) {

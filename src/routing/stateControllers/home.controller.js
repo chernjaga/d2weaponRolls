@@ -1,17 +1,15 @@
-angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', function(
+angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'varsStore', function(
     $stateParams,
     fetchManifestService,
-    languageMapService
+    languageMapService,
+    varsStore
 ) {
     var vm = this;
     var lang = $stateParams.language;
     var homeText = languageMapService.getDictionary(lang, 'home');
-    var footer = document.getElementsByClassName('footer-menu')[0];
-    var bodyHeight = footer.getBoundingClientRect().bottom;
-    var footerHeight = getComputedStyle(footer).height.replace('px', '');
-    var menuHeight = bodyHeight - footerHeight
-    var homeMenu = document.getElementsByClassName('home-sorting-menu')[0];
-    homeMenu.style.height = menuHeight - 32 + 'px';
+
+    varsStore.setContentHeight();
+    vm.textSortAll = homeText.all;
     vm.sort = {
         rarity: homeText.sortByRarity,
         class: homeText.sortByWeaponClass,

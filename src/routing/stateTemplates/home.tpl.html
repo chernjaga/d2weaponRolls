@@ -4,7 +4,7 @@
            ui-sref="categories({language: footer.lang, sortBy: [category]})"
            role="link"
            class="home-sorting-link"
-           ng-class="::{disabled: description === 'Sort by seasons' }"
+           ng-class="::{disabled: description === 'Sort by seasons'|| description === 'Сортировать по сезонам' }"
            title="{{::description}}">
                 {{::description}}
         </a>
@@ -12,7 +12,7 @@
            role="link"
            class="home-sorting-link"
            title="Show All list">
-                All
+                {{::home.textSortAll}}
         </a>
     </div>
 </div>

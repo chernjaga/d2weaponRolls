@@ -22,7 +22,8 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 sortByWeaponClass: 'Сортировать по классу оружия',
                 sortByRarity: 'Сортировать по редкости',
                 sortBySource: 'Сортировать по источнику получения',
-                sortBySeasons: 'Сортировать по сезонам'
+                sortBySeasons: 'Сортировать по сезонам',
+                all: 'Весь список'
             }
         },
         en: {
@@ -53,7 +54,8 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 sortByWeaponClass: 'Sort by weapon class',
                 sortByRarity: 'Sort by rarity',
                 sortBySource: 'Sort by source',
-                sortBySeasons: 'Sort by seasons'
+                sortBySeasons: 'Sort by seasons',
+                all: 'All'
             }
         }
     };

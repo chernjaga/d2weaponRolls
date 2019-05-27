@@ -7,9 +7,8 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     var lang = $stateParams.language;
     var search = languageMapService.getDictionary(lang).search;
     var rarityMap = fetchManifestService.rarityMap;
-    var sortingType = $stateParams.sortBy;
-    var sortingCategory = $stateParams.categories;
     var isFullList = $stateParams.isFullList;
+    var filters = $stateParams.filters;
     
     vm.getRarityClass = getRarityClass;
     vm.searchPlaceHolder = search;
@@ -22,21 +21,36 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
 
         for (var item in arrayOfItems) {
             var itemObject = arrayOfItems[item];
-            if (!isFullList) {
-                if (!sortObject[itemObject[sortingType].name] && itemObject[sortingType].name === sortingCategory) {
-                    sortObject[itemObject[sortingType].name] = true;
+            if (isShownByFilter(itemObject, filters) || isFullList) {
+                vm.list.push(itemObject);
+                if (!itemObject[itemObject.class.name]) {
+                    sortObject[itemObject.class.name] = true;
                 }
-            } else {
-                sortObject.all = true;
             }
-            itemObject.sortingCategory = itemObject[sortingType] ? itemObject[sortingType].name : 'all';
-            itemObject.sortingKey = getSortingKey(itemObject, sortingType, sortingCategory);
-            vm.list.push(itemObject);
-        };
-
+        }
         vm.categoryHeaders = sortObject;
         vm.isLoaded = !!vm.list.length;
     });
+
+    function isShownByFilter(item, filters) {
+        var filtersArray = [];
+        var isApplied = false;
+        if (typeof filters === 'string') {
+            filtersArray.push(filters)
+        } else {
+            filtersArray = filters;
+        }
+        for (var filter in filtersArray) {
+            var categoryName = filtersArray[filter].split(':')[0];
+            var categoryValue = filtersArray[filter].split(':')[1];
+            if (item[categoryName].name === categoryValue) {
+                isApplied = true;
+                break;
+            }
+        }
+
+        return isApplied;
+    }
 
     function getSortingKey(dataObject, sortingType, category) {
         if (!$stateParams.isFullList) {

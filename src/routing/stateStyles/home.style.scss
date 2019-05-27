@@ -16,6 +16,10 @@
 
 }
 
+.view > div {
+    height: inherit;
+}
 .home-sorting-menu {
     display: grid;
+    height: inherit;
 }

@@ -14,13 +14,13 @@
     <div class="body-padding weapon-list-margin " id="#a11yMainContent">
         <ul>
             <li ng-repeat="(key, value) in ::weapons.categoryHeaders" ng-init="isExpanded = true">
-                <div class="category-title" ng-click="isExpanded = !isExpanded">
+                <div class="category-title pointer" ng-click="isExpanded = !isExpanded">
                     {{::key}} <span ng-show="!isExpanded">&#9651;</span><span ng-show="isExpanded">&#9661;</span>
                 </div>
                 <ul class="weapon-list-box" role="menu" ng-show="isExpanded">
                     <li 
                         ng-repeat="item in weapons.list | filter: weaponSearch"
-                        ng-if="::(item.sortingCategory === key && item.sortingKey)"
+                        ng-if="::(item.class.name === key)"
                         role="menuitem">
                         <a ui-sref="weaponView({weaponHash: item.hash, language: weapons.lang})"
                             role="link" 
