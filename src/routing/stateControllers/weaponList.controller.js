@@ -52,18 +52,6 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
         return isApplied;
     }
 
-    function getSortingKey(dataObject, sortingType, category) {
-        if (!$stateParams.isFullList) {
-            if (dataObject[sortingType].name === category) {
-                return true;
-            }
-        } else {
-            return true;
-        }
-
-        return false;
-    }
-
     function getRarityClass(hash) {
 
         return rarityMap[hash];
