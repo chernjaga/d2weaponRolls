@@ -14,7 +14,7 @@
     <div class="body-padding weapon-list-margin " id="#a11yMainContent">
         <ul>
             <li ng-repeat="(key, value) in ::weapons.categoryHeaders" ng-init="isExpanded = true">
-                <div class="category-title pointer" ng-click="isExpanded = !isExpanded" ng-if="!weaponSearch">
+                <div class="category-title pointer" ng-click="isExpanded = !isExpanded">
                     {{::key}} <span ng-show="!isExpanded">&#9651;</span><span ng-show="isExpanded">&#9661;</span>
                 </div>
                 <ul class="weapon-list-box" role="menu" ng-show="isExpanded">
