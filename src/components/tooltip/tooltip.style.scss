@@ -2,8 +2,6 @@
 
 .tooltip {
     display: none;
-    left: $body-padding;
-    right: $body-padding;
     position: absolute;
     background: $cl-tooltip-bg;
     color: $cl-gray-tint3;
@@ -47,4 +45,12 @@
     transform: rotate(45deg);
     display: inline-block;
     font-size: $fs-weapon-list-item*1.25;
+}
+
+@media (max-width: $wd-body-max) {
+    .tooltip {
+        display: none;
+        left: $body-padding;
+        right: $body-padding;
+    }
 }

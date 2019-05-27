@@ -10,7 +10,7 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
         params: {
             language: 'en',
             filters: [],
-            isFullList: true
+            isFullList: false
         },
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',
         controller: 'weaponListCtrl',
