@@ -41,7 +41,7 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
 
     var categories = {
         name: 'categories',
-        url: '/categories/language?sortBy',
+        url: '/categories/{language}?sortBy',
         params: {
             language: 'en',
             sortBy: 'class'
