@@ -1,18 +1,21 @@
 <div class="perks-panel body-padding" ng-class="{active: isExpanded}">
     <div>{{::weapon.perksPanelTextContent.perksPanelHeader}}</div>
     <ul class="all-perks-bucket">
-        <li ng-repeat="perk in perks.pool">
+        <li ng-repeat="perk in perks.pool" 
+            perks-binder 
+            binded-perk="perk">
             <ul class="all-perks-categories">
                 <li>
-                    <img ng-src="https://www.bungie.net{{::perk.vendorPerk.icon}}" alt="destiny2 weapon perk icon" class="perk-icon"/>
+                    <img ng-src="https://www.bungie.net{{binder.bindedPerk.vendorPerk.icon}}" alt="destiny2 weapon perk icon" class="perk-icon"/>
                     <div class="perk-icon-arrow"></div>
-                    <perk-tooltip title="::perk.vendorPerk.name" 
-                                  description="::perk.vendorPerk.description"></perk-tooltip>
+                    <perk-tooltip title="binder.bindedPerk.vendorPerk.name" 
+                                  description="binder.bindedPerk.vendorPerk.description"></perk-tooltip>
                 </li>
                 <li ng-show="isExpanded" class="randomized-perks-container">
                     <ul>
                         <li ng-repeat="randomPerk in perk.randomizedPerks track by $index" 
                             class="randomized-perks"
+                            ng-click="binder.bindPerk(this)"
 >
                                 <img ng-if="::randomPerk.icon"
                                      ng-src="https://www.bungie.net{{::randomPerk.icon}}" 

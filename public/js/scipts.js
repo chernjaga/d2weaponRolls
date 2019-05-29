@@ -331,6 +331,27 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
     });
+function perksBinderCtrl(){
+    var vm = this;
+    vm.bindPerk = function(target) {
+
+        vm.bindedPerk.vendorPerk = target.randomPerk;
+        
+    };
+};
+
+angular.module('d2RollsApp')
+    .directive('perksBinder', function () {
+        return {
+            restrict: 'A',
+            replace: false,
+            bindToController: {
+                bindedPerk: '<'
+            },
+            controller: perksBinderCtrl,
+            controllerAs: 'binder'  
+        }
+    });
 angular.module('d2RollsApp').controller('statsViewCtrl', [function () {
     var vm = this;
     console.log(vm.inputStats);
