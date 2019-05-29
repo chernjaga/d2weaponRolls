@@ -15,6 +15,7 @@
 }
 .randomized-perks-container {
     opacity: 1;
+    margin-top: $body-padding*1.5;
     transition: opacity 0.15s ease-out 0.1s;
 }
 .all-perks-bucket {
@@ -30,6 +31,12 @@
     li:last-child {
         margin-right: 0;
     }
+}
+li.active-perk {
+    border: 1px solid $cl-white-tint0;
+    border-radius: $body-padding;
+    padding: $body-padding*0.25;
+    box-sizing: border-box;
 }
 
 .all-perks-categories {

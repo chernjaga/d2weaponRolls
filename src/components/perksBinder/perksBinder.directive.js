@@ -11,9 +11,10 @@ angular.module('d2RollsApp')
             restrict: 'A',
             replace: false,
             bindToController: {
-                bindedPerk: '<'
+                bindedPerk: '<',
+                activeHash: '<'
             },
             controller: perksBinderCtrl,
-            controllerAs: 'binder'  
+            controllerAs: 'binder'
         }
     });

@@ -37,11 +37,16 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
         vm.rarityClass = rarityMap[rarityHash];
         vm.data = incomingData;
         vm.calculatedStats = vm.data.secondaryData.stats;
-        console.log(vm.calculatedStats);
         getPerksBucket(vm.data.secondaryData.perks);
     });
 
     function getPerksBucket(data) {
+        var roll = $stateParams.roll;
+        if (!!roll.length) {
+            for (var index = 0; index < roll.length; index++) {
+                data[index].vendorPerk = roll[index];
+            }
+        }
         fetchManifestService.getPerksForSingleWeapon(data, function(perksBucket) {
             vm.perksBucket = perksBucket;
         });

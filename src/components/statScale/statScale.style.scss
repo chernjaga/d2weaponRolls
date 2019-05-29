@@ -1,11 +1,16 @@
 @import '../../common/commonStyles/vars.style.scss';
 .scale-line {
-    width: 80%;
+    width: 70%;
     background: $cl-gray-tint1;
     height: $fs-stats-view*0.5;
     display: inline-block;
+    overflow: hidden;
 }
 .scale-progress {
     background: $cl-gray-tint2;
     height: $fs-stats-view*0.5;
+}
+.stat-number {
+    margin-left: $body-padding;
+    font-size: $fs-stats-view*0.6;
 }

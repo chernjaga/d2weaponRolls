@@ -3,7 +3,8 @@
     <ul class="all-perks-bucket">
         <li ng-repeat="perk in perks.pool" 
             perks-binder 
-            binded-perk="perk">
+            binded-perk="perk"
+            active-hash="perk.vendorPerk.hash">
             <ul class="all-perks-categories">
                 <li>
                     <img ng-src="https://www.bungie.net{{binder.bindedPerk.vendorPerk.icon}}" alt="destiny2 weapon perk icon" class="perk-icon"/>
@@ -15,12 +16,12 @@
                     <ul>
                         <li ng-repeat="randomPerk in perk.randomizedPerks track by $index" 
                             class="randomized-perks"
-                            ng-click="binder.bindPerk(this)"
->
-                                <img ng-if="::randomPerk.icon"
-                                     ng-src="https://www.bungie.net{{::randomPerk.icon}}" 
-                                     class="perk-icon"
-                                     alt="destiny2 weapon perk icon"/>
+                            ng-class="{'active-perk': randomPerk.hash === binder.activeHash}"
+                            ng-click="binder.bindPerk(this); perks.collectRoll()">
+                                    <img ng-if="::randomPerk.icon"
+                                         ng-src="https://www.bungie.net{{::randomPerk.icon}}" 
+                                         class="perk-icon"
+                                         alt="destiny2 weapon perk icon"/>
                                 <div class="perk-icon-arrow"></div>
                                 <perk-tooltip title="::randomPerk.name" 
                                               description="::randomPerk.description"></perk-tooltip>

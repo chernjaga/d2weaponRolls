@@ -9,6 +9,7 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     var rarityMap = fetchManifestService.rarityMap;
     var isFullList = $stateParams.isFullList;
     var filters = $stateParams.filters;
+    var sortType = $stateParams.sortBy === 'class' ? 'rarity' : 'class';
     
     vm.getRarityClass = getRarityClass;
     vm.searchPlaceHolder = search;
@@ -22,9 +23,10 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
         for (var item in arrayOfItems) {
             var itemObject = arrayOfItems[item];
             if (isShownByFilter(itemObject, filters) || isFullList) {
+                itemObject.sortType = itemObject[sortType].name;
                 vm.list.push(itemObject);
-                if (!itemObject[itemObject.class.name]) {
-                    sortObject[itemObject.class.name] = true;
+                if (!itemObject[itemObject[sortType].name]) {
+                    sortObject[itemObject[sortType].name] = true;
                 }
             }
         }

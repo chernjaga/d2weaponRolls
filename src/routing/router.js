@@ -19,10 +19,12 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
 
     var weaponViewState = {
         name: 'weaponView',
-        url: '/weaponView/{language}/{weaponHash}',
+        url: '/weaponView/{language}/{weaponHash}?roll',
         params: {
-            language: 'en'
+            language: 'en',
+            roll: []
         },
+        reloadOnSearch : false,
         templateUrl: '../html/routing/stateTemplates/weaponView.tpl.html',
         controller: 'weaponViewCtrl',
         controllerAs: 'weapon'
