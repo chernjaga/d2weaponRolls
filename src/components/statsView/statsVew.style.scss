@@ -1,6 +1,27 @@
+@import '../../common/commonStyles/vars.style.scss';
+
 .stats-view {
     display: block;
     position: relative;
-    margin: 0 auto;
-    width: max-content;
+    width: 100%;
+    color: $cl-gray-tint2;
+}
+.stats-view-header {
+    color: $cl-gray-tint2;
+    font-size: $fs-stats-view;
+}
+.stat-item {
+    display: block;
+    width: 100%;
+    font-size: $fs-stats-view*0.9;
+    .stat-name {
+        display: inline-block;
+        width: 48%;
+        text-align: right;
+    }
+    .stat-value {
+        display: inline-block;
+        width: 48%;
+        margin-left: 4%;
+    }
 }

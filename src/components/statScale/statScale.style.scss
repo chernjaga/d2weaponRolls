@@ -1,0 +1,11 @@
+@import '../../common/commonStyles/vars.style.scss';
+.scale-line {
+    width: 80%;
+    background: $cl-gray-tint1;
+    height: $fs-stats-view*0.5;
+    display: inline-block;
+}
+.scale-progress {
+    background: $cl-gray-tint2;
+    height: $fs-stats-view*0.5;
+}

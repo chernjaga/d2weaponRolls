@@ -334,9 +334,7 @@ angular.module('d2RollsApp')
 function perksBinderCtrl(){
     var vm = this;
     vm.bindPerk = function(target) {
-
         vm.bindedPerk.vendorPerk = target.randomPerk;
-        
     };
 };
 
@@ -352,9 +350,16 @@ angular.module('d2RollsApp')
             controllerAs: 'binder'  
         }
     });
+angular.module('d2RollsApp')
+    .directive('statScale', function() {
+        return {
+            restrict: 'E',
+            replace: false,
+            templateUrl: '../html/components/statScale/statScale.tpl.html'
+        }
+    });
 angular.module('d2RollsApp').controller('statsViewCtrl', [function () {
     var vm = this;
-    console.log(vm.inputStats);
 }]);
 angular.module('d2RollsApp')
     .directive('statsView', function () {
@@ -583,10 +588,6 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
         statsPanelHeader: statsPanel.header
     };
 
-    vm.calculatedStats = {
-        test: 'ipsum lorem'
-    };
-
     fetchManifestService.getSingleWeaponData(lang, weaponHash, function(incomingData){
         var rarityHash = incomingData.rarity.hash;
         vm.rarityClass = rarityMap[rarityHash];
@@ -596,20 +597,21 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
 
     }, function(incomingData) {
         vm.data.secondaryData = incomingData;
+        vm.calculatedStats = vm.data.secondaryData.stats;
         getPerksBucket(vm.data.secondaryData.perks);
 
     }, function(incomingData) {
         var rarityHash = incomingData.primaryData.rarity.hash
         vm.rarityClass = rarityMap[rarityHash];
         vm.data = incomingData;
-        console.log(vm.data);
+        vm.calculatedStats = vm.data.secondaryData.stats;
+        console.log(vm.calculatedStats);
         getPerksBucket(vm.data.secondaryData.perks);
     });
 
     function getPerksBucket(data) {
         fetchManifestService.getPerksForSingleWeapon(data, function(perksBucket) {
             vm.perksBucket = perksBucket;
-            console.log(perksBucket);
         });
     };
 
