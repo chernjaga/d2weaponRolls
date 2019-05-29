@@ -1,15 +1,15 @@
 angular
 .module('d2RollsApp')
-.controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'varsStore', function(
+.controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'utils', function(
     $stateParams,
     fetchManifestService,
-    varsStore
+    utils
 ) {
     var vm = this;
     var sortingType = $stateParams.sortBy;
     var lang = $stateParams.language;
 
-    varsStore.setContentHeight();
+    utils.setContentHeight();
 
     vm.isLoaded = false;
     vm.categories = [];

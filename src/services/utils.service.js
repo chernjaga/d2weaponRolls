@@ -1,4 +1,4 @@
-angular.module('d2RollsApp').factory('varsStore', [ function() {
+angular.module('d2RollsApp').factory('utils', [ function() {
     var contentHeight;
 
     function setContentHeight() {

@@ -14,10 +14,11 @@
             class="weapon-list-item weapon-view bg list-item-content">
         </weapon-list-item > 
         <weapon-perks-panel
-            pool="::weapon.perksBucket"
-            text="::weapon.perksPanelTextContent">
+            pool="::weapon.perksBucket">
         </weapon-perks-panel>
     </div>
-    <h1>stats///</h1>
+    <stats-view
+        input-stats="weapon.calculatedStats" 
+    ></stats-view>
 </div>
 

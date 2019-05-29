@@ -1,7 +1,7 @@
 <div class="perks-panel body-padding" ng-class="{active: isExpanded}">
-    <div>{{::text.perksPanelHeader}}</div>
+    <div>{{::weapon.perksPanelTextContent.perksPanelHeader}}</div>
     <ul class="all-perks-bucket">
-        <li ng-repeat="perk in pool">
+        <li ng-repeat="perk in perks.pool">
             <ul class="all-perks-categories">
                 <li>
                     <img ng-src="https://www.bungie.net{{::perk.vendorPerk.icon}}" alt="destiny2 weapon perk icon" class="perk-icon"/>
@@ -29,6 +29,6 @@
         </li>
     </ul>
     <div class="show-all-perks-button" role="button" ng-click="isExpanded = !isExpanded">
-        <span ng-show="!isExpanded">{{::text.perksPanelExpand}}</span><span ng-show="isExpanded">{{::text.perksPanelCollapse}}</span> <span ng-show="isExpanded">&#9651;</span><span ng-show="!isExpanded">&#9661;</span>
+        <span ng-show="!isExpanded">{{::weapon.perksPanelTextContent.perksPanelExpand}}</span><span ng-show="isExpanded">{{::weapon.perksPanelTextContent.perksPanelCollapse}}</span> <span ng-show="isExpanded">&#9651;</span><span ng-show="!isExpanded">&#9661;</span>
     </div>
 </div>

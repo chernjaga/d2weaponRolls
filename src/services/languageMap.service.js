@@ -16,6 +16,9 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                     header: 'Перки оружия',
                     expand: 'Показать все варианты',
                     collapse: 'Скрыть'
+                },
+                statsPanel: {
+                    header: 'Характеристики оружия'
                 }
             },
             home: {
@@ -48,6 +51,9 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                     header: 'Weapon perks',
                     expand: 'All perks',
                     collapse: 'Hide'
+                },
+                statsPanel: {
+                    header: 'Weapon stats'
                 }
             },
             home: {

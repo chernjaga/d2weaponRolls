@@ -218,6 +218,9 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                     header: 'Перки оружия',
                     expand: 'Показать все варианты',
                     collapse: 'Скрыть'
+                },
+                statsPanel: {
+                    header: 'Характеристики оружия'
                 }
             },
             home: {
@@ -250,6 +253,9 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                     header: 'Weapon perks',
                     expand: 'All perks',
                     collapse: 'Hide'
+                },
+                statsPanel: {
+                    header: 'Weapon stats'
                 }
             },
             home: {
@@ -290,7 +296,7 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
         getDictionary: getDictionary
     };
 }]);
-angular.module('d2RollsApp').factory('varsStore', [ function() {
+angular.module('d2RollsApp').factory('utils', [ function() {
     var contentHeight;
 
     function setContentHeight() {
@@ -325,6 +331,22 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
     });
+angular.module('d2RollsApp').controller('statsViewCtrl', [function () {
+    var vm = this;
+    console.log(vm.inputStats);
+}]);
+angular.module('d2RollsApp')
+    .directive('statsView', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: 'statsViewCtrl as stats',
+            bindToController: {
+                inputStats: '<'
+            },
+            templateUrl: '../html/components/statsView/statsView.tpl.html'
+        };
+    });
 angular.module('d2RollsApp')
     .directive('perkTooltip', function () {
         return {
@@ -343,13 +365,30 @@ angular.module('d2RollsApp')
         };
     });
 angular.module('d2RollsApp')
+    .directive('weaponListItem', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                listItem: '<',
+                language: '<',
+                offset: '@'
+            },
+            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
+        }
+    })
+angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', [function () {
+    var vm = this;
+
+}]);
+angular.module('d2RollsApp')
     .directive('weaponPerksPanel', [ '$interval', function($interval) {
         return {
             restrict: 'E',
             replace: false,
-            scope: {
-                pool: '<',
-                text: '<'
+            controller: 'weaponPerksPanelCtrl as perks',
+            bindToController: {
+                pool: '<'
             },
             templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html',
             link: function(scope, element) {
@@ -389,31 +428,18 @@ angular.module('d2RollsApp')
             }
         };
     }]);
-angular.module('d2RollsApp')
-    .directive('weaponListItem', function () {
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                listItem: '<',
-                language: '<',
-                offset: '@'
-            },
-            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
-        }
-    })
 angular
 .module('d2RollsApp')
-.controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'varsStore', function(
+.controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'utils', function(
     $stateParams,
     fetchManifestService,
-    varsStore
+    utils
 ) {
     var vm = this;
     var sortingType = $stateParams.sortBy;
     var lang = $stateParams.language;
 
-    varsStore.setContentHeight();
+    utils.setContentHeight();
 
     vm.isLoaded = false;
     vm.categories = [];
@@ -434,17 +460,17 @@ angular
         vm.isLoaded = !!vm.categories.length;
     });
 }]);
-angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'varsStore', function(
+angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'utils', function(
     $stateParams,
     fetchManifestService,
     languageMapService,
-    varsStore
+    utils
 ) {
     var vm = this;
     var lang = $stateParams.language;
     var homeText = languageMapService.getDictionary(lang, 'home');
 
-    varsStore.setContentHeight();
+    utils.setContentHeight();
     vm.textSortAll = homeText.all;
     vm.sort = {
         rarity: homeText.sortByRarity,
@@ -525,12 +551,21 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
     var weaponHash = $stateParams.weaponHash;
 
     var perksPanel = languageMapService.getDictionary(lang, 'perksPanel');
+    var statsPanel = languageMapService.getDictionary(lang, 'statsPanel');
 
     vm.perksPanelTextContent = {
         perksPanelHeader: perksPanel.header,
         perksPanelExpand: perksPanel.expand,
         perksPanelCollapse: perksPanel.collapse
-    }
+    };
+    vm.statsPanelTextContent = {
+        statsPanelHeader: statsPanel.header
+    };
+
+    vm.calculatedStats = {
+        test: 'ipsum lorem'
+    };
+
     fetchManifestService.getSingleWeaponData(lang, weaponHash, function(incomingData){
         var rarityHash = incomingData.rarity.hash;
         vm.rarityClass = rarityMap[rarityHash];
@@ -546,12 +581,14 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
         var rarityHash = incomingData.primaryData.rarity.hash
         vm.rarityClass = rarityMap[rarityHash];
         vm.data = incomingData;
+        console.log(vm.data);
         getPerksBucket(vm.data.secondaryData.perks);
     });
 
     function getPerksBucket(data) {
         fetchManifestService.getPerksForSingleWeapon(data, function(perksBucket) {
             vm.perksBucket = perksBucket;
+            console.log(perksBucket);
         });
     };
 

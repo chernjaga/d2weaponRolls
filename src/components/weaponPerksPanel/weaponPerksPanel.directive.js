@@ -3,9 +3,9 @@ angular.module('d2RollsApp')
         return {
             restrict: 'E',
             replace: false,
-            scope: {
-                pool: '<',
-                text: '<'
+            controller: 'weaponPerksPanelCtrl as perks',
+            bindToController: {
+                pool: '<'
             },
             templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html',
             link: function(scope, element) {
