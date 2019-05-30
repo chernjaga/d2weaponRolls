@@ -33,10 +33,12 @@
     }
 }
 li.active-perk {
-    border: 1px solid $cl-white-tint0;
-    border-radius: $body-padding;
-    padding: $body-padding*0.25;
-    box-sizing: border-box;
+    img  {
+        background: $cl-active-perk-bg !important;
+        border-radius: $body-padding;
+        padding: $body-padding*0.25;
+        box-sizing: border-box;
+    }
 }
 
 .all-perks-categories {
