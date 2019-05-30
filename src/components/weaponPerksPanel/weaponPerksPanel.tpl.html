@@ -1,7 +1,7 @@
 <div class="perks-panel body-padding" ng-class="{active: isExpanded}">
     <div>{{::weapon.perksPanelTextContent.perksPanelHeader}}</div>
     <ul class="all-perks-bucket">
-        <li ng-repeat="perk in perks.pool" 
+        <li ng-repeat="perk in ::perks.pool" 
             perks-binder 
             binded-perk="perk"
             active-hash="perk.vendorPerk.hash">
@@ -14,10 +14,10 @@
                 </li>
                 <li ng-show="isExpanded" class="randomized-perks-container">
                     <ul>
-                        <li ng-repeat="randomPerk in perk.randomizedPerks track by $index" 
+                        <li ng-repeat="randomPerk in ::perk.randomizedPerks track by $index" 
                             class="randomized-perks"
                             ng-class="{'active-perk': randomPerk.hash === binder.activeHash}"
-                            ng-click="binder.bindPerk(this); perks.collectRoll()">
+                            ng-click="binder.bindPerk(this, perks.collectRoll)">
                                     <img ng-if="::randomPerk.icon"
                                          ng-src="https://www.bungie.net{{::randomPerk.icon}}" 
                                          class="perk-icon"

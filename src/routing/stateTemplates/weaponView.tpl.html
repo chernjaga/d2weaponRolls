@@ -14,11 +14,12 @@
             class="weapon-list-item weapon-view bg list-item-content">
         </weapon-list-item > 
         <weapon-perks-panel
-            pool="::weapon.perksBucket">
+            pool="::weapon.perksBucket"
+            investment-stats="weapon.statsToRecalculate">
         </weapon-perks-panel>
     </div>
     <stats-view
-        input-stats="weapon.calculatedStats" 
+        input-stats="weapon.calculatedStats(weapon.data.secondaryData.stats, weapon.statsToRecalculate)" 
     ></stats-view>
 </div>
 

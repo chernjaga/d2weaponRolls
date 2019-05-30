@@ -5,7 +5,8 @@ angular.module('d2RollsApp')
             replace: false,
             controller: 'weaponPerksPanelCtrl as perks',
             bindToController: {
-                pool: '<'
+                pool: '<',
+                investmentStats: '='
             },
             templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html',
             link: function(scope, element) {

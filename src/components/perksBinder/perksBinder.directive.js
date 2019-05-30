@@ -1,7 +1,9 @@
 function perksBinderCtrl(){
     var vm = this;
-    vm.bindPerk = function(target) {
+    vm.bindPerk = function(target, callback) {
         vm.bindedPerk.vendorPerk = target.randomPerk;
+        callback();
+        return false;
     };
 };
 

@@ -6,7 +6,7 @@
                 ng-if="::!!stat.statValue"
                 class="stat-item">
                 <div class="stat-name">
-                    {{stat.statName}}
+                    {{::stat.statName}}
                 </div>
                 <div class="stat-value" ng-switch="stat.hash">
                     <span ng-switch-when="4284893193">{{stat.statValue}}</span>
@@ -14,7 +14,7 @@
                     <span ng-switch-when="2961396640">{{stat.statValue}}</span>
                     <span ng-switch-when="447667954">{{stat.statValue}}</span>
                     <span ng-switch-default>
-                        <stat-scale>
+                        <stat-scale value="stat.statValue">
                         </stat-scale>
                         <span class="stat-number">
                             {{stat.statValue}}
