@@ -1,9 +1,9 @@
-<div class="body-padding">
+<div class="body-padding" >
     <div class="stats-view-header body-padding">{{weapon.statsPanelTextContent.statsPanelHeader}}</div>
     <div class="stats-view">
         <ul>
             <li ng-repeat="(hash, stat) in stats.inputStats" 
-                ng-if="::!!stat.statValue"
+                ng-if="!!stat.statValue"
                 class="stat-item">
                 <div class="stat-name">
                     {{::stat.statName}}

@@ -1,1 +1,1 @@
-<div class="scale-line"><div class="scale-progress" ng-style="{'width': '{{value}}%'}"></div></div>
+<div class="scale-line"><div class="scale-wrapper"><div class="scale-progress" style="width:{{scale.value}}%;"></div><div class="scale-stat" ng-class="{{scale.direction}}" style="width:{{scale.width}}; margin-left: {{scale.marginLeft}};"></div></div></div>

@@ -298,8 +298,45 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
         getDictionary: getDictionary
     };
 }]);
-angular.module('d2RollsApp').factory('utils', [ function() {
+angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
     var contentHeight;
+    var statsStoreObject = {};
+    var recalculatedStats = {};
+    var statInit = $q.defer();
+    var recalculateDeffer = $q.defer();
+
+
+    function initWeaponStats(stats) {
+        statsStoreObject = stats;
+        statInit.resolve(stats);
+    };
+
+    function collectStats(investmentStats) {
+        if (Object.keys(statsStoreObject).length) {
+            recalculateStats(investmentStats);
+            return;
+        }
+        $q.when(statInit.promise).then(function() {
+            recalculateStats(investmentStats);
+        });
+    };
+
+    function recalculateStats(newStats) {
+        recalculatedStats = JSON.parse(JSON.stringify(statsStoreObject));
+        for (item of newStats) {
+            var hash = item.statTypeHash;
+            if (recalculatedStats[hash]) {
+                recalculatedStats[hash].statValue = statsStoreObject[hash].statValue + item.value;
+            }
+        }
+        recalculateDeffer.resolve(recalculatedStats);
+    };
+
+    function getNewStats(callback) {
+        $q.when(recalculateDeffer.promise).then(function() {
+            callback(recalculatedStats);
+        });
+    };
 
     function setContentHeight() {
         if (contentHeight) {
@@ -312,10 +349,13 @@ angular.module('d2RollsApp').factory('utils', [ function() {
         var menuHeight = bodyHeight - footerHeight
         var view = document.getElementsByClassName('view')[0];
         view.style.height = menuHeight - 32 + 'px';
-    }
+    };
 
     return {
-        setContentHeight: setContentHeight
+        collectStats: collectStats,
+        setContentHeight: setContentHeight,
+        initWeaponStats: initWeaponStats,
+        getNewStats: getNewStats
     };
 }]);
 angular.module('d2RollsApp').controller('footerPanelCtrl', [function () {
@@ -335,9 +375,12 @@ angular.module('d2RollsApp')
     });
 function perksBinderCtrl(){
     var vm = this;
-    vm.bindPerk = function(target, callback) {
+    vm.$onInit = function() {
+        vm.bindedPerk.vendorPerk = vm.initPerk;
+        vm.collectBinded();
+    }
+    vm.bindPerk = function(target) {
         vm.bindedPerk.vendorPerk = target.randomPerk;
-        callback();
         return false;
     };
 };
@@ -349,25 +392,66 @@ angular.module('d2RollsApp')
             replace: false,
             bindToController: {
                 bindedPerk: '<',
-                activeHash: '<'
+                initPerk: '<',
+                collectBinded: '<'
             },
             controller: perksBinderCtrl,
             controllerAs: 'binder'
         }
     });
+function scaleCtrl () {
+    var vm = this;
+    var startPosition = vm.value;
+    vm.definition = vm.value - startPosition;
+    
+    if (vm.definition > 0) {
+        vm.direction = 'positive';
+        vm.width = vm.definition;
+        vm.marginLeft = 0;
+    }
+    if (vm.definition < 0) {
+        vm.direction = 'negative';
+        vm.width = -vm.definition;
+        vm.marginLeft = -vm.definition;
+    }
+}
+
 angular.module('d2RollsApp')
     .directive('statScale', function() {
         return {
             restrict: 'E',
-            scope: {
+            bindToController: {
                 value: '<'
             },
+            controller: scaleCtrl,
+            controllerAs: 'scale',
             replace: false,
             templateUrl: '../html/components/statScale/statScale.tpl.html'
         }
     });
-angular.module('d2RollsApp').controller('statsViewCtrl', [function () {
+function statsRefresherCtrl(utils) {
     var vm = this;
+    vm.$onInit = getData;
+    vm.refresh = getData;
+    function getData (){
+        utils.getNewStats(function(data){
+            vm.data = data;
+        });
+    }
+}
+
+angular.module('d2RollsApp')
+    .directive('statsRefresher', function() {
+        return {
+            restrict: 'A',
+            replace: false,
+            controller: statsRefresherCtrl,
+            controllerAs: 'refresher'
+        }
+    });
+angular.module('d2RollsApp').controller('statsViewCtrl', ['utils', function (utils) {
+    var vm = this;
+
 }]);
 angular.module('d2RollsApp')
     .directive('statsView', function () {
@@ -411,9 +495,15 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
         }
     })
-angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', ['$location', function ($location) {
+angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', ['$location', 'utils', function ($location, utils) {
     var vm = this;
-    vm.collectRoll = function(){
+    var currentUrl;
+    vm.collectRoll = function(isManualEvent, callback){
+
+        if (currentUrl === $location.url() && !isManualEvent) {
+            return;
+        }
+
         var perksCollection = vm.pool;
         var roll = [];
         var statsToRecalculate = [];
@@ -424,11 +514,14 @@ angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', ['$location', fu
             }
             roll.push(perksCollection[perk].vendorPerk.hash);
         }
+        currentUrl = $location.url();
+        utils.collectStats(statsToRecalculate);
         vm.investmentStats = statsToRecalculate;
         $location.search({roll: roll});
+        if (callback) {
+            callback()
+        }
     };
-    vm.collectRoll();
-
 }]);
 angular.module('d2RollsApp')
     .directive('weaponPerksPanel', [ '$interval', function($interval) {
@@ -592,17 +685,16 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
         return rarityMap[hash];
     };
 }]);
-angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', function(
+angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'utils', function(
     $stateParams,
     fetchManifestService,
-    languageMapService
+    languageMapService,
+    utils
 ) {  
     var vm = this;
     var rarityMap = fetchManifestService.rarityMap;
     var lang = $stateParams.language;
     var weaponHash = $stateParams.weaponHash;
-    var lastStats = [];
-    var lastStatsValues = {};
 
     var perksPanel = languageMapService.getDictionary(lang, 'perksPanel');
     var statsPanel = languageMapService.getDictionary(lang, 'statsPanel');
@@ -615,29 +707,7 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
     vm.statsPanelTextContent = {
         statsPanelHeader: statsPanel.header
     };
-    vm.calculatedStats = function (stats, investmentStats) {
-        if(!investmentStats) {
-            return stats;
-        }
-        if (lastStats.toString() === investmentStats.toString()) {
-            return stats;
-        }
-        if (!investmentStats || !investmentStats.length) {
-            return stats;
-        }
-        for (var item of investmentStats) {
-            var hash = item.statTypeHash
-            if (!lastStats.length && stats[hash]) {
-                stats[hash].statValue = stats[hash].statValue + item.value;
-                lastStatsValues[hash] = item.value;
-            } else if (stats[hash]) {
-                stats[hash].statValue = stats[hash].statValue + item.value - lastStatsValues[hash];
-                lastStatsValues[hash] = item.value;
-            }
-        }
-        lastStats = investmentStats;
-        return stats;
-    }
+    
 
     fetchManifestService.getSingleWeaponData(lang, weaponHash, function(incomingData){
         var rarityHash = incomingData.rarity.hash;
@@ -648,14 +718,20 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
 
     }, function(incomingData) {
         vm.data.secondaryData = incomingData;
+        setWeaponStats(vm.data.secondaryData.stats);
         getPerksBucket(vm.data.secondaryData.perks);
 
     }, function(incomingData) {
         var rarityHash = incomingData.primaryData.rarity.hash
         vm.rarityClass = rarityMap[rarityHash];
-        vm.data = incomingData;       
+        vm.data = incomingData;      
+        setWeaponStats(vm.data.secondaryData.stats); 
         getPerksBucket(vm.data.secondaryData.perks);
     });
+
+    function setWeaponStats(data) {
+        utils.initWeaponStats(data);
+    }
 
     function getPerksBucket(data) {
         var roll = $stateParams.roll;

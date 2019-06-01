@@ -1,6 +1,6 @@
 
 
-<div class="style-screen-adaptor">
+<div class="style-screen-adaptor" stats-refresher>
     <div class="weapon-view-header bg" ng-class="::weapon.rarityClass">
         <div class="weapon-view-header-banner">
                 <img ng-src="https://www.bungie.net{{::weapon.data.secondaryData.screenshot}}" alt="destiny2 weapon screenshot">
@@ -19,7 +19,12 @@
         </weapon-perks-panel>
     </div>
     <stats-view
-        input-stats="weapon.calculatedStats(weapon.data.secondaryData.stats, weapon.statsToRecalculate)" 
+        input-stats="refresher.data"
     ></stats-view>
+    <div>
+        <p>
+            {{weapon.data.primaryData.source.name}}
+        </p>
+    </div>
 </div>
 

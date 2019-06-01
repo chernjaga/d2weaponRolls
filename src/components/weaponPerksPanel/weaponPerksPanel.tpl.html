@@ -4,7 +4,8 @@
         <li ng-repeat="perk in ::perks.pool" 
             perks-binder 
             binded-perk="perk"
-            active-hash="perk.vendorPerk.hash">
+            init-perk="perk.vendorPerk"
+            collect-binded="perks.collectRoll">
             <ul class="all-perks-categories">
                 <li>
                     <img ng-src="https://www.bungie.net{{binder.bindedPerk.vendorPerk.icon}}" alt="destiny2 weapon perk icon" class="perk-icon"/>
@@ -16,8 +17,8 @@
                     <ul>
                         <li ng-repeat="randomPerk in ::perk.randomizedPerks track by $index" 
                             class="randomized-perks"
-                            ng-class="{'active-perk': randomPerk.hash === binder.activeHash}"
-                            ng-click="binder.bindPerk(this, perks.collectRoll)">
+                            ng-class="{'active-perk': randomPerk.hash === binder.initPerk.hash}"
+                            ng-click="binder.bindPerk(this);  perks.collectRoll(true, refresher.refresh)">
                                     <img ng-if="::randomPerk.icon"
                                          ng-src="https://www.bungie.net{{::randomPerk.icon}}" 
                                          class="perk-icon"

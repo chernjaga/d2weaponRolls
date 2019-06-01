@@ -1,8 +1,11 @@
 function perksBinderCtrl(){
     var vm = this;
-    vm.bindPerk = function(target, callback) {
+    vm.$onInit = function() {
+        vm.bindedPerk.vendorPerk = vm.initPerk;
+        vm.collectBinded();
+    }
+    vm.bindPerk = function(target) {
         vm.bindedPerk.vendorPerk = target.randomPerk;
-        callback();
         return false;
     };
 };
@@ -14,7 +17,8 @@ angular.module('d2RollsApp')
             replace: false,
             bindToController: {
                 bindedPerk: '<',
-                activeHash: '<'
+                initPerk: '<',
+                collectBinded: '<'
             },
             controller: perksBinderCtrl,
             controllerAs: 'binder'

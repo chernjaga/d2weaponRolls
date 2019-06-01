@@ -9,6 +9,19 @@
 .scale-progress {
     background: $cl-gray-tint2;
     height: $fs-stats-view*0.5;
+    display: inline-block;
+}
+.scale-wrapper {
+    display: flex;
+}
+.scale-stat {
+    display: inline-block;
+    &.positive {
+        background: $cl-stat-positive;
+    }
+    &.negative {
+        background: $cl-stat-negative;
+    }
 }
 .stat-number {
     margin-left: $body-padding;
