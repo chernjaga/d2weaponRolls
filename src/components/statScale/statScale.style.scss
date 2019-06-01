@@ -1,4 +1,5 @@
 @import '../../common/commonStyles/vars.style.scss';
+
 .scale-line {
     width: 70%;
     background: $cl-gray-tint1;
@@ -7,21 +8,30 @@
     overflow: hidden;
 }
 .scale-progress {
-    background: $cl-gray-tint2;
+    top: 0;
+    left: 0;
     height: $fs-stats-view*0.5;
-    display: inline-block;
+    display: block;
+    position: absolute;
 }
 .scale-wrapper {
-    display: flex;
+    display: block;
+    position: relative;
 }
 .scale-stat {
     display: inline-block;
-    &.positive {
-        background: $cl-stat-positive;
-    }
-    &.negative {
-        background: $cl-stat-negative;
-    }
+}
+.positive {
+    background: $cl-stat-positive;
+    z-index: 10;
+}
+.negative {
+    background: $cl-gray-tint2;
+    z-index: 30;
+}
+.neutral {
+    background: $cl-stat-negative;
+    z-index: 20;
 }
 .stat-number {
     margin-left: $body-padding;
