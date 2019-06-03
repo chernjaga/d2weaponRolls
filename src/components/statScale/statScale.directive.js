@@ -1,5 +1,9 @@
 function scaleCtrl () {
     var vm = this;
+    vm.$onInit = function() {
+        var startPosition = vm.value;
+        vm.startPosition = startPosition;
+    }
 }
 
 angular.module('d2RollsApp')

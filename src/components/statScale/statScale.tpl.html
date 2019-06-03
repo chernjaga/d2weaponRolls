@@ -1,7 +1,9 @@
 <div class="scale-line">
-    <div class="scale-wrapper" ng-init="startPosition = scale.value">
-        <div class="scale-progress negative" style="width:{{scale.value}}%; max-width:{{startPosition}}%;"></div>
-        <div class="scale-progress neutral" style="width:{{startPosition}}%;"></div>
-        <div class="scale-progress positive" style="width:{{scale.value}}%;"></div>
+    <div class="scale-wrapper">
+       
+        <div class="scale-progress negative" style="width:{{scale.value}}%; max-width:{{::scale.startPosition}}%;"></div>
+        <div class="scale-progress neutral" style="width:{{::scale.startPosition}}%;"></div>
+        <div class="scale-progress positive" style="width:{{scale.value}}%; min-width:{{::scale.startPosition}}%;"></div>
+
     </div>
 </div>
