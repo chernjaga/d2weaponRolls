@@ -304,7 +304,60 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
     var recalculatedStats = {};
     var statInit = $q.defer();
     var recalculateDeffer = $q.defer();
+    var filterMap = {
+        '4043523819': {
+            statName: null,
+            statValue: null,
+            order: 1
+        }, //impact
+        '1240592695': {
+            statName: null,
+            statValue: null,
+            order: 2
+        }, //range
+        '15562408': {
+            statName: null,
+            statValue: null,
+            order: 3
+        }, //stability
+        '943549884': {
+            statName: null,
+            statValue: null,
+            order: 4
+        }, //handling
+        '4188031367': {
+            statName: null,
+            statValue: null,
+            order: 5
+        }, //reload speed
+        '1345609583': {
+            statName: null,
+            statValue: null,
+            order: 6
+        }, //aim assist
+        '4284893193': {
+            statName: null,
+            statValue: null,
+            order: 7
+        }, // RPM
+        '3871231066': {
+            statName: null,
+            statValue: null,
+            order: 8
+        } //magazine
+    };
 
+    function statsFilter (stats) {
+        var output = [];
+        angular.forEach(stats, function(value, key) {
+            if (filterMap[key]){
+                value.order = filterMap[key].order;
+                value.startPosition = statsStoreObject[key].statValue;
+                output.push(value);
+            }
+        });
+        return output;
+    };
 
     function initWeaponStats(stats) {
         statsStoreObject = stats;
@@ -334,7 +387,8 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
 
     function getNewStats(callback) {
         $q.when(recalculateDeffer.promise).then(function() {
-            callback(recalculatedStats);
+            var output = statsFilter(recalculatedStats);
+            callback(output);
         });
     };
 
@@ -401,10 +455,6 @@ angular.module('d2RollsApp')
     });
 function scaleCtrl () {
     var vm = this;
-    vm.$onInit = function() {
-        var startPosition = vm.value;
-        vm.startPosition = startPosition;
-    }
 }
 
 angular.module('d2RollsApp')
@@ -412,7 +462,8 @@ angular.module('d2RollsApp')
         return {
             restrict: 'E',
             bindToController: {
-                value: '<'
+                value: '<',
+                startPosition: '<'
             },
             controller: scaleCtrl,
             controllerAs: 'scale',
@@ -440,61 +491,8 @@ angular.module('d2RollsApp')
             controllerAs: 'refresher'
         }
     });
-angular.module('d2RollsApp').controller('statsViewCtrl', ['utils', function (utils) {
-    var vm = this;
+angular.module('d2RollsApp').controller('statsViewCtrl', [ function () {
 
-    var filterMap = {
-        '4043523819': {
-            statName: null,
-            statValue: null,
-            order: 1
-        }, //impact
-        '1240592695': {
-            statName: null,
-            statValue: null,
-            order: 2
-        }, //range
-        '15562408': {
-            statName: null,
-            statValue: null,
-            order: 3
-        }, //stability
-        '943549884': {
-            statName: null,
-            statValue: null,
-            order: 4
-        }, //handling
-        '4188031367': {
-            statName: null,
-            statValue: null,
-            order: 5
-        }, //reload speed
-        '1345609583': {
-            statName: null,
-            statValue: null,
-            order: 6
-        }, //aim assist
-        '4284893193': {
-            statName: null,
-            statValue: null,
-            order: 7
-        }, // RPM
-        '3871231066': {
-            statName: null,
-            statValue: null,
-            order: 8
-        } //magazine
-    };
-    vm.statsFilter = function (stats) {
-        var output = [];
-        angular.forEach(stats, function(value, key) {
-            if (filterMap[key]){
-                value.order = filterMap[key].order;
-                output.push(value);
-            }
-        });
-        return output;
-    }
 }]);
 angular.module('d2RollsApp')
     .directive('statsView', function () {

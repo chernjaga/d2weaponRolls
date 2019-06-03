@@ -1,9 +1,5 @@
 function scaleCtrl () {
     var vm = this;
-    vm.$onInit = function() {
-        var startPosition = vm.value;
-        vm.startPosition = startPosition;
-    }
 }
 
 angular.module('d2RollsApp')
@@ -11,7 +7,8 @@ angular.module('d2RollsApp')
         return {
             restrict: 'E',
             bindToController: {
-                value: '<'
+                value: '<',
+                startPosition: '<'
             },
             controller: scaleCtrl,
             controllerAs: 'scale',

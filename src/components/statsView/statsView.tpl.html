@@ -2,7 +2,7 @@
     <div class="stats-view-header body-padding">{{weapon.statsPanelTextContent.statsPanelHeader}}</div>
     <div class="stats-view">
         <ul>
-            <li ng-repeat="stat in stats.statsFilter(stats.inputStats) | orderBy: 'order'"  
+            <li ng-repeat="stat in stats.inputStats | orderBy: 'order'"  
                 class="stat-item">
                 <div class="stat-name">
                     {{::stat.statName}}
@@ -11,7 +11,8 @@
                     <span ng-switch-when="4284893193">{{stat.statValue}}</span>
                     <span ng-switch-when="3871231066">{{stat.statValue}}</span>
                     <span ng-switch-default>
-                        <stat-scale value="stat.statValue">
+                        <stat-scale value="stat.statValue"
+                                    start-position="stat.startPosition">
                         </stat-scale>
                         <span class="stat-number">
                             {{stat.statValue}}
