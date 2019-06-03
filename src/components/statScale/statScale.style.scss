@@ -10,15 +10,15 @@
 .scale-progress {
     top: 0;
     left: 0;
+    width: 1%;
     height: $fs-stats-view*0.5;
     display: block;
     position: absolute;
-    transition: width 0.2s 0.2s;
+    transition: 0.2s;
 }
 .scale-wrapper {
     display: block;
     position: relative;
-    transition: all 0.2s;
 }
 .scale-stat {
     display: inline-block;
