@@ -3,7 +3,7 @@
 .perks-panel {
     max-height: 200px;
     margin: 0 $mg-weapon-view-content-offset*0.5;
-    transition: max-height 0.15s ease-out; 
+    transition: max-height 0.15s ease-out 0.1s;
 }
 .perks-panel.active {
     max-height: 900px;

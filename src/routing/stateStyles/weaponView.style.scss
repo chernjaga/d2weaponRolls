@@ -11,3 +11,9 @@
         object-fit: cover;
     }
 }
+.weapon-view-text-content {
+    color: $cl-gray-tint2;
+    width: max-content;
+    margin: 2*$body-padding auto 0;
+    max-width: 100%;
+}

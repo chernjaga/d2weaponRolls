@@ -3,7 +3,34 @@
 .footer-panel {
     background-color: $cl-gray-tint1;
     position: fixed;
-    z-index: 2;
+    z-index: 60;
     width: 100%;
     bottom: 0;
+}
+.footer-button {
+    display: block;
+    color: $cl-gray-tint3;
+    cursor: pointer;
+}
+.footer-button-container {
+    display: flex;
+    justify-content: space-between;
+}
+.footer-menu-container {
+    display: block;
+    margin: 0 auto;
+    max-width: 490px;
+}
+.footer-settings-container {
+    display: block;
+    color: $cl-gray-tint3;
+    padding: $body-padding*2 0;
+    max-height: 300px;
+    opacity: 1;
+    transition: 0.2s;
+    &.ng-hide {
+        max-height: 0;
+        opacity: 0;
+        transition: max-height 0.2s;
+    }
 }

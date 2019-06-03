@@ -412,21 +412,6 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
         getNewStats: getNewStats
     };
 }]);
-angular.module('d2RollsApp').controller('footerPanelCtrl', [function () {
-    var vm = this;
-    vm.text = ' To weapon list';
-    vm.lang = location.pathname.split('/')[2] || 'en';
-}]);
-angular.module('d2RollsApp')
-    .directive('footerPanel', function () {
-        return {
-            restrict: 'E',
-            replace: false,
-            controller: 'footerPanelCtrl',
-            controllerAs: 'footer',
-            templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
-        }
-    });
 function perksBinderCtrl(){
     var vm = this;
     vm.$onInit = function() {
@@ -451,6 +436,20 @@ angular.module('d2RollsApp')
             },
             controller: perksBinderCtrl,
             controllerAs: 'binder'
+        }
+    });
+angular.module('d2RollsApp').controller('footerPanelCtrl', [function () {
+    var vm = this;
+    vm.isOpenedSetting = false;
+}]);
+angular.module('d2RollsApp')
+    .directive('footerPanel', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: 'footerPanelCtrl',
+            controllerAs: 'footer',
+            templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
     });
 function scaleCtrl () {};

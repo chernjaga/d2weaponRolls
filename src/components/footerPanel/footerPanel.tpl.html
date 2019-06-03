@@ -1,7 +1,26 @@
-<div class="style-screen-adaptor">
-    <div class="body-padding footer-menu">
-        <a ui-sref="home({language: footer.lang})" role="link" title="To weapon list">Home</a>
-        <a ui-sref="weaponList({language: footer.lang})" role="link" title="To weapon list">{{footer.text}} {{footer.lang}}</a>
+<div class="body-padding footer-menu style-screen-adaptor">
+    <div class="footer-menu-container">
+        <div class="footer-button-container">
+            <a ui-sref="home({language: footer.lang})"
+                class="footer-button"
+                role="link" title="To weapon list"
+                class="footer-button">
+                    Home
+            </a>
+            <a ui-sref="weaponList({language: footer.lang, isFullList: true})"
+               role="link"
+               class="footer-button"
+               title="Show All list">
+                    All
+            </a>
+            <div role="button"
+                class="footer-button"
+                ng-click="footer.isOpenedSetting = !footer.isOpenedSetting">
+                    Settings
+            </div>
+        </div>
+        <div class="footer-settings-container" ng-show="footer.isOpenedSetting">
+            Language
+        </div>
     </div>
 </div>
-
