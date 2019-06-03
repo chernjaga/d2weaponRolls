@@ -16,11 +16,11 @@
             <div role="button"
                 class="footer-button"
                 ng-click="footer.isOpenedSetting = !footer.isOpenedSetting">
-                    Settings
+                    Settings <span ng-show="!footer.isOpenedSetting">&#9651;</span><span ng-show="footer.isOpenedSetting">&#9661;</span>
             </div>
         </div>
         <div class="footer-settings-container" ng-show="footer.isOpenedSetting">
-            Language
+            Language: RU - EN
         </div>
     </div>
 </div>

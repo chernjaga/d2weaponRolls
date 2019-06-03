@@ -55,7 +55,9 @@ ul {
         background-color: $rarityColor;
     }
 }
-
+.bottom-offset {
+    padding-bottom: 5*$body-padding;
+}
 // background colors 
 .bg.exotic {
     background-color: $cl-exotic-yellow;

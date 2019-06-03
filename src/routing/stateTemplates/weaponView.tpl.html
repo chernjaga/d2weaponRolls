@@ -3,7 +3,8 @@
 <div class="style-screen-adaptor" stats-refresher>
     <div class="weapon-view-header bg" ng-class="::weapon.rarityClass">
         <div class="weapon-view-header-banner">
-                <img ng-src="https://www.bungie.net{{::weapon.data.secondaryData.screenshot}}" alt="destiny2 weapon screenshot">
+                <img ng-src="https://www.bungie.net{{::weapon.data.secondaryData.screenshot}}" 
+                     alt="destiny2 weapon screenshot">
         </div>
     </div>
     <div class="bgc"  ng-class="::weapon.rarityClass">
@@ -21,7 +22,7 @@
     <stats-view
         input-stats="refresher.data"
     ></stats-view>
-    <div class="body-padding weapon-view-text-content">
+    <div class="body-padding weapon-view-text-content bottom-offset">
         {{weapon.data.primaryData.source.name}}
     </div>
 </div>

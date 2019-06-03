@@ -32,9 +32,6 @@ $word-spacing-damage-type: $body-padding*0.25;
             margin-left: $fs-weapon-list-item;
         }
     }
-
-    
-
     .weapon-list-item-elemental {
         margin-top: $body-padding;
         word-spacing: $word-spacing-damage-type;
@@ -46,13 +43,11 @@ $word-spacing-damage-type: $body-padding*0.25;
     a {
         color: inherit;
     }
-
     .list-item-elemental-icon {
         height: $fs-weapon-list-item;
         max-width: (100% - 2*$mg-weapon-view-content-offset)*0.25;
         margin-right: $word-spacing-damage-type*2;
     }
-
     .weapon-list-item-text {
         position: relative;
         display: flex;
@@ -61,11 +56,9 @@ $word-spacing-damage-type: $body-padding*0.25;
         max-width: (100% - 2*$mg-weapon-view-content-offset)*0.75;
         margin-left: $mg-weapon-view-content-offset;
     }
-
     .weapon-list-item-icon {
         height: $fs-weapon-list-item*4.0;
     }
-
     .weapon-list-item-name {
         font-size: $fs-weapon-list-item*1;
         max-width: 100%;
