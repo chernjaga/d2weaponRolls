@@ -31,19 +31,19 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
 
     }, function(incomingData) {
         vm.data.secondaryData = incomingData;
-        setWeaponStats(vm.data.secondaryData.stats);
+        setWeaponStats(vm.data.secondaryData.stats, vm.data.primaryData.hash);
         getPerksBucket(vm.data.secondaryData.perks);
 
     }, function(incomingData) {
         var rarityHash = incomingData.primaryData.rarity.hash
         vm.rarityClass = rarityMap[rarityHash];
         vm.data = incomingData;      
-        setWeaponStats(vm.data.secondaryData.stats); 
+        setWeaponStats(vm.data.secondaryData.stats, vm.data.primaryData.hash); 
         getPerksBucket(vm.data.secondaryData.perks);
     });
 
-    function setWeaponStats(data) {
-        utils.initWeaponStats(data);
+    function setWeaponStats(data, hash) {
+        utils.initWeaponStats(data, hash);
     }
 
     function getPerksBucket(data) {

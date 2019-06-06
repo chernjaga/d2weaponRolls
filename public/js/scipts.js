@@ -310,16 +310,31 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
             statValue: null,
             order: 1
         }, //impact
+        '3614673599': {
+            statName: null,
+            statValue: null,
+            order: 1.1
+        }, //blastRadius
         '1240592695': {
             statName: null,
             statValue: null,
             order: 2
         }, //range
+        '2523465841': {
+            statName: null,
+            statValue: null,
+            order: 2.1
+        }, //velocity
         '15562408': {
             statName: null,
             statValue: null,
             order: 3
         }, //stability
+        '155624089': {
+            statName: null,
+            statValue: null,
+            order: 3.1
+        }, // GL stability
         '943549884': {
             statName: null,
             statValue: null,
@@ -330,27 +345,48 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
             statValue: null,
             order: 5
         }, //reload speed
-        '1345609583': {
-            statName: null,
-            statValue: null,
-            order: 6
-        }, //aim assist
         '4284893193': {
             statName: null,
             statValue: null,
-            order: 7
+            order: 6
         }, // RPM
+        '2961396640': {
+            statName: null,
+            statValue: null,
+            order: 6.1
+        }, // Charge time
+        '447667954': {
+            statName: null,
+            statValue: null,
+            order: 6.2
+        }, // Draw time
         '3871231066': {
             statName: null,
             statValue: null,
+            order: 7
+        }, //magazine
+        '1345609583': {
+            statName: null,
+            statValue: null,
             order: 8
-        } //magazine
+        }, //aim assist
+        '1591432999': {
+            statName: null,
+            statValue: null,
+            order: 9
+        }, //accuracy
+        '3555269338': {
+            statName: null,
+            statValue: null,
+            order: 10
+        }, //zoom
+        
     };
 
     function statsFilter (stats) {
         var output = [];
         angular.forEach(stats, function(value, key) {
-            if (filterMap[key]){
+            if (filterMap[key] && statsStoreObject[key]){
                 value.order = filterMap[key].order;
                 value.startPosition = statsStoreObject[key].statValue;
                 output.push(value);
@@ -359,12 +395,19 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
         return output;
     };
 
-    function initWeaponStats(stats) {
-        statsStoreObject = stats;
-        statInit.resolve(stats);
+    function initWeaponStats(stats, hash) {
+        // if (!Object.keys(statsStoreObject).length || statsStoreObject.hash == hash) {
+            statsStoreObject = stats;
+            statsStoreObject.hash = hash;
+            statInit.resolve(stats);
+        // } else {
+        //     statsStoreObject.hash = hash;
+        //     statInit.resolve(statsStoreObject);
+        // };
+        
     };
 
-    function collectStats(investmentStats) {
+    function collectStats(investmentStats, hash) {
         if (Object.keys(statsStoreObject).length) {
             recalculateStats(investmentStats);
             return;
@@ -546,11 +589,11 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
         }
     })
-angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', ['$location', 'utils', function ($location, utils) {
+angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', ['$location', '$stateParams','utils', function ($location, $stateParams, utils) {
     var vm = this;
     var currentUrl;
+    var hash = $stateParams.weaponHash;
     vm.collectRoll = function(isManualEvent, callback){
-
         if (currentUrl === $location.url() && !isManualEvent) {
             return;
         }
@@ -566,7 +609,7 @@ angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', ['$location', 'u
             roll.push(perksCollection[perk].vendorPerk.hash);
         }
         currentUrl = $location.url();
-        utils.collectStats(statsToRecalculate);
+        utils.collectStats(statsToRecalculate, hash);
         vm.investmentStats = statsToRecalculate;
         $location.search({roll: roll});
         if (callback) {
@@ -769,19 +812,19 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
 
     }, function(incomingData) {
         vm.data.secondaryData = incomingData;
-        setWeaponStats(vm.data.secondaryData.stats);
+        setWeaponStats(vm.data.secondaryData.stats, vm.data.primaryData.hash);
         getPerksBucket(vm.data.secondaryData.perks);
 
     }, function(incomingData) {
         var rarityHash = incomingData.primaryData.rarity.hash
         vm.rarityClass = rarityMap[rarityHash];
         vm.data = incomingData;      
-        setWeaponStats(vm.data.secondaryData.stats); 
+        setWeaponStats(vm.data.secondaryData.stats, vm.data.primaryData.hash); 
         getPerksBucket(vm.data.secondaryData.perks);
     });
 
-    function setWeaponStats(data) {
-        utils.initWeaponStats(data);
+    function setWeaponStats(data, hash) {
+        utils.initWeaponStats(data, hash);
     }
 
     function getPerksBucket(data) {
