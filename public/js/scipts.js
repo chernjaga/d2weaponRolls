@@ -304,6 +304,7 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
     var recalculatedStats = {};
     var statInit = $q.defer();
     var recalculateDeffer = $q.defer();
+    var weaponHash;
     var filterMap = {
         '4043523819': {
             statName: null,
@@ -383,12 +384,12 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
         
     };
 
-    function statsFilter (stats) {
+    function statsFilter (stats, isAnotherWeapon) {
         var output = [];
         angular.forEach(stats, function(value, key) {
             if (filterMap[key] && statsStoreObject[key]){
                 value.order = filterMap[key].order;
-                value.startPosition = statsStoreObject[key].statValue;
+                value.startPosition = isAnotherWeapon ? statsStoreObject[key].statValue : value.statValue;
                 output.push(value);
             }
         });
@@ -396,15 +397,10 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
     };
 
     function initWeaponStats(stats, hash) {
-        // if (!Object.keys(statsStoreObject).length || statsStoreObject.hash == hash) {
+            weaponHash = hash;
             statsStoreObject = stats;
             statsStoreObject.hash = hash;
-            statInit.resolve(stats);
-        // } else {
-        //     statsStoreObject.hash = hash;
-        //     statInit.resolve(statsStoreObject);
-        // };
-        
+            statInit.resolve(stats);        
     };
 
     function collectStats(investmentStats, hash) {
@@ -430,7 +426,8 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
 
     function getNewStats(callback) {
         $q.when(recalculateDeffer.promise).then(function() {
-            var output = statsFilter(recalculatedStats);
+            var isAnotherWeapon = recalculatedStats.hash == weaponHash;
+            var output = statsFilter(recalculatedStats, isAnotherWeapon);
             callback(output);
         });
     };
