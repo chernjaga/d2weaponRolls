@@ -1,14 +1,14 @@
 <div class="style-screen-adaptor body-padding">
     <div class="home-sorting-menu">
         <a ng-repeat="(category, description) in ::home.sort"
-           ui-sref="categories({language: footer.lang, sortBy: [category]})"
+           ui-sref="categories({language: home.lang, sortBy: [category]})"
            role="link"
            class="home-sorting-link"
            ng-class="::{disabled: description === 'Sort by seasons'|| description === 'Сортировать по сезонам' || description === 'Sort by source' || description === 'Сортировать по источнику получения'}"
            title="{{::description}}">
                 {{::description}}
         </a>
-        <a ui-sref="weaponList({language: footer.lang, isFullList: true})"
+        <a ui-sref="weaponList({language: home.lang, isFullList: true})"
            role="link"
            class="home-sorting-link"
            title="Show All list">

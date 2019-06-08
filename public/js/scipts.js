@@ -452,9 +452,13 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
         getNewStats: getNewStats
     };
 }]);
-angular.module('d2RollsApp').controller('footerPanelCtrl', [function () {
+angular.module('d2RollsApp').controller('footerPanelCtrl', ['$stateParams', function ($stateParams) {
     var vm = this;
-    vm.isOpenedSetting = false;
+    vm.$onInit = function() {
+        var lang = $stateParams.language;
+        vm.lang = $stateParams.language;
+        vm.isOpenedSetting = false;
+    };
 }]);
 angular.module('d2RollsApp')
     .directive('footerPanel', function () {
@@ -521,6 +525,26 @@ angular.module('d2RollsApp')
             }
         }
     });
+function statsRefresherCtrl(utils) {
+    var vm = this;
+    vm.$onInit = getData;
+    vm.refresh = getData;
+    function getData (){
+        utils.getNewStats(function(data){
+            vm.data = data;
+        });
+    }
+}
+
+angular.module('d2RollsApp')
+    .directive('statsRefresher', function() {
+        return {
+            restrict: 'A',
+            replace: false,
+            controller: statsRefresherCtrl,
+            controllerAs: 'refresher'
+        }
+    });
 angular.module('d2RollsApp').controller('statsViewCtrl', [ function () {
 
 }]);
@@ -552,26 +576,6 @@ angular.module('d2RollsApp')
                 });
             } 
         };
-    });
-function statsRefresherCtrl(utils) {
-    var vm = this;
-    vm.$onInit = getData;
-    vm.refresh = getData;
-    function getData (){
-        utils.getNewStats(function(data){
-            vm.data = data;
-        });
-    }
-}
-
-angular.module('d2RollsApp')
-    .directive('statsRefresher', function() {
-        return {
-            restrict: 'A',
-            replace: false,
-            controller: statsRefresherCtrl,
-            controllerAs: 'refresher'
-        }
     });
 angular.module('d2RollsApp')
     .directive('weaponListItem', function () {
@@ -673,6 +677,7 @@ angular
     var sortingType = $stateParams.sortBy;
     var lang = $stateParams.language;
 
+    console.log($stateParams);
     utils.setContentHeight();
 
     vm.isLoaded = false;
@@ -703,6 +708,8 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
     var vm = this;
     var lang = $stateParams.language;
     var homeText = languageMapService.getDictionary(lang, 'home');
+
+    vm.lang = lang;
 
     utils.setContentHeight();
     vm.textSortAll = homeText.all;
