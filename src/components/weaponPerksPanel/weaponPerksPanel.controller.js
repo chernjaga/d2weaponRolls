@@ -1,8 +1,8 @@
-angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', ['$location', 'utils', function ($location, utils) {
+angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', ['$location', '$stateParams','utils', function ($location, $stateParams, utils) {
     var vm = this;
     var currentUrl;
+    var hash = $stateParams.weaponHash;
     vm.collectRoll = function(isManualEvent, callback){
-
         if (currentUrl === $location.url() && !isManualEvent) {
             return;
         }
@@ -18,7 +18,7 @@ angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', ['$location', 'u
             roll.push(perksCollection[perk].vendorPerk.hash);
         }
         currentUrl = $location.url();
-        utils.collectStats(statsToRecalculate);
+        utils.collectStats(statsToRecalculate, hash);
         vm.investmentStats = statsToRecalculate;
         $location.search({roll: roll});
         if (callback) {
