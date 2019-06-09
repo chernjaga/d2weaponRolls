@@ -1,7 +1,7 @@
 <div class="body-padding" >
     <div class="stats-view-header body-padding">{{weapon.statsPanelTextContent.statsPanelHeader}}</div>
     <div class="stats-view">
-        <ul>
+        <ul stats-view-refresher refresh="refresher.refresh">
             <li ng-repeat="stat in stats.inputStats | orderBy: 'order'"  
                 class="{{stat.hash == 1345609583 ? 'secondary-section stat-item': 'stat-item'}}"
                 ng-if="stat.statValue">

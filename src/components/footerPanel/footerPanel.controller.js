@@ -8,7 +8,7 @@ angular.module('d2RollsApp').controller('footerPanelCtrl', ['$state', '$statePar
             var params = $stateParams;
             params.language = $stateParams.language === 'ru' ? 'en' : 'ru';
             var stateName = $state.current.name;
-            console.log(stateName, params);
+            vm.isOpenedSetting = false;
             $state.go(stateName, params);
         }
     };

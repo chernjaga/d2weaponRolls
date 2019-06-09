@@ -429,7 +429,7 @@ angular.module('d2RollsApp').controller('footerPanelCtrl', ['$state', '$statePar
             var params = $stateParams;
             params.language = $stateParams.language === 'ru' ? 'en' : 'ru';
             var stateName = $state.current.name;
-            console.log(stateName, params);
+            vm.isOpenedSetting = false;
             $state.go(stateName, params);
         }
     };
@@ -519,8 +519,8 @@ angular.module('d2RollsApp')
             controllerAs: 'refresher'
         }
     });
-angular.module('d2RollsApp').controller('statsViewCtrl', [ function () {
-
+angular.module('d2RollsApp').controller('statsViewCtrl', [ function ($timeout) {
+    
 }]);
 angular.module('d2RollsApp')
     .directive('statsView', function () {
@@ -533,6 +533,24 @@ angular.module('d2RollsApp')
             },
             templateUrl: '../html/components/statsView/statsView.tpl.html'
         };
+    });
+function statsViewRefresherCtrl($timeout) {
+    var vm = this;
+    vm.$onInit = function() {
+        $timeout(vm.refresh);
+    }
+}
+
+angular.module('d2RollsApp')
+    .directive('statsViewRefresher', function() {
+        return {
+            restrict: 'A',
+            replace: false,
+            controller: statsViewRefresherCtrl,
+            bindToController: {
+                refresh: '<'
+            }
+        }
     });
 angular.module('d2RollsApp')
     .directive('perkTooltip', function () {
