@@ -1,0 +1,68 @@
+@import '../../common/commonStyles/vars.style.scss';
+
+.weapon-filter {
+    background: $cl-gray-tint2;
+    color: $cl-white-tint0;
+    margin-bottom: 4*$body-padding;
+}
+
+.class-section {
+    margin-bottom: $body-padding*2;
+    .class-section-title {
+        margin-bottom: $body-padding;
+    }
+    &.slot {
+        ul {
+            grid-template-rows: 4*$body-padding;
+        }
+    }
+    &.damage-type {
+        ul {
+            grid-template-rows: 4*$body-padding;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+    }
+    &.rarity {
+        ul {
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr;
+            margin-bottom: 0;
+        }
+        .class-section-item {
+            padding: 0;
+            div {
+                width: 100%;
+                height: 4*$body-padding;
+            }
+        }
+    }
+    ul {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: $body-padding;
+    }
+    .class-section-item {
+        background: $cl-filter-item-bg;
+        display: flex;
+        padding: $body-padding;
+        &.included {
+            background: $cl-blue-tint1;
+        }
+
+        img {
+            object-fit: contain;
+            width: 100%;
+        }
+    }
+}
+.filter-buttons-panel {
+    margin-top: 4*$body-padding;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: $body-padding;
+    .button {
+        padding: $body-padding;
+        background: $cl-filter-item-bg;
+        text-align: center;
+    }
+}

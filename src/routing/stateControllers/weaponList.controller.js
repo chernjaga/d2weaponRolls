@@ -15,6 +15,7 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     vm.searchPlaceHolder = search;
     vm.lang = lang;
     vm.isLoaded = false;
+    vm.isFilterActive = false;
 
     fetchManifestService.getWeaponList(lang, function(arrayOfItems) {
         var sortObject = {}
@@ -34,7 +35,7 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
         vm.isLoaded = !!vm.list.length;
     });
 
-    function isShownByFilter(item, filters) {
+    function isShownByFilter(item, filters, hashFilter) {
         var filtersArray = [];
         var isApplied = false;
         if (typeof filters === 'string') {

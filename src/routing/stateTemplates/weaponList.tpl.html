@@ -14,7 +14,7 @@
             </form>
         </div>
     </div>
-    <div class="style-screen-adaptor">
+    <div class="style-screen-adaptor" ng-if="!weapons.isFilterActive">
         <div class="body-padding weapon-list-margin bottom-offset" id="#a11yMainContent">
             <ul>
                 <li ng-repeat="(key, value) in ::weapons.categoryHeaders" ng-init="isExpanded = true">

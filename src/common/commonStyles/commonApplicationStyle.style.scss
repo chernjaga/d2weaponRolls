@@ -61,19 +61,19 @@ ul {
 }
 // background colors 
 .bg.exotic {
-    background-color: $cl-exotic-yellow;
+    background-color: $cl-exotic-yellow !important;
 }
 .bg.legendary {
-    background-color: $cl-legendary-purple;
+    background-color: $cl-legendary-purple !important;
 }
 .bg.rare {
-    background-color: $cl-rare-blue; 
+    background-color: $cl-rare-blue !important; 
 }
 .bg.uncommon {
-    background-color: $cl-uncommon-green; 
+    background-color: $cl-uncommon-green !important; 
 }
 .bg.common {
-    background-color: $cl-common-white; 
+    background-color: $cl-common-white !important; 
 }
 
 // classes background component

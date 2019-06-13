@@ -2,18 +2,6 @@
 
 $pd-filter-button: $fs-filter-button*0.5;
 
-@keyframes expanding {
-    10% {
-        margin-left: 100%;
-        width: 300%; 
-    }
-
-    100% {
-        margin-left: 0%;
-        width: 100%;
-    }
-}
-
 .filter-view {
     position: fixed;
     bottom: 8*$body-padding;
@@ -24,7 +12,9 @@ $pd-filter-button: $fs-filter-button*0.5;
 }
 .filter-view.expanded {
     width: 100%;
-    margin: 0;
+    position: absolute;
+    margin: 0 auto;
+    display: block;
     right: 0;
     left: 0;
     top: 0;
@@ -43,12 +33,7 @@ $pd-filter-button: $fs-filter-button*0.5;
 }
 .filter-container.ng-hide {
     display: none;
-    max-width: 50%;
 }
 .filter-container {
-    display: block;
-    max-height: 1080px;
-    max-width: 100%;
-    background: $cl-gray-tint2;
-    transition: all 0.3s;
+    width: 100%;
 }

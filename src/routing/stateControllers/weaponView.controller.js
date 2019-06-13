@@ -44,6 +44,7 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
 
     function setWeaponStats(data, hash) {
         utils.initWeaponStats(data, hash);
+        console.log(vm.data);
     }
 
     function getPerksBucket(data) {

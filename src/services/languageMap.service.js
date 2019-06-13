@@ -2,6 +2,17 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
     var dictionary = {
         ru: {
             search: 'Поиск',
+            filter: {
+                button: 'Фильтр',
+                weaponClass: 'Класс оружия',
+                slot: 'Слот оружия',
+                damageType: 'Тип урона',
+                rarity: 'Редкость',
+                frame: 'Рама',
+                perks: 'Перки',
+                cancel: 'Отменить',
+                apply: 'Применить'
+            },
             sorting: {
                 weaponRarity: {
                     exotic: 'Экзотический',
@@ -31,6 +42,18 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
         },
         en: {
             search: 'Search',
+            filter: {
+                button: 'Filtr',
+                weaponClass: 'Weapon class',
+                slot: 'Weapon slot',
+                damageType: 'Damage type',
+                rarity: 'Rarity',
+                frame: 'Frame',
+                perks: 'Perks',
+                cancel: 'Cancel',
+                apply: 'Apply'
+
+            },
             sorting: {
                 weaponRarity: {
                     exotic: 'Exotic',

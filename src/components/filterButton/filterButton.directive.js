@@ -3,10 +3,7 @@ angular.module('d2RollsApp')
         return {
             restrict: 'E',
             replace: false,
-            controller: function() {
-                this.isExpanded = false;
-            },
-            controllerAs: 'filterButton',
+            controller: 'filterButtonCtrl as filterButton',
             templateUrl: '../html/components/filterButton/filterButton.tpl.html'
         }
     });

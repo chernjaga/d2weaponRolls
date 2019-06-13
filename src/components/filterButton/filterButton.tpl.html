@@ -1,11 +1,10 @@
 <div class="filter-view" ng-class="{'expanded': filterButton.isExpanded}">
-    <div class="filter-button" ng-click="filterButton.isExpanded = !filterButton.isExpanded">
-        Filter | lll
+    <div class="filter-button"
+         ng-click="filterButton.isExpanded =  weapons.isFilterActive = true"
+         ng-hide="filterButton.isExpanded ">
+        {{::filterButton.text}} | lll
     </div>
-    <div class="filter-container" ng-show="filterButton.isExpanded">
-        <div class="style-screen-adaptor body-padding">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aspernatur a molestias exercitationem. In amet, voluptas deserunt optio quidem eum unde obcaecati placeat pariatur autem tempora vel laudantium vero? Similique, modi?
-            <ui-view></ui-view>
-        </div>
+    <div class="filter-container style-screen-adaptor" ng-show="filterButton.isExpanded">
+        <weapon-filter></weapon-filter>
     </div>
 </div>
