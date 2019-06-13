@@ -299,7 +299,6 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
     };
 }]);
 angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
-    var contentHeight;
     var statsStoreObject = {};
     var recalculatedStats = {};
     var statInit = $q.defer();
@@ -399,9 +398,17 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
         });
     };
 
+    return {
+        collectStats: collectStats,
+        initWeaponStats: initWeaponStats,
+        getNewStats: getNewStats
+    };
+}]);
+angular.module('d2RollsApp').factory('styleHandler', [function() {
+    var contentHeight;
     function setContentHeight() {
         if (contentHeight) {
-            return contentHeight
+            return contentHeight;
         }
       
         var footer = document.getElementsByClassName('footer-menu')[0];
@@ -411,14 +418,23 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
         var view = document.getElementsByClassName('view')[0];
         view.style.height = menuHeight - 32 + 'px';
     };
-
+    
     return {
-        collectStats: collectStats,
-        setContentHeight: setContentHeight,
-        initWeaponStats: initWeaponStats,
-        getNewStats: getNewStats
-    };
+        setContentHeight: setContentHeight
+    }
 }]);
+angular.module('d2RollsApp')
+    .directive('filterButton', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: function() {
+                this.isExpanded = false;
+            },
+            controllerAs: 'filterButton',
+            templateUrl: '../html/components/filterButton/filterButton.tpl.html'
+        }
+    });
 angular.module('d2RollsApp').controller('footerPanelCtrl', ['$state', '$stateParams', function ($state, $stateParams) {
     var vm = this;
     vm.$onInit = function() {
@@ -660,17 +676,17 @@ angular.module('d2RollsApp')
     }]);
 angular
 .module('d2RollsApp')
-.controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'utils', function(
+.controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'styleHandler', function(
     $stateParams,
     fetchManifestService,
-    utils
+    styleHandler
 ) {
     var vm = this;
     var sortingType = $stateParams.sortBy;
     var lang = $stateParams.language;
 
     console.log($stateParams);
-    utils.setContentHeight();
+    styleHandler.setContentHeight();
 
     vm.isLoaded = false;
     vm.categories = [];
@@ -691,11 +707,11 @@ angular
         vm.isLoaded = !!vm.categories.length;
     });
 }]);
-angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'utils', function(
+angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'styleHandler', function(
     $stateParams,
     fetchManifestService,
     languageMapService,
-    utils
+    styleHandler
 ) {
     var vm = this;
     var lang = $stateParams.language;
@@ -703,7 +719,7 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
 
     vm.lang = lang;
 
-    utils.setContentHeight();
+    styleHandler.setContentHeight();
     vm.textSortAll = homeText.all;
     vm.sort = {
         rarity: homeText.sortByRarity,

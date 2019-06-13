@@ -1,0 +1,33 @@
+@import '../../common/commonStyles/vars.style.scss';
+
+$pd-filter-button: $fs-filter-button*0.5;
+
+.filter-view {
+    position: sticky;
+    bottom: 8*$body-padding;
+    margin-left: 60%;
+    background: $cl-gray-tint2;
+    border-radius: $pd-filter-button + $fs-filter-button;
+    width: max-content;
+}
+.filter-view.expanded {
+    width: 100%;
+    margin: 0;
+    bottom: 4*$body-padding;
+}
+.filter-button {
+    color: $cl-white-tint0;
+    background: $cl-blue-tint1;
+    width: max-content;
+    padding: $pd-filter-button $pd-filter-button*2;
+    font-size: $fs-filter-button;
+    line-height: $fs-filter-button;
+    border-radius: $pd-filter-button + $fs-filter-button;
+    cursor: pointer;
+}
+.filter-container.ng-hide {
+    display: none;
+}
+.filter-container {
+    display: block;
+}

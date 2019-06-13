@@ -1,8 +1,8 @@
-angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'utils', function(
+angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'styleHandler', function(
     $stateParams,
     fetchManifestService,
     languageMapService,
-    utils
+    styleHandler
 ) {
     var vm = this;
     var lang = $stateParams.language;
@@ -10,7 +10,7 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
 
     vm.lang = lang;
 
-    utils.setContentHeight();
+    styleHandler.setContentHeight();
     vm.textSortAll = homeText.all;
     vm.sort = {
         rarity: homeText.sortByRarity,
