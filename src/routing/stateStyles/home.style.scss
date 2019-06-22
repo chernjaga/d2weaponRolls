@@ -23,3 +23,8 @@
     display: grid;
     height: inherit;
 }
+.categories {
+    a:last-child {
+        margin-bottom: 5.5*$body-padding;
+    }
+}

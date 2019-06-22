@@ -3,7 +3,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', ['$state', '$statePa
     var lang = $stateParams.language;
     var includedFilters = []
     vm.text = languageMapService.getDictionary(lang, 'filter');
-    vm.classes = [5,6,7,8,9,10,11,13,14,54,153950757,3317538576,3954685534];
+    vm.classes = [5,6,7,8,9,10,11,13,14,54,153950757,3317538576,3954685534,1504945536];
     vm.slots = [2,3,4];
     vm.damageTypes = {
         '2303181850': '/common/destiny2_content/icons/DestinyDamageTypeDefinition_9fbcfcef99f4e8a40d8762ccb556fcd4.png',

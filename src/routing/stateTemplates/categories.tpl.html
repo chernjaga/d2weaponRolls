@@ -1,5 +1,5 @@
 <div class="style-screen-adaptor body-padding">
-    <div class="home-sorting-menu">
+    <div class="home-sorting-menu categories">
         <a ng-repeat="category in ::sorting.categories | orderBy: category"
             ui-sref="weaponList({language: sorting.lang, isFullList: false, filters: sorting.sortingType+':'+category, sortBy: sorting.sortingType})"
             role="link"
