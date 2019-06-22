@@ -22,10 +22,15 @@ angular
         var categoriesArray = [];
         for (var item in arrayOfItems) {
             var itemObject = arrayOfItems[item];
-            if (!sortObject[itemObject[sortingType].name]) {
-                sortObject[itemObject[sortingType].name] = true;
-                categoriesArray.push(itemObject[sortingType].name);
-            }
+            try {
+                if (!sortObject[itemObject[sortingType].name]) {
+                    sortObject[itemObject[sortingType].name] = true;
+                    categoriesArray.push(itemObject[sortingType].name);
+                }
+
+            } catch (e) {
+                    
+            };
         };
         vm.categories = categoriesArray;
         vm.isLoaded = !!vm.categories.length;

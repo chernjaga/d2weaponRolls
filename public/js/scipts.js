@@ -754,10 +754,15 @@ angular
         var categoriesArray = [];
         for (var item in arrayOfItems) {
             var itemObject = arrayOfItems[item];
-            if (!sortObject[itemObject[sortingType].name]) {
-                sortObject[itemObject[sortingType].name] = true;
-                categoriesArray.push(itemObject[sortingType].name);
-            }
+            try {
+                if (!sortObject[itemObject[sortingType].name]) {
+                    sortObject[itemObject[sortingType].name] = true;
+                    categoriesArray.push(itemObject[sortingType].name);
+                }
+
+            } catch (e) {
+                    
+            };
         };
         vm.categories = categoriesArray;
         vm.isLoaded = !!vm.categories.length;
@@ -797,7 +802,8 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     var rarityMap = fetchManifestService.rarityMap;
     var isFullList = $stateParams.isFullList;
     var filters = $stateParams.filters;
-    var sortType = $stateParams.sortBy === 'class' ? 'rarity' : 'class';
+    // var sortType = $stateParams.sortBy;
+    var sortType = 'class';
     
     vm.getRarityClass = getRarityClass;
     vm.searchPlaceHolder = search;
@@ -827,13 +833,16 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
         var filtersArray = [];
         var isApplied = false;
         if (typeof filters === 'string') {
-            filtersArray.push(filters)
+            filtersArray.push(filters);
         } else {
             filtersArray = filters;
         }
         for (var filter in filtersArray) {
             var categoryName = filtersArray[filter].split(':')[0];
             var categoryValue = filtersArray[filter].split(':')[1];
+            if (!item[categoryName]) {
+                return false;
+            }
             if (item[categoryName].name === categoryValue) {
                 isApplied = true;
                 break;
