@@ -843,12 +843,11 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
             if (!item[categoryName]) {
                 return false;
             }
-            if (item[categoryName].name === categoryValue) {
+            if (item[categoryName].name == categoryValue) {
                 isApplied = true;
                 break;
             }
         }
-
         return isApplied;
     };
 
@@ -903,7 +902,7 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
 
     function setWeaponStats(data, hash) {
         utils.initWeaponStats(data, hash);
-        console.log(vm.data);
+        console.log(vm.data.primaryData.hash);
     }
 
     function getPerksBucket(data) {
