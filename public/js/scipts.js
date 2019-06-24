@@ -237,17 +237,15 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 }
             },
             home: {
-                sortByWeaponClass: 'Сортировать по классу оружия',
-                sortByRarity: 'Сортировать по редкости',
-                sortBySource: 'Сортировать по источнику получения',
-                sortBySeasons: 'Сортировать по сезонам',
-                all: 'Весь список'
+                newStuff: 'НОВОЕ',
+                sources: 'АКТИВНОСТИ',
+                godRoll: 'ГОД РОЛЛ'
             }
         },
         en: {
             search: 'Search',
             filter: {
-                button: 'Filtr',
+                button: 'Filter',
                 weaponClass: 'Weapon class',
                 slot: 'Weapon slot',
                 damageType: 'Damage type',
@@ -284,11 +282,9 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 }
             },
             home: {
-                sortByWeaponClass: 'Sort by weapon class',
-                sortByRarity: 'Sort by rarity',
-                sortBySource: 'Sort by source',
-                sortBySeasons: 'Sort by seasons',
-                all: 'All'
+                newStuff: 'NEW STUFF',
+                sources: 'WEAPON SOURCES',
+                godRoll: 'GOD ROLL'
             }
         }
     };
@@ -488,6 +484,29 @@ angular.module('d2RollsApp')
             controllerAs: 'footer',
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
+    });
+function menuLinkCtrl($state) {
+    var vm = this;
+    vm.clickHandler = function() {
+        $state.go(vm.goTo, vm.params);
+    };
+}
+
+angular.module('d2RollsApp')
+    .directive('menuLink', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            bindToController: {
+                linkClass: '<',
+                goTo: '<',
+                linkText: '<',
+                params: '<'
+            },
+            templateUrl: '../html/components/menuLink/menuLink.tpl.html',
+            controller: menuLinkCtrl,
+            controllerAs: 'link'
+        };
     });
 function perksBinderCtrl(){
     var vm = this;
@@ -776,18 +795,23 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
 ) {
     var vm = this;
     var lang = $stateParams.language;
-    var homeText = languageMapService.getDictionary(lang, 'home');
-
+    var text = languageMapService.getDictionary(lang, 'home');
+    vm.sorting = [
+        {
+            sortBy: 'season',
+            text: text.newStuff
+        },
+        {
+            sortBy: 'source',
+            text: text.sources
+        },
+        {
+            sortBy: 'godRoll',
+            text: text.godRoll
+        }
+    ];
     vm.lang = lang;
-
     styleHandler.setContentHeight();
-    vm.textSortAll = homeText.all;
-    vm.sort = {
-        rarity: homeText.sortByRarity,
-        class: homeText.sortByWeaponClass,
-        source: homeText.sortBySource,
-        season: homeText.sortBySeasons
-    } 
 
     fetchManifestService.getWeaponList(lang, function(){});
 }]);

@@ -33,17 +33,15 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 }
             },
             home: {
-                sortByWeaponClass: 'Сортировать по классу оружия',
-                sortByRarity: 'Сортировать по редкости',
-                sortBySource: 'Сортировать по источнику получения',
-                sortBySeasons: 'Сортировать по сезонам',
-                all: 'Весь список'
+                newStuff: 'НОВОЕ',
+                sources: 'АКТИВНОСТИ',
+                godRoll: 'ГОД РОЛЛ'
             }
         },
         en: {
             search: 'Search',
             filter: {
-                button: 'Filtr',
+                button: 'Filter',
                 weaponClass: 'Weapon class',
                 slot: 'Weapon slot',
                 damageType: 'Damage type',
@@ -80,11 +78,9 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 }
             },
             home: {
-                sortByWeaponClass: 'Sort by weapon class',
-                sortByRarity: 'Sort by rarity',
-                sortBySource: 'Sort by source',
-                sortBySeasons: 'Sort by seasons',
-                all: 'All'
+                newStuff: 'NEW STUFF',
+                sources: 'WEAPON SOURCES',
+                godRoll: 'GOD ROLL'
             }
         }
     };

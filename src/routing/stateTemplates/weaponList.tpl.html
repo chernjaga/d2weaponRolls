@@ -23,7 +23,7 @@
                     </div>
                     <ul class="weapon-list-box" role="menu" ng-show="isExpanded">
                         <li 
-                            ng-repeat="item in weapons.list | filter: weaponSearch | orderBy: '-rarity.hash' "
+                            ng-repeat="item in weapons.list | filter: weaponSearch | orderBy: ['-rarity.hash','-season.name']"
                             ng-if="::(item.sortType === key)"
                             role="menuitem">
                             <a ui-sref="weaponView({weaponHash: item.hash, language: weapons.lang})"

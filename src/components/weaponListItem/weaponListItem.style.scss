@@ -3,7 +3,7 @@
 $word-spacing-damage-type: $body-padding*0.25;
 
 .category-title {
-    color: $cl-gray-tint3;
+    color: $cl-main-bg-red;
     margin-bottom: $body-padding;
 }
 .weapon-list-item {
@@ -87,6 +87,10 @@ $word-spacing-damage-type: $body-padding*0.25;
     left: 0;
     right: 0;
     input {
+        &::placeholder {
+            color: $cl-main-bg-red;
+        };
+        background: $cl-empty-bg-black;
         text-align: center;
         width: 100%;
         border-radius: $body-padding*0.5;

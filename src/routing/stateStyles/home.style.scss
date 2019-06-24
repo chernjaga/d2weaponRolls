@@ -1,6 +1,6 @@
 @import '../../common/commonStyles/vars.style.scss';
 
-.home-sorting-link {
+.sorting-link {
     background:$cl-main-bg-red;
     margin-bottom: $body-padding;
     padding: 2*$body-padding;   
@@ -10,17 +10,17 @@
     text-align: center;
     align-items: center;
     vertical-align: middle;
-    &.stuff {
+    &.season {
         background: url("../img/covers/menu_new_stuff.jpg");
         background-position: center;
         background-size: cover;
     }
-    &.sources {
+    &.source {
         background: url("../img/covers/menu_weapon_sources.jpg");
         background-position: center;
         background-size: cover;
     }
-    &.god-roll {
+    &.godRoll {
         background: url("../img/covers/menu_god_roll.jpg");
         background-position: center;
         background-size: cover;
@@ -39,7 +39,7 @@
     height: inherit;
 }
 .categories {
-    a:last-child {
+    .sorting-link.activity:last-child {
         margin-bottom: 5.5*$body-padding;
     }
 }

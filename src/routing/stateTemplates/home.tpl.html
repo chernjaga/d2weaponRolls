@@ -1,22 +1,11 @@
 <div class="style-screen-adaptor body-padding">
     <div class="home-sorting-menu">
-        <a ui-sref="categories({language: home.lang, sortBy: 'season'})"
-           role="link"
-           class="home-sorting-link main-menu stuff"
-           title="{{::description}}">
-                NEW STUFF
-        </a>
-        <a ui-sref="categories({language: home.lang, sortBy: 'source'})"
-           role="link"
-           class="home-sorting-link main-menu sources"
-           title="{{::description}}">
-                WEAPON SOURCES
-        </a>
-        <a ui-sref="categories({language: home.lang, sortBy: 'rarity'})"
-           role="link"
-           class="home-sorting-link main-menu god-roll"
-           title="{{::description}}">
-                GOD ROLL
-        </a>
+        <menu-link  ng-repeat="item in home.sorting"
+                    go-to="'categories'"
+                    params="{lang: home.lang, sortBy: item.sortBy}"
+                    link-class="item.sortBy"
+                    class="main-menu"
+                    link-text="item.text">
+        </menu-link>
     </div>
 </div>

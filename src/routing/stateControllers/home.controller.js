@@ -6,18 +6,23 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
 ) {
     var vm = this;
     var lang = $stateParams.language;
-    var homeText = languageMapService.getDictionary(lang, 'home');
-
+    var text = languageMapService.getDictionary(lang, 'home');
+    vm.sorting = [
+        {
+            sortBy: 'season',
+            text: text.newStuff
+        },
+        {
+            sortBy: 'source',
+            text: text.sources
+        },
+        {
+            sortBy: 'godRoll',
+            text: text.godRoll
+        }
+    ];
     vm.lang = lang;
-
     styleHandler.setContentHeight();
-    vm.textSortAll = homeText.all;
-    vm.sort = {
-        rarity: homeText.sortByRarity,
-        class: homeText.sortByWeaponClass,
-        source: homeText.sortBySource,
-        season: homeText.sortBySeasons
-    } 
 
     fetchManifestService.getWeaponList(lang, function(){});
 }]);
