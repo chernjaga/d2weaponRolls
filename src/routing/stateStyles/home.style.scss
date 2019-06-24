@@ -1,7 +1,7 @@
 @import '../../common/commonStyles/vars.style.scss';
 
 .home-sorting-link {
-    background: $cl-exotic-yellow;
+    background:$cl-main-bg-red;
     margin-bottom: $body-padding;
     padding: 2*$body-padding;   
     display: flex;
@@ -10,6 +10,21 @@
     text-align: center;
     align-items: center;
     vertical-align: middle;
+    &.stuff {
+        background: url("../img/covers/menu_new_stuff.jpg");
+        background-position: center;
+        background-size: cover;
+    }
+    &.sources {
+        background: url("../img/covers/menu_weapon_sources.jpg");
+        background-position: center;
+        background-size: cover;
+    }
+    &.god-roll {
+        background: url("../img/covers/menu_god_roll.jpg");
+        background-position: center;
+        background-size: cover;
+    }
     &:last-child {
         margin-bottom: 0;
     }

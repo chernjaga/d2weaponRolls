@@ -1,7 +1,7 @@
 @import '../../common/commonStyles/vars.style.scss';
 
 .footer-panel {
-    background-color: $cl-gray-tint1;
+    background-color: $cl-empty-bg-black;
     position: fixed;
     z-index: 60;
     width: 100%;
@@ -9,7 +9,7 @@
 }
 .footer-button {
     display: block;
-    color: $cl-gray-tint3;
+    color: $cl-main-bg-red;
     cursor: pointer;
 }
 .footer-button-container {
