@@ -50,12 +50,24 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
         },
         controller: 'categoriesCtrl as sorting',
         templateUrl: '../html/routing/stateTemplates/categories.tpl.html'
+    };
+
+    var filterState = {
+        name: 'filterState',
+        url: '/filter/{language}',
+        params: {
+            language: 'en',
+            filters: []
+        },
+        controller: 'weaponFilterCtrl as filter',
+        templateUrl: '../html/routing/stateTemplates/filterState.tpl.html'
     }
 
     $stateProvider.state(homeState);
     $stateProvider.state(categories);
     $stateProvider.state(weaponListState);
     $stateProvider.state(weaponViewState);
+    $stateProvider.state(filterState);
     $urlRouterProvider.otherwise('/home/en');
     $locationProvider.html5Mode(true);
 });

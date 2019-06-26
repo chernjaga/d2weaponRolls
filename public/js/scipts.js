@@ -50,12 +50,24 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
         },
         controller: 'categoriesCtrl as sorting',
         templateUrl: '../html/routing/stateTemplates/categories.tpl.html'
+    };
+
+    var filterState = {
+        name: 'filterState',
+        url: '/filter/{language}',
+        params: {
+            language: 'en',
+            filters: []
+        },
+        controller: 'weaponFilterCtrl as filter',
+        templateUrl: '../html/routing/stateTemplates/filterState.tpl.html'
     }
 
     $stateProvider.state(homeState);
     $stateProvider.state(categories);
     $stateProvider.state(weaponListState);
     $stateProvider.state(weaponViewState);
+    $stateProvider.state(filterState);
     $urlRouterProvider.otherwise('/home/en');
     $locationProvider.html5Mode(true);
 });
@@ -460,6 +472,29 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/filterButton/filterButton.tpl.html'
         }
     });
+function menuLinkCtrl($state) {
+    var vm = this;
+    vm.clickHandler = function() {
+        $state.go(vm.goTo, vm.params);
+    };
+}
+
+angular.module('d2RollsApp')
+    .directive('menuLink', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            bindToController: {
+                linkClass: '<',
+                goTo: '<',
+                linkText: '<',
+                params: '<'
+            },
+            templateUrl: '../html/components/menuLink/menuLink.tpl.html',
+            controller: menuLinkCtrl,
+            controllerAs: 'link'
+        };
+    });
 angular.module('d2RollsApp').controller('footerPanelCtrl', ['$state', '$stateParams', function ($state, $stateParams) {
     var vm = this;
     vm.$onInit = function() {
@@ -484,29 +519,6 @@ angular.module('d2RollsApp')
             controllerAs: 'footer',
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
-    });
-function menuLinkCtrl($state) {
-    var vm = this;
-    vm.clickHandler = function() {
-        $state.go(vm.goTo, vm.params);
-    };
-}
-
-angular.module('d2RollsApp')
-    .directive('menuLink', function () {
-        return {
-            restrict: 'E',
-            replace: true,
-            bindToController: {
-                linkClass: '<',
-                goTo: '<',
-                linkText: '<',
-                params: '<'
-            },
-            templateUrl: '../html/components/menuLink/menuLink.tpl.html',
-            controller: menuLinkCtrl,
-            controllerAs: 'link'
-        };
     });
 function perksBinderCtrl(){
     var vm = this;

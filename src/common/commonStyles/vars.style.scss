@@ -13,16 +13,16 @@ $cl-blue-tint1: rgb(13, 88, 252);
 $cl-uncommon-green: #366F42;
 $cl-common-white: #C4BDB5;
 $cl-tooltip-bg: rgba(240, 238, 234, 0.9);
-$cl-filter-item-bg: rgba(240, 238, 234, 0.2);
 $cl-active-perk-bg: rgba(240, 238, 234, 0.2);
 
 $cl-stat-negative: rgb(202, 95, 95);
 $cl-stat-positive: rgb(62, 161, 83);
 
 // restyling colors
-$cl-main-bg-black: #292C33;
-$cl-empty-bg-black: #25282F;
+$cl-main-bg-black: rgb(45, 49, 58);
+$cl-empty-bg-black: rgb(35, 38, 46);
 $cl-main-bg-red: #CC0001;
+$cl-filter-item-bg: rgba(240, 238, 234, 0.295);
 
 
 // paddings. 1rem ~ 16px;

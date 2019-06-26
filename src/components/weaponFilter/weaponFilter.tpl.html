@@ -1,41 +1,41 @@
 <div class="body-padding weapon-filter">
-    <div class="class-section">
-        <div class="class-section-title">{{::filter.text.weaponClass}}</div>
-        <ul>
+    <div class="filter-section class">
+        <div class="filter-section-title">{{::filter.text.weaponClass}}</div>
+        <ul class="filter-section-items">
             <li ng-repeat="hash in ::filter.classes"
-                class="class-section-item"
+                class="filter-section-item"
                 ng-class="{'included': this.isIncluded}"
                 ng-click="filter.toggleFilter(this, 'class', this.hash)">
                     <img ng-src="../img/weaponClasses/{{::hash}}.png" alt="weapon icon">
             </li>
         </ul>
     </div>
-    <div class="class-section slot">
-        <div class="class-section-title">{{::filter.text.slot}}</div>
-        <ul>
+    <div class="filter-section slot">
+        <div class="filter-section-title">{{::filter.text.slot}}</div>
+        <ul class="filter-section-items">
             <li ng-repeat="hash in ::filter.slots"
-                class="class-section-item"
+                class="filter-section-item"
                 ng-class="{'included': this.isIncluded}"
                 ng-click="filter.toggleFilter(this, 'slot', this.hash)">
                     <img ng-src="../img/slot/{{::hash}}.png" alt="weapon icon">
             </li>
         </ul>
     </div>
-    <div class="class-section rarity">
-        <div class="class-section-title">{{::filter.text.rarity}}</div>
-        <ul>
+    <div class="filter-section rarity">
+        <div class="filter-section-title">{{::filter.text.rarity}}</div>
+        <ul class="filter-section-items">
             <li ng-repeat="hash in ::filter.rarity"
-                class="class-section-item">
+                class="filter-section-item">
                 <div class="bg {{::hash }}">
                 </div>
             </li>
         </ul>
     </div>
-    <div class="class-section damage-type">
-        <div class="class-section-title">{{::filter.text.damageType}}</div>
-        <ul>
+    <div class="filter-section damage-type">
+        <div class="filter-section-title">{{::filter.text.damageType}}</div>
+        <ul class="filter-section-items">
             <li ng-repeat="(key, value) in ::filter.damageTypes"
-                class="class-section-item"
+                class="filter-section-item"
                 ng-class="{'included': this.isIncluded}"
                 ng-click="filter.toggleFilter(this, 'damageType')">
                     <img ng-src="https://www.bungie.net{{value}}" alt="weapon icon">
