@@ -8,29 +8,43 @@
     bottom: 0;
 }
 .footer-button {
-    display: block;
+    display: flex;
+    position: relative;
+    width: 30%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     color: $cl-main-bg-red;
     cursor: pointer;
+    &.h-home, &.h-categories, &.w-weaponList, &.s-settings {
+        background: rgb(204,0,1);
+        background: radial-gradient(circle at 50% 145%, $cl-main-bg-red 0%, $cl-empty-bg-black 55%);
+        .active-highlight {
+            display: flex;
+        }
+    };
 }
 .footer-button-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
-.footer-menu-container {
-    display: block;
-    margin: 0 auto;
-    max-width: 490px;
-}
-.footer-settings-container {
-    display: block;
-    color: $cl-gray-tint3;
-    padding: $body-padding*2 0;
-    max-height: 300px;
-    opacity: 1;
-    transition: 0.2s;
-    &.ng-hide {
-        max-height: 0;
-        opacity: 0;
-        transition: max-height 0.2s;
+.active-highlight {
+    display: none;
+    width: 35%;
+    justify-content: center;
+    div {
+        border: 1px solid $cl-main-bg-red;
+        border-radius: 1px;
+        height: 2px;
+        margin: 0 1px;
+        background: $cl-main-bg-red;
+        margin-bottom: $body-padding;
+    }
+    &.end {
+        div {
+            margin-bottom: 0;
+            margin-top: $body-padding;
+        }
     }
 }
+

@@ -36,6 +36,11 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 newStuff: 'НОВОЕ',
                 sources: 'АКТИВНОСТИ',
                 godRoll: 'ГОД РОЛЛ'
+            },
+            footerMenu: {
+                home: 'Домашняя',
+                weapon: 'Арсенал',
+                settings: 'Настройки'
             }
         },
         en: {
@@ -81,6 +86,11 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 newStuff: 'NEW STUFF',
                 sources: 'WEAPON SOURCES',
                 godRoll: 'GOD ROLL'
+            },
+            footerMenu: {
+                home: 'Home',
+                weapon: 'Weapon',
+                settings: 'Settings'
             }
         }
     };

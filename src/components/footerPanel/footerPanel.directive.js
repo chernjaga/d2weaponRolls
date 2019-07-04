@@ -1,5 +1,5 @@
 angular.module('d2RollsApp')
-    .directive('footerPanel', function () {
+    .directive('footerPanel', function ($state) {
         return {
             restrict: 'E',
             replace: false,

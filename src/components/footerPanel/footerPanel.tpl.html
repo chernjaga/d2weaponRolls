@@ -1,27 +1,71 @@
-<div class="body-padding footer-menu style-screen-adaptor">
+<div class="footer-menu style-screen-adaptor">
     <div class="footer-menu-container">
         <div class="footer-button-container">
             <a ui-sref="home({language: footer.lang})"
-                class="footer-button"
                 role="link" title="To weapon list"
-                class="footer-button">
-                    Home
+                class="footer-button h-{{footer.currentState}}">
+                <div class="active-highlight">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                <img src="./img/menu/home.png" alt="home icon">
+                <span>
+                    {{::footer.text.home}}    
+                </span>
+                <div class="active-highlight end">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
             </a>
             <a ui-sref="weaponList({language: footer.lang, isFullList: true})"
                role="link"
-               class="footer-button"
+               class="footer-button w-{{footer.currentState}}"
                title="Show All list">
-                    All
+               <div class="active-highlight">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+               <img src="./img/menu/weapons.png" alt="weapon icon">
+               <span>
+                    {{::footer.text.weapon}}    
+                </span>
+                <div class="active-highlight end">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
             </a>
             <div role="button"
-                class="footer-button"
-                ng-click="footer.isOpenedSetting = !footer.isOpenedSetting">
-                    Settings <span ng-show="!footer.isOpenedSetting">&#9651;</span><span ng-show="footer.isOpenedSetting">&#9661;</span>
-            </div>
-        </div>
-        <div class="footer-settings-container" ng-show="footer.isOpenedSetting">
-            <div ng-click="footer.changeLanguage()">
-                Language: RU - EN
+                class="footer-button s-{{footer.currentState}}">
+                <div class="active-highlight">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                <img src="./img/menu/settings.png" alt="settings icon">
+                <span>
+                    {{::footer.text.settings}}    
+                </span>
+                <div class="active-highlight end">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
             </div>
         </div>
     </div>

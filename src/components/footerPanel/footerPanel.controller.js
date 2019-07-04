@@ -1,15 +1,16 @@
-angular.module('d2RollsApp').controller('footerPanelCtrl', ['$state', '$stateParams', function ($state, $stateParams) {
+angular.module('d2RollsApp').controller('footerPanelCtrl', ['$state', '$stateParams', '$transitions', 'languageMapService', function (
+    $state,
+    $stateParams,
+    $transitions,
+    languageMapService
+    ) {
     var vm = this;
-    vm.$onInit = function() {
-        var lang = $stateParams.language;
-        vm.lang = $stateParams.language;
-        vm.isOpenedSetting = false;
-        vm.changeLanguage = function() {
-            var params = $stateParams;
-            params.language = $stateParams.language === 'ru' ? 'en' : 'ru';
-            var stateName = $state.current.name;
-            vm.isOpenedSetting = false;
-            $state.go(stateName, params);
+   
+    $transitions.onSuccess({}, function() {
+        if (!vm.text) {
+            vm.text = languageMapService.getDictionary($stateParams.language, 'footerMenu');
         }
-    };
+        vm.currentState = $state.current.name;
+    });
+
 }]);

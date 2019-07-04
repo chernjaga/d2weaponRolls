@@ -5,12 +5,12 @@ angular.module('d2RollsApp').factory('styleHandler', [function() {
             return contentHeight;
         }
       
-        var footer = document.getElementsByClassName('footer-menu')[0];
+        var footer = document.getElementsByClassName('footer-button-container')[0];
         var bodyHeight = footer.getBoundingClientRect().bottom;
         var footerHeight = getComputedStyle(footer).height.replace('px', '');
-        var menuHeight = bodyHeight - footerHeight
+        var menuHeight = bodyHeight - 104;
         var view = document.getElementsByClassName('view')[0];
-        view.style.height = menuHeight - 32 + 'px';
+        view.style.height = menuHeight + 'px';
     };
     
     return {

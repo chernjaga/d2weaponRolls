@@ -1,56 +1,47 @@
 @import '../../common/commonStyles/vars.style.scss';
 
 .weapon-filter {
-    position: relative;
-    background: $cl-main-bg-black;
     color: $cl-main-bg-red;
-    margin-bottom: 4*$body-padding;
-}
-
-.filter-section {
-    margin-bottom: $body-padding*2;
-    .filter-section-title {
-        margin-bottom: $body-padding;
-    }
-    .filter-section-items {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        ul {
-            min-width: 100%;
-            display: flex;
-            overflow-x: auto;
-        }
-    }
-    &.slot {
-    }
-    &.damage-type {
-    }
-    &.rarity {
-    }
-    .filter-section-item {
-        background: $cl-empty-bg-black;
-        min-width: max-content;
-        padding: $body-padding;
-        height: auto;
-        &.included {
-            background: $cl-main-bg-red;
-        }
-        img {
-            object-fit: contain;
-            width: 100%;
-
-        }
-    }
-}
-.filter-buttons-panel {
-    margin-top: 4*$body-padding;
     display: grid;
-    grid-template-columns: 1fr 1fr;
     grid-gap: $body-padding;
-    .button {
-        padding: $body-padding;
-        background: $cl-filter-item-bg;
-        text-align: center;
+    grid-template-rows: repeat(autofit, 1fr);
+    grid-template-columns: repeat(autofit, 1fr);
+}
+
+.filter-section-title {
+    grid-column: 1;
+}
+
+.filter-section-content {
+    display: grid;
+    grid-gap: $body-padding;
+    grid-template-columns: subgrid;
+    grid-template-rows: subgrid;
+    overflow-x: auto;
+    overflow-y: hidden;
+    &::-webkit-scrollbar {
+        display: none;
     }
+}
+.filter-section-item {
+    display: flex;
+    height: 6*$body-padding;
+    justify-content: center;
+    align-items: center;
+    background: $cl-empty-bg-black;
+    padding: $body-padding;
+    img {
+        &.small-icon {
+            width: 6*$body-padding;
+            height: 6*$body-padding;
+        }
+        
+    }
+    &.included {
+        background: $cl-main-bg-red;
+    }
+}
+
+.filter-button {
+    grid-column: 1 /1 ;
 }
