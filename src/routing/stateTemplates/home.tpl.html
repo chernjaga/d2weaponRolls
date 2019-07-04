@@ -1,7 +1,7 @@
 <div class="style-screen-adaptor body-padding">
     <div class="home-sorting-menu">
         <menu-link  ng-repeat="item in home.sorting"
-                    go-to="'filterState'"
+                    go-to="item.toState"
                     params="{lang: home.lang, sortBy: item.sortBy}"
                     link-class="item.sortBy"
                     class="main-menu"

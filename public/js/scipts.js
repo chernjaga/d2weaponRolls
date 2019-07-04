@@ -472,29 +472,6 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/filterButton/filterButton.tpl.html'
         }
     });
-function menuLinkCtrl($state) {
-    var vm = this;
-    vm.clickHandler = function() {
-        $state.go(vm.goTo, vm.params);
-    };
-}
-
-angular.module('d2RollsApp')
-    .directive('menuLink', function () {
-        return {
-            restrict: 'E',
-            replace: true,
-            bindToController: {
-                linkClass: '<',
-                goTo: '<',
-                linkText: '<',
-                params: '<'
-            },
-            templateUrl: '../html/components/menuLink/menuLink.tpl.html',
-            controller: menuLinkCtrl,
-            controllerAs: 'link'
-        };
-    });
 angular.module('d2RollsApp').controller('footerPanelCtrl', ['$state', '$stateParams', function ($state, $stateParams) {
     var vm = this;
     vm.$onInit = function() {
@@ -519,6 +496,29 @@ angular.module('d2RollsApp')
             controllerAs: 'footer',
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
+    });
+function menuLinkCtrl($state) {
+    var vm = this;
+    vm.clickHandler = function() {
+        $state.go(vm.goTo, vm.params);
+    };
+}
+
+angular.module('d2RollsApp')
+    .directive('menuLink', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            bindToController: {
+                linkClass: '<',
+                goTo: '<',
+                linkText: '<',
+                params: '<'
+            },
+            templateUrl: '../html/components/menuLink/menuLink.tpl.html',
+            controller: menuLinkCtrl,
+            controllerAs: 'link'
+        };
     });
 function perksBinderCtrl(){
     var vm = this;
@@ -685,82 +685,6 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
         }
     })
-angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', ['$location', '$stateParams','utils', function ($location, $stateParams, utils) {
-    var vm = this;
-    var currentUrl;
-    var hash = $stateParams.weaponHash;
-    vm.collectRoll = function(isManualEvent, callback){
-        if (currentUrl === $location.url() && !isManualEvent) {
-            return;
-        }
-
-        var perksCollection = vm.pool;
-        var roll = [];
-        var statsToRecalculate = [];
-        for (var perk in perksCollection) {
-            var investmentStats = perksCollection[perk].vendorPerk.investmentStats;
-            if (!!investmentStats.length) {
-                statsToRecalculate = statsToRecalculate.concat(investmentStats);
-            }
-            roll.push(perksCollection[perk].vendorPerk.hash);
-        }
-        currentUrl = $location.url();
-        utils.collectStats(statsToRecalculate, hash);
-        vm.investmentStats = statsToRecalculate;
-        $location.search({roll: roll});
-        if (callback) {
-            callback()
-        }
-    };
-}]);
-angular.module('d2RollsApp')
-    .directive('weaponPerksPanel', [ '$interval', function($interval) {
-        return {
-            restrict: 'E',
-            replace: false,
-            controller: 'weaponPerksPanelCtrl as perks',
-            bindToController: {
-                pool: '<',
-                investmentStats: '='
-            },
-            templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html',
-            link: function(scope, element) {
-                var timer;
-                var isHolding = false;
-                var target;
-                element.on('contextmenu', function(event) {
-                    event.preventDefault();
-                    event.stopPropagation(); // not necessary in my case, could leave in case stopImmediateProp isn't available? 
-                    event.stopImmediatePropagation();
-                    return false;
-                });
-                element.on('mousedown touchstart', function(event) {
-                    var previousElement = element[0].getElementsByClassName('has-tooltip')[0];
-                    isHolding = true;
-                    target = event.target;
-                    if (previousElement && previousElement != target.parentElement) {
-                        previousElement.classList.remove('has-tooltip');
-                    }
-                    timer = $interval(function() {                   
-                        if (isHolding && target === event.target) {
-                            addToolTip(target);       
-                        }
-                    }, 300, 1, true);
-                });
-                element.on('mouseup touchend', function(event) {
-                    isHolding = false;
-                    $interval.cancel(timer);
-                    return false;
-                });
-
-                function addToolTip(eventTarget) {
-                    if (eventTarget.className.includes('perk-icon')) {
-                            eventTarget.parentElement.classList.add('has-tooltip');
-                    }
-                };
-            }
-        };
-    }]);
 angular
 .module('d2RollsApp')
 .controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'styleHandler', function(
@@ -811,14 +735,17 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
     vm.sorting = [
         {
             sortBy: 'season',
+            toState: 'categories',
             text: text.newStuff
         },
         {
             sortBy: 'source',
+            toState: 'categories',
             text: text.sources
         },
         {
             sortBy: 'godRoll',
+            toState: 'filterState',
             text: text.godRoll
         }
     ];
@@ -954,3 +881,79 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
     };
 
 }]);
+angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', ['$location', '$stateParams','utils', function ($location, $stateParams, utils) {
+    var vm = this;
+    var currentUrl;
+    var hash = $stateParams.weaponHash;
+    vm.collectRoll = function(isManualEvent, callback){
+        if (currentUrl === $location.url() && !isManualEvent) {
+            return;
+        }
+
+        var perksCollection = vm.pool;
+        var roll = [];
+        var statsToRecalculate = [];
+        for (var perk in perksCollection) {
+            var investmentStats = perksCollection[perk].vendorPerk.investmentStats;
+            if (!!investmentStats.length) {
+                statsToRecalculate = statsToRecalculate.concat(investmentStats);
+            }
+            roll.push(perksCollection[perk].vendorPerk.hash);
+        }
+        currentUrl = $location.url();
+        utils.collectStats(statsToRecalculate, hash);
+        vm.investmentStats = statsToRecalculate;
+        $location.search({roll: roll});
+        if (callback) {
+            callback()
+        }
+    };
+}]);
+angular.module('d2RollsApp')
+    .directive('weaponPerksPanel', [ '$interval', function($interval) {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: 'weaponPerksPanelCtrl as perks',
+            bindToController: {
+                pool: '<',
+                investmentStats: '='
+            },
+            templateUrl: '../html/components/weaponPerksPanel/weaponPerksPanel.tpl.html',
+            link: function(scope, element) {
+                var timer;
+                var isHolding = false;
+                var target;
+                element.on('contextmenu', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation(); // not necessary in my case, could leave in case stopImmediateProp isn't available? 
+                    event.stopImmediatePropagation();
+                    return false;
+                });
+                element.on('mousedown touchstart', function(event) {
+                    var previousElement = element[0].getElementsByClassName('has-tooltip')[0];
+                    isHolding = true;
+                    target = event.target;
+                    if (previousElement && previousElement != target.parentElement) {
+                        previousElement.classList.remove('has-tooltip');
+                    }
+                    timer = $interval(function() {                   
+                        if (isHolding && target === event.target) {
+                            addToolTip(target);       
+                        }
+                    }, 300, 1, true);
+                });
+                element.on('mouseup touchend', function(event) {
+                    isHolding = false;
+                    $interval.cancel(timer);
+                    return false;
+                });
+
+                function addToolTip(eventTarget) {
+                    if (eventTarget.className.includes('perk-icon')) {
+                            eventTarget.parentElement.classList.add('has-tooltip');
+                    }
+                };
+            }
+        };
+    }]);

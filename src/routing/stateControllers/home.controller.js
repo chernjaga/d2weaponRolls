@@ -10,14 +10,17 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
     vm.sorting = [
         {
             sortBy: 'season',
+            toState: 'categories',
             text: text.newStuff
         },
         {
             sortBy: 'source',
+            toState: 'categories',
             text: text.sources
         },
         {
             sortBy: 'godRoll',
+            toState: 'filterState',
             text: text.godRoll
         }
     ];

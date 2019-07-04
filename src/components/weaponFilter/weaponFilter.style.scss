@@ -14,28 +14,32 @@
     }
     .filter-section-items {
         display: flex;
-        width:  100%;
+        justify-content: center;
+        align-items: center;
+        ul {
+            min-width: 100%;
+            display: flex;
+            overflow-x: auto;
+        }
     }
     &.slot {
-
     }
     &.damage-type {
     }
     &.rarity {
-
     }
     .filter-section-item {
         background: $cl-empty-bg-black;
-        display: flex;
-        width: 30%;
+        min-width: max-content;
         padding: $body-padding;
+        height: auto;
         &.included {
             background: $cl-main-bg-red;
         }
-
         img {
             object-fit: contain;
             width: 100%;
+
         }
     }
 }
