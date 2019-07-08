@@ -18,13 +18,19 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     var includedFilters = [];
     var filterInit = $q.defer();
     var sectionCounter = {};
-
+    var itemsToSort;
+    
+    vm.moveToList = moveToList;
+    vm.itemsDetected;
     vm.includedItems = {};
     filterService.resetFilters();
     fetchManifestService.getHashToName(function(initialHashes) {
         vm.hashToName = initialHashes;
         filterInit.resolve();
     }, lang);
+    fetchManifestService.getWeaponList(lang, function(data){
+        itemsToSort = data;
+    });
 
     $q.when(filterInit.promise).then(function(){
         init();
@@ -32,12 +38,18 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     
     function init() {
         vm.text = languageMapService.getDictionary(lang, 'filter');
-        vm.toggleFilter = function(target, filterBy, hash) {
-            
+        vm.toggleFilter = function(target, filterBy, hash) {   
+            var filterItem = `${filterBy}:${hash}`;
+            if (!includedFilters.includes(filterItem)) {
+                includedFilters.push(filterItem);
+            } else {
+                includedFilters = removeFromFilters(includedFilters, filterItem);
+            }
             setIncludedNumber(target, filterBy, hash);
             target.isIncluded = !target.isIncluded;
-            // console.log(filterBy, + ':' + hash);
-            // console.log(target);
+            filterService.getFilteredItems(function(data){
+                console.log(data);
+            }, includedFilters);
         };
     };
 
@@ -51,5 +63,18 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
             delete  sectionCounter[filterBy][hash];
         }
         vm.includedItems[filterBy] = Object.keys(sectionCounter[filterBy]).length;
+    };
+
+    function removeFromFilters(filtersArray, item) {
+        return filtersArray.filter(function(element){
+            return element != item;
+        }); 
+    };
+
+    function moveToList() {
+        $state.go('weaponList', {
+            language: lang,
+            filters: includedFilters
+        });
     }
 }]);

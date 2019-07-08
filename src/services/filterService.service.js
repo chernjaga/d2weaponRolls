@@ -18,10 +18,11 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
     };
 
     function getFilteredItems(callback, filters ,isReset) {
+        var outputItems = filteredItems.length ? filteredItems : itemsArray;
         if (!itemsArray.length) {
             fetchItems.then(function(items){
                 callback({
-                    items: applyFilter(filters, itemsArray),
+                    items: applyFilter(filters, outputItems),
                     sections: sortSections
                 })
             });
@@ -29,41 +30,40 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
         }
 
         callback({
-            items: applyFilter(filters, itemsArray),
+            items: applyFilter(filters, outputItems),
             sections: sortSections
         });
     };
 
-    function isShownByFilter(item, filters, isCombinedFilter) {
-        var filtersArray = [];
+    function isShownByFilter(item, filter) {
         var isApplied = false;
-        if (typeof filters === 'string') {
-            filtersArray.push(filters);
-        } else {
-            filtersArray = filters;
-        }
-        for (var filter in filtersArray) {
-            var categoryName = filtersArray[filter].split(':')[0];
-            var categoryValue = filtersArray[filter].split(':')[1];
+            var categoryName = filter.split(':')[0];
+            var categoryValue = filter.split(':')[1];
             if (!item[categoryName]) {
                 return false;
             }
             if (item[categoryName].name == categoryValue) {
                 isApplied = true;
-                break;
             }
-        }
         return isApplied;
     };
 
     function applyFilter(filters, arrayToFilter) {
+        var filtersArray = [];
+        if (typeof filters === 'string') {
+            filtersArray.push(filters);
+        } else {
+            filtersArray = filters;
+        }
         for (var item in arrayToFilter) {
             var itemObject = arrayToFilter[item];
-            if (isShownByFilter(itemObject, filters)) {
-                itemObject.sortType = itemObject[sortType].name;
-                filteredItems.push(itemObject);
-                if (!itemObject[itemObject[sortType].name]) {
-                    sortSections[itemObject[sortType].name] = true;
+            for (var filter in filtersArray) {
+                if (isShownByFilter(itemObject, filtersArray[filter])) {
+                    itemObject.sortType = itemObject[sortType].name;
+                    filteredItems.push(itemObject);
+                    if (!itemObject[itemObject[sortType].name]) {
+                        sortSections[itemObject[sortType].name] = true;
+                    }
                 }
             }
         }

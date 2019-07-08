@@ -15,7 +15,6 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     vm.lang = lang;
     vm.isLoaded = false;
     vm.isFilterActive = false;
-    
     filterService.getFilteredItems(function(filteredObject) {
         vm.list = filteredObject.items;
         vm.categoryHeaders = filteredObject.sections;
