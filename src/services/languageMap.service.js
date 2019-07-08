@@ -13,7 +13,8 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 season: 'Сезон',
                 perks: 'Перки',
                 cancel: 'Отменить',
-                apply: 'Применить'
+                apply: 'Применить',
+                selected: 'Выбрано'
             },
             sorting: {
                 weaponRarity: {
@@ -58,7 +59,8 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 frame: 'Frame',
                 perks: 'Perks',
                 cancel: 'Cancel',
-                apply: 'Apply'
+                apply: 'Apply',
+                selected: 'Selected'
 
             },
             sorting: {

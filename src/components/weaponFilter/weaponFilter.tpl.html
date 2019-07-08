@@ -1,13 +1,18 @@
 <div class="body-padding">
-    <div class="weapon-filter" ng-repeat="(itemName, itemContent) in filter.hashToName">
-        <div class="filter-section-title">{{::filter.text[itemName]}}</div>
-        <div class="filter-section-content">
+    <div class="weapon-filter" ng-repeat="(itemName, itemContent) in ::filter.hashToName">
+        <div class="filter-section-title">
+            {{::filter.text[itemName]}} 
+            <span ng-show="filter.includedItems[itemName]">
+                ({{::filter.text.selected}}: {{filter.includedItems[itemName]}})
+            </span>
+        </div>
+        <div class="filter-section-content {{::itemName}}">
             <div ng-repeat="(hash, name) in ::itemContent"
                 class="filter-section-item"
                 style="grid-column:{{$index+1}}"
                 ng-class="{'included': this.isIncluded}"
                 ng-click="filter.toggleFilter(this, itemName, this.name)">
-                    <img ng-src="../img/filterAssets/{{::itemName}}/{{::hash}}.png" alt="{{name}}">
+                    <img class="{{::itemName}}" ng-src="../img/filterAssets/{{::itemName}}/{{::hash}}.png" alt="{{name}}">
             </div>
         </div>
     </div>
