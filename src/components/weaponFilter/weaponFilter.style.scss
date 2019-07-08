@@ -6,6 +6,7 @@
     grid-gap: $body-padding;
     grid-template-rows: repeat(autofit, 1fr);
     grid-template-columns: repeat(autofit, 1fr);
+    margin-bottom: $body-padding*1.5;
 }
 
 .filter-section-title {
@@ -31,11 +32,7 @@
     background: $cl-empty-bg-black;
     padding: $body-padding;
     img {
-        &.small-icon {
-            width: 6*$body-padding;
-            height: 6*$body-padding;
-        }
-        
+        max-width: 100px;       
     }
     &.included {
         background: $cl-main-bg-red;
