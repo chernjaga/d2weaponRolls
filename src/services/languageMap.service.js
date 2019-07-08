@@ -4,11 +4,13 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
             search: 'Поиск',
             filter: {
                 button: 'Фильтр',
-                weaponClass: 'Класс оружия',
+                class: 'Класс оружия',
                 slot: 'Слот оружия',
+                ammoType: 'Тип патронов',
                 damageType: 'Тип урона',
                 rarity: 'Редкость',
                 frame: 'Рама',
+                season: 'Сезон',
                 perks: 'Перки',
                 cancel: 'Отменить',
                 apply: 'Применить'
@@ -47,7 +49,9 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
             search: 'Search',
             filter: {
                 button: 'Filter',
-                weaponClass: 'Weapon class',
+                class: 'Weapon class',
+                ammoType: 'Ammo type',
+                season: 'Season',
                 slot: 'Weapon slot',
                 damageType: 'Damage type',
                 rarity: 'Rarity',

@@ -85,7 +85,17 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
     };
 
     var dataDownloadDeferred = $q.defer();
+    var filterHashesDeferred = $q.defer();
     var perksDownloadDeferred = $q.defer();
+    var hashToName = {
+        class: {},
+        rarity: {},
+        slot: {},
+        season: {},
+        ammoType: {},
+        source: {},
+        damageType: {}
+    };
 
     function getWeaponList (language, callback) {
         if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
@@ -93,33 +103,32 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
 
             return;
         }
-        var weaponListPromise = $q(function(resolve){
-            $http.post('/getWeaponList', JSON.stringify({language: language})).then(function(response) {
+        var weaponListPromise = $q(function(resolve) {
+            resolve($http.post('/getWeaponList', JSON.stringify({language: language})).then(function(response) {
                 weaponListObject = response.data;
                 if (callback) {
                     callback(weaponListObject);
                 }
-                resolve();
-            });
+                return weaponListObject;
+            }));
         });
 
         var weaponDataPromise = $q(function(resolve){
-            $http.post('/getWeaponData', JSON.stringify({language: language})).then(function(response) {
+            resolve($http.post('/getWeaponData', JSON.stringify({language: language})).then(function(response) {
                 weaponData = response.data;
                 if (callback) {
                     callback(weaponListObject);
                 }
 
-                dataDownloadDeferred.resolve();
-                resolve();
-            });
+                dataDownloadDeferred.resolve();;
+            }));
         });
 
         var weaponPerksPromise = $q(function(resolve) {
-            $http.post('/getWeaponPerks', JSON.stringify({language: language})).then(function(response) {
+            resolve($http.post('/getWeaponPerks', JSON.stringify({language: language})).then(function(response) {
                 perksBucket = response.data;
                 perksDownloadDeferred.resolve(perksBucket);
-            });
+            }));
         });
 
         lastLanguage = language;
@@ -128,8 +137,46 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
             weaponListPromise,
             weaponDataPromise,
             weaponPerksPromise
-        ]).catch(function(error) {
+        ]).then(function(responses) {
+            var items = responses[0];
+            for (var hash in items) {
+
+                if (!hashToName.class[items[hash].class.hash]) {
+                    hashToName.class[items[hash].class.hash] = items[hash].class.name;
+                }
+                if (!hashToName.slot[items[hash].slot.hash]) {
+                    hashToName.slot[items[hash].slot.hash] = items[hash].slot.name;
+                }
+                if (!hashToName.rarity[items[hash].rarity.hash]) {
+                    hashToName.rarity[items[hash].rarity.hash] = items[hash].rarity.name;
+                }
+                if (!hashToName.season[items[hash].season.hash]) {
+                    hashToName.season[items[hash].season.name] = items[hash].season.name;
+                }
+                if (!hashToName.source[items[hash].source.hash]) {
+                    hashToName.source[items[hash].source.hash] = items[hash].source.name;
+                }
+                if (!hashToName.damageType[items[hash].damageType.hash]) {
+                    hashToName.damageType[items[hash].damageType.hash] = items[hash].damageType.name;
+                }
+                hashToName.ammoType = {
+                    1: 1,
+                    2: 2,
+                    3: 3
+                }
+            }
+            filterHashesDeferred.resolve();
+        }).catch(function(error) {
             console.log(error);
+        });
+    };
+    function getHashToName(callback, language) {
+        if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
+            callback(hashToName);
+            return;
+        }
+        $q.when(filterHashesDeferred.promise).then(function() {
+            callback(hashToName);
         });
     };
     
@@ -197,7 +244,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                     for (var randomPerk of perk.randomizedPerks) {
                         randomizedPerks.push(perksBucket[randomPerk])
                     }
-                    objectToPush.randomizedPerks = randomizedPerks
+                    objectToPush.randomizedPerks = randomizedPerks;
                 }
                 bucketToReturn.push(objectToPush);
             }
@@ -211,7 +258,92 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         getSingleWeaponData: getSingleWeaponData,
         getWeaponList: getWeaponList,
         rarityMap: rarityMap,
+        getHashToName: getHashToName,
         weaponData: weaponData
+    };
+}]);
+angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fetchManifestService', function($q, $stateParams, fetchManifestService) {
+    var itemsArray = [];
+    var filteredItems = [];
+    var sortType = 'class';
+    var applyDefer = $q.defer();
+    var sortSections = {};
+    var fetchItems = new Promise(function(resolve){
+        fetchManifestService.getWeaponList($stateParams.language, function(items){
+            itemsArray = items;
+            resolve(items);
+        });
+    });
+
+    //todo: language dependency
+
+    function setSortType(newType) {
+        sortType = newType; 
+    };
+
+    function getFilteredItems(callback, filters ,isReset) {
+        if (!itemsArray.length) {
+            fetchItems.then(function(items){
+                callback({
+                    items: applyFilter(filters, itemsArray),
+                    sections: sortSections
+                })
+            });
+            return;
+        }
+
+        callback({
+            items: applyFilter(filters, itemsArray),
+            sections: sortSections
+        });
+    };
+
+    function isShownByFilter(item, filters, isCombinedFilter) {
+        var filtersArray = [];
+        var isApplied = false;
+        if (typeof filters === 'string') {
+            filtersArray.push(filters);
+        } else {
+            filtersArray = filters;
+        }
+        for (var filter in filtersArray) {
+            var categoryName = filtersArray[filter].split(':')[0];
+            var categoryValue = filtersArray[filter].split(':')[1];
+            if (!item[categoryName]) {
+                return false;
+            }
+            if (item[categoryName].name == categoryValue) {
+                isApplied = true;
+                break;
+            }
+        }
+        return isApplied;
+    };
+
+    function applyFilter(filters, arrayToFilter) {
+        for (var item in arrayToFilter) {
+            var itemObject = arrayToFilter[item];
+            if (isShownByFilter(itemObject, filters)) {
+                itemObject.sortType = itemObject[sortType].name;
+                filteredItems.push(itemObject);
+                if (!itemObject[itemObject[sortType].name]) {
+                    sortSections[itemObject[sortType].name] = true;
+                }
+            }
+        }
+        applyDefer.resolve();
+        return filteredItems;
+    };
+
+    function resetFilters() {
+        filteredItems = [];
+    };
+    return {
+        getFilteredItems: getFilteredItems,
+        sortSections: sortSections,
+        resetFilters: resetFilters,
+        setSortType: setSortType,
+        applyFilter: applyFilter
     };
 }]);
 angular.module('d2RollsApp').factory('languageMapService', [ function() {
@@ -220,11 +352,13 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
             search: 'Поиск',
             filter: {
                 button: 'Фильтр',
-                weaponClass: 'Класс оружия',
+                class: 'Класс оружия',
                 slot: 'Слот оружия',
+                ammoType: 'Тип патронов',
                 damageType: 'Тип урона',
                 rarity: 'Редкость',
                 frame: 'Рама',
+                season: 'Сезон',
                 perks: 'Перки',
                 cancel: 'Отменить',
                 apply: 'Применить'
@@ -263,7 +397,9 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
             search: 'Search',
             filter: {
                 button: 'Filter',
-                weaponClass: 'Weapon class',
+                class: 'Weapon class',
+                ammoType: 'Ammo type',
+                season: 'Season',
                 slot: 'Weapon slot',
                 damageType: 'Damage type',
                 rarity: 'Rarity',
@@ -447,15 +583,19 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
 }]);
 angular.module('d2RollsApp').factory('styleHandler', [function() {
     var contentHeight;
-    function setContentHeight() {
+    function setContentHeight(stateName) {
+        var statesHeights = {
+            category: 74,
+            home: 74
+        }
         if (contentHeight) {
             return contentHeight;
         }
       
         var footer = document.getElementsByClassName('footer-button-container')[0];
         var bodyHeight = footer.getBoundingClientRect().bottom;
-        var footerHeight = getComputedStyle(footer).height.replace('px', '');
-        var menuHeight = bodyHeight - 104;
+        var differentHeight = statesHeights[stateName] || 0;
+        var menuHeight = bodyHeight - differentHeight;
         var view = document.getElementsByClassName('view')[0];
         view.style.height = menuHeight + 'px';
     };
@@ -656,25 +796,51 @@ angular.module('d2RollsApp')
             } 
         };
     });
-angular.module('d2RollsApp').controller('weaponFilterCtrl', ['$state', '$stateParams', 'languageMapService', function ($state, $stateParams, languageMapService) {
+angular.module('d2RollsApp').controller('weaponFilterCtrl', [
+    '$q',
+    '$state',
+    '$stateParams',
+    'filterService',
+    'languageMapService',
+    'fetchManifestService',
+    function (
+        $q,
+        $state,
+        $stateParams,
+        filterService,
+        languageMapService,
+        fetchManifestService
+    ) {
     var vm = this;
     var lang = $stateParams.language;
-    var includedFilters = []
-    vm.text = languageMapService.getDictionary(lang, 'filter');
-    vm.classes = [5,6,7,8,9,10,11,13,14,54,153950757,3317538576,3954685534,1504945536];
-    vm.slots = [2,3,4];
-    vm.slots = [2,3,4];
-    vm.ammoTypes = [1,2,3];
-    vm.damageTypes = {
-        '2303181850': '/common/destiny2_content/icons/DestinyDamageTypeDefinition_9fbcfcef99f4e8a40d8762ccb556fcd4.png',
-        '3373582085': '/common/destiny2_content/icons/DestinyDamageTypeDefinition_3385a924fd3ccb92c343ade19f19a370.png',
-        '1847026933': '/common/destiny2_content/icons/DestinyDamageTypeDefinition_2a1773e10968f2d088b97c22b22bba9e.png',
-        '3454344768':'/common/destiny2_content/icons/DestinyDamageTypeDefinition_290040c1025b9f7045366c1c7823da6a.png'
-    };
-    vm.rarity = ['exotic', 'legendary', 'rare', 'uncommon', 'common'];
-    vm.toggleFilter = function(target, filterBy, hash) {
-        target.isIncluded = !target.isIncluded;
-    };
+    var includedFilters = [];
+    var hashToName;
+    var filterInit = $q.defer();
+    fetchManifestService.getHashToName(function(initialHashes) {
+        console.log(initialHashes);
+        hashToName = initialHashes;
+        filterInit.resolve();
+    }, lang);
+
+    $q.when(filterInit.promise).then(function(){
+        vm.text = languageMapService.getDictionary(lang, 'filter');
+        vm.classes = hashToName.class;
+        vm.slots = [2,3,4];
+        vm.ammoTypes = [1,2,3];
+        vm.damageTypes = {
+            '2303181850': '/common/destiny2_content/icons/DestinyDamageTypeDefinition_9fbcfcef99f4e8a40d8762ccb556fcd4.png',
+            '3373582085': '/common/destiny2_content/icons/DestinyDamageTypeDefinition_3385a924fd3ccb92c343ade19f19a370.png',
+            '1847026933': '/common/destiny2_content/icons/DestinyDamageTypeDefinition_2a1773e10968f2d088b97c22b22bba9e.png',
+            '3454344768':'/common/destiny2_content/icons/DestinyDamageTypeDefinition_290040c1025b9f7045366c1c7823da6a.png'
+        };
+        vm.rarity = ['exotic', 'legendary', 'rare', 'uncommon', 'common'];
+        vm.toggleFilter = function(target, filterBy, hash) {
+            target.isIncluded = !target.isIncluded;
+            console.log(hash, filterBy);
+        };
+    });
+    filterService.resetFilters();
+    
 }]);
 angular.module('d2RollsApp')
     .directive('weaponFilter', function () {
@@ -786,7 +952,7 @@ angular
     var lang = $stateParams.language;
 
     console.log($stateParams);
-    styleHandler.setContentHeight();
+    styleHandler.setContentHeight('category');
 
     vm.isLoaded = false;
     vm.categories = [];
@@ -839,69 +1005,34 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
         }
     ];
     vm.lang = lang;
-    styleHandler.setContentHeight();
+    styleHandler.setContentHeight('home');
 
     fetchManifestService.getWeaponList(lang, function(){});
 }]);
-angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'languageMapService', 'fetchManifestService',  function(
+angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'languageMapService', 'fetchManifestService', 'filterService', function(
     $stateParams,
     languageMapService,
-    fetchManifestService
+    fetchManifestService,
+    filterService
 ){
     var vm = this;
     var lang = $stateParams.language;
     var search = languageMapService.getDictionary(lang).search;
     var rarityMap = fetchManifestService.rarityMap;
-    var isFullList = $stateParams.isFullList;
     var filters = $stateParams.filters;
-    // var sortType = $stateParams.sortBy;
-    var sortType = 'class';
     
     vm.getRarityClass = getRarityClass;
     vm.searchPlaceHolder = search;
     vm.lang = lang;
     vm.isLoaded = false;
     vm.isFilterActive = false;
-
-    fetchManifestService.getWeaponList(lang, function(arrayOfItems) {
-        var sortObject = {}
-        vm.list = [];
-
-        for (var item in arrayOfItems) {
-            var itemObject = arrayOfItems[item];
-            if (isShownByFilter(itemObject, filters) || isFullList) {
-                itemObject.sortType = itemObject[sortType].name;
-                vm.list.push(itemObject);
-                if (!itemObject[itemObject[sortType].name]) {
-                    sortObject[itemObject[sortType].name] = true;
-                }
-            }
-        }
-        vm.categoryHeaders = sortObject;
+    
+    filterService.getFilteredItems(function(filteredObject) {
+        vm.list = filteredObject.items;
+        vm.categoryHeaders = filteredObject.sections;
         vm.isLoaded = !!vm.list.length;
-    });
+    }, filters);
 
-    function isShownByFilter(item, filters, hashFilter) {
-        var filtersArray = [];
-        var isApplied = false;
-        if (typeof filters === 'string') {
-            filtersArray.push(filters);
-        } else {
-            filtersArray = filters;
-        }
-        for (var filter in filtersArray) {
-            var categoryName = filtersArray[filter].split(':')[0];
-            var categoryValue = filtersArray[filter].split(':')[1];
-            if (!item[categoryName]) {
-                return false;
-            }
-            if (item[categoryName].name == categoryValue) {
-                isApplied = true;
-                break;
-            }
-        }
-        return isApplied;
-    };
 
     function getRarityClass(hash) {
 

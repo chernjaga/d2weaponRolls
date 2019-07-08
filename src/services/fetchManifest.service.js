@@ -12,7 +12,17 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
     };
 
     var dataDownloadDeferred = $q.defer();
+    var filterHashesDeferred = $q.defer();
     var perksDownloadDeferred = $q.defer();
+    var hashToName = {
+        class: {},
+        rarity: {},
+        slot: {},
+        season: {},
+        ammoType: {},
+        source: {},
+        damageType: {}
+    };
 
     function getWeaponList (language, callback) {
         if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
@@ -20,33 +30,32 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
 
             return;
         }
-        var weaponListPromise = $q(function(resolve){
-            $http.post('/getWeaponList', JSON.stringify({language: language})).then(function(response) {
+        var weaponListPromise = $q(function(resolve) {
+            resolve($http.post('/getWeaponList', JSON.stringify({language: language})).then(function(response) {
                 weaponListObject = response.data;
                 if (callback) {
                     callback(weaponListObject);
                 }
-                resolve();
-            });
+                return weaponListObject;
+            }));
         });
 
         var weaponDataPromise = $q(function(resolve){
-            $http.post('/getWeaponData', JSON.stringify({language: language})).then(function(response) {
+            resolve($http.post('/getWeaponData', JSON.stringify({language: language})).then(function(response) {
                 weaponData = response.data;
                 if (callback) {
                     callback(weaponListObject);
                 }
 
-                dataDownloadDeferred.resolve();
-                resolve();
-            });
+                dataDownloadDeferred.resolve();;
+            }));
         });
 
         var weaponPerksPromise = $q(function(resolve) {
-            $http.post('/getWeaponPerks', JSON.stringify({language: language})).then(function(response) {
+            resolve($http.post('/getWeaponPerks', JSON.stringify({language: language})).then(function(response) {
                 perksBucket = response.data;
                 perksDownloadDeferred.resolve(perksBucket);
-            });
+            }));
         });
 
         lastLanguage = language;
@@ -55,8 +64,46 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
             weaponListPromise,
             weaponDataPromise,
             weaponPerksPromise
-        ]).catch(function(error) {
+        ]).then(function(responses) {
+            var items = responses[0];
+            for (var hash in items) {
+
+                if (!hashToName.class[items[hash].class.hash]) {
+                    hashToName.class[items[hash].class.hash] = items[hash].class.name;
+                }
+                if (!hashToName.slot[items[hash].slot.hash]) {
+                    hashToName.slot[items[hash].slot.hash] = items[hash].slot.name;
+                }
+                if (!hashToName.rarity[items[hash].rarity.hash]) {
+                    hashToName.rarity[items[hash].rarity.hash] = items[hash].rarity.name;
+                }
+                if (!hashToName.season[items[hash].season.hash]) {
+                    hashToName.season[items[hash].season.name] = items[hash].season.name;
+                }
+                if (!hashToName.source[items[hash].source.hash]) {
+                    hashToName.source[items[hash].source.hash] = items[hash].source.name;
+                }
+                if (!hashToName.damageType[items[hash].damageType.hash]) {
+                    hashToName.damageType[items[hash].damageType.hash] = items[hash].damageType.name;
+                }
+                hashToName.ammoType = {
+                    1: 1,
+                    2: 2,
+                    3: 3
+                }
+            }
+            filterHashesDeferred.resolve();
+        }).catch(function(error) {
             console.log(error);
+        });
+    };
+    function getHashToName(callback, language) {
+        if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
+            callback(hashToName);
+            return;
+        }
+        $q.when(filterHashesDeferred.promise).then(function() {
+            callback(hashToName);
         });
     };
     
@@ -124,7 +171,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                     for (var randomPerk of perk.randomizedPerks) {
                         randomizedPerks.push(perksBucket[randomPerk])
                     }
-                    objectToPush.randomizedPerks = randomizedPerks
+                    objectToPush.randomizedPerks = randomizedPerks;
                 }
                 bucketToReturn.push(objectToPush);
             }
@@ -138,6 +185,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         getSingleWeaponData: getSingleWeaponData,
         getWeaponList: getWeaponList,
         rarityMap: rarityMap,
+        getHashToName: getHashToName,
         weaponData: weaponData
     };
 }]);

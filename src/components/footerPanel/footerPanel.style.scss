@@ -14,11 +14,15 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    font-size: 1.5*$body-padding;
     color: $cl-main-bg-red;
     cursor: pointer;
+    img {
+        width: 30%;
+    }
     &.h-home, &.h-categories, &.w-weaponList, &.s-settings {
         background: rgb(204,0,1);
-        background: radial-gradient(circle at 50% 145%, $cl-main-bg-red 0%, $cl-empty-bg-black 55%);
+        background: radial-gradient(circle at 50% 155%, $cl-main-bg-red 0%, $cl-empty-bg-black 55%);
         .active-highlight {
             display: flex;
         }
@@ -38,12 +42,12 @@
         height: 2px;
         margin: 0 1px;
         background: $cl-main-bg-red;
-        margin-bottom: $body-padding;
+        margin-bottom: $body-padding*0.5;
     }
     &.end {
         div {
             margin-bottom: 0;
-            margin-top: $body-padding;
+            margin-top: $body-padding*0.5;
         }
     }
 }

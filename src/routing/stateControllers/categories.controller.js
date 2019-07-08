@@ -10,7 +10,7 @@ angular
     var lang = $stateParams.language;
 
     console.log($stateParams);
-    styleHandler.setContentHeight();
+    styleHandler.setContentHeight('category');
 
     vm.isLoaded = false;
     vm.categories = [];

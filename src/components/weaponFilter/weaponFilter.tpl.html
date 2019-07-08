@@ -1,12 +1,22 @@
 <div class="body-padding weapon-filter">
-        <div class="filter-section-title">{{::filter.text.weaponClass}}</div>
+        <div class="filter-section-title">{{::filter.text.class}}</div>
         <div class="filter-section-content">
-            <div ng-repeat="hash in ::filter.classes"
+            <div ng-repeat="(hash, value) in ::filter.classes"
                 class="filter-section-item"
                 style="grid-column:{{$index+1}}"
                 ng-class="{'included': this.isIncluded}"
-                ng-click="filter.toggleFilter(this, 'class', this.hash)">
+                ng-click="filter.toggleFilter(this, 'class', this.value)">
                     <img ng-src="../img/weaponClasses/{{::hash}}.png" alt="weapon icon">
+            </div>
+        </div>
+        <div class="filter-section-title">{{::filter.text.ammoType}}</div>
+        <div class="filter-section-content">
+            <div ng-repeat="hash in ::filter.slots"
+                class="filter-section-item"
+                style="grid-column:{{$index+1}}"
+                ng-class="{'included': this.isIncluded}"
+                ng-click="filter.toggleFilter(this, 'slot', this.hash)">
+                    <img ng-src="../img/slot/{{::hash}}.png" alt="weapon icon">
             </div>
         </div>
         <div class="filter-section-title">{{::filter.text.slot}}</div>

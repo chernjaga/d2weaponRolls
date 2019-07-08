@@ -25,7 +25,7 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
         }
     ];
     vm.lang = lang;
-    styleHandler.setContentHeight();
+    styleHandler.setContentHeight('home');
 
     fetchManifestService.getWeaponList(lang, function(){});
 }]);
