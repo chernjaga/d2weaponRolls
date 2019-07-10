@@ -15,15 +15,17 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     vm.lang = lang;
     vm.isLoaded = false;
     vm.isFilterActive = false;
-    filterService.getFilteredItems(function(filteredObject) {
-        vm.list = filteredObject.items;
-        vm.categoryHeaders = filteredObject.sections;
-        vm.isLoaded = !!vm.list.length;
-    }, filters);
-
+    vm.categoryHeaders;
+    fetchManifestService.getHashToName(function(initialHashes) {
+        vm.categoryHeaders = filterService.setSortTypeHeaders(initialHashes);
+        filterService.getFilteredItems(function(filteredItems) {
+            console.log(filteredItems);
+            vm.list = filteredItems;
+            vm.isLoaded = !!vm.list.length;
+        }, filters);
+    }, lang);
 
     function getRarityClass(hash) {
-
         return rarityMap[hash];
     };
 }]);

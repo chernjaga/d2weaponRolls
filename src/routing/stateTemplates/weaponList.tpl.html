@@ -17,14 +17,14 @@
     <div class="style-screen-adaptor" ng-if="!weapons.isFilterActive">
         <div class="body-padding weapon-list-margin bottom-offset" id="#a11yMainContent">
             <ul>
-                <li ng-repeat="(key, value) in ::weapons.categoryHeaders" ng-init="isExpanded = true">
+                <li ng-repeat="key in ::weapons.categoryHeaders" ng-init="isExpanded = true">
                     <div class="category-title pointer" ng-click="isExpanded = !isExpanded" ng-hide="searchForm.search.$valid">
                         {{::key}} <span ng-show="!isExpanded">&#9651;</span><span ng-show="isExpanded">&#9661;</span>
                     </div>
                     <ul class="weapon-list-box" role="menu" ng-show="isExpanded">
                         <li 
                             ng-repeat="item in weapons.list | filter: weaponSearch | orderBy: ['-rarity.hash','-season.name'] track by $index"
-                            ng-if="::(item.sortType === key)"
+                            ng-if="::(item.class.name == key)"
                             role="menuitem">
                             <a ui-sref="weaponView({weaponHash: item.hash, language: weapons.lang})"
                                 role="link" 

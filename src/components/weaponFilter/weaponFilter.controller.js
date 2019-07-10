@@ -18,7 +18,6 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     var includedFilters = [];
     var filterInit = $q.defer();
     var sectionCounter = {};
-    var itemsToSort;
     
     vm.moveToList = moveToList;
     vm.itemsDetected;
@@ -28,9 +27,6 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
         vm.hashToName = initialHashes;
         filterInit.resolve();
     }, lang);
-    fetchManifestService.getWeaponList(lang, function(data){
-        itemsToSort = data;
-    });
 
     $q.when(filterInit.promise).then(function(){
         init();
@@ -48,7 +44,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
             setIncludedNumber(target, filterBy, hash);
             target.isIncluded = !target.isIncluded;
             filterService.getFilteredItems(function(data){
-                console.log(data);
+                vm.itemsDetected = data.length;
             }, includedFilters);
         };
     };

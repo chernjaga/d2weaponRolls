@@ -1,6 +1,5 @@
 angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fetchManifestService', function($q, $stateParams, fetchManifestService) {
     var itemsArray = [];
-    var filteredItems = [];
     var sortType = 'class';
     var applyDefer = $q.defer();
     var sortSections = {};
@@ -13,62 +12,70 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
 
     //todo: language dependency
 
-    function setSortType(newType) {
-        sortType = newType; 
+    function setSortTypeHeaders(initialHashes) {
+        var sortBy = 'class'
+        
+        return initialHashes[sortBy];
     };
 
-    function getFilteredItems(callback, filters ,isReset) {
-        var outputItems = filteredItems.length ? filteredItems : itemsArray;
+    function getFilteredItems(callback, filters) {
         if (!itemsArray.length) {
-            fetchItems.then(function(items){
-                callback({
-                    items: applyFilter(filters, outputItems),
-                    sections: sortSections
-                })
+            fetchItems.then(function(){
+                callback(applyFilter(filters, itemsArray));
             });
             return;
         }
 
-        callback({
-            items: applyFilter(filters, outputItems),
-            sections: sortSections
-        });
+        callback(applyFilter(filters, itemsArray));
     };
 
-    function isShownByFilter(item, filter) {
-        var isApplied = false;
-            var categoryName = filter.split(':')[0];
-            var categoryValue = filter.split(':')[1];
-            if (!item[categoryName]) {
-                return false;
+    function isMatchedToFilter(item, filter) {
+        var categoryName = filter.split(':')[0];
+        var categoryValue = filter.split(':')[1];
+        if (item.appliedFilter && item.appliedFilter[categoryName]) {
+            return true;
+        }
+        if (!item[categoryName]) {
+            return false;
+        }
+        if (item[categoryName].name === categoryValue) {
+            if (!item.appliedFilter) {
+                item.appliedFilter = {};
+                item.appliedFilter[categoryName] = true;
             }
-            if (item[categoryName].name == categoryValue) {
-                isApplied = true;
-            }
-        return isApplied;
+            return true;
+        }
+        return false;
     };
 
     function applyFilter(filters, arrayToFilter) {
+        if (!filters.length) {
+            return arrayToFilter;
+        }
         var filtersArray = [];
+        var outputArray = [];
         if (typeof filters === 'string') {
             filtersArray.push(filters);
         } else {
             filtersArray = filters;
         }
         for (var item in arrayToFilter) {
-            var itemObject = arrayToFilter[item];
-            for (var filter in filtersArray) {
-                if (isShownByFilter(itemObject, filtersArray[filter])) {
-                    itemObject.sortType = itemObject[sortType].name;
-                    filteredItems.push(itemObject);
-                    if (!itemObject[itemObject[sortType].name]) {
-                        sortSections[itemObject[sortType].name] = true;
-                    }
-                }
+            var isApplied = true;
+            for (var section in filtersArray) {
+                var currentItem = arrayToFilter[item];
+                var currentFilter = filtersArray[section];
+                if (!isMatchedToFilter(currentItem, currentFilter)) {
+                    isApplied = false;
+                    break;
+                };
+            }
+            if (isApplied) {
+                outputArray.push(arrayToFilter[item]);
             }
         }
+        
         applyDefer.resolve();
-        return filteredItems;
+        return outputArray;
     };
 
     function resetFilters() {
@@ -76,9 +83,7 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
     };
     return {
         getFilteredItems: getFilteredItems,
-        sortSections: sortSections,
         resetFilters: resetFilters,
-        setSortType: setSortType,
-        applyFilter: applyFilter
+        setSortTypeHeaders: setSortTypeHeaders
     };
 }]);

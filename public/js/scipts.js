@@ -264,7 +264,6 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
 }]);
 angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fetchManifestService', function($q, $stateParams, fetchManifestService) {
     var itemsArray = [];
-    var filteredItems = [];
     var sortType = 'class';
     var applyDefer = $q.defer();
     var sortSections = {};
@@ -277,62 +276,70 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
 
     //todo: language dependency
 
-    function setSortType(newType) {
-        sortType = newType; 
+    function setSortTypeHeaders(initialHashes) {
+        var sortBy = 'class'
+        
+        return initialHashes[sortBy];
     };
 
-    function getFilteredItems(callback, filters ,isReset) {
-        var outputItems = filteredItems.length ? filteredItems : itemsArray;
+    function getFilteredItems(callback, filters) {
         if (!itemsArray.length) {
-            fetchItems.then(function(items){
-                callback({
-                    items: applyFilter(filters, outputItems),
-                    sections: sortSections
-                })
+            fetchItems.then(function(){
+                callback(applyFilter(filters, itemsArray));
             });
             return;
         }
 
-        callback({
-            items: applyFilter(filters, outputItems),
-            sections: sortSections
-        });
+        callback(applyFilter(filters, itemsArray));
     };
 
-    function isShownByFilter(item, filter) {
-        var isApplied = false;
-            var categoryName = filter.split(':')[0];
-            var categoryValue = filter.split(':')[1];
-            if (!item[categoryName]) {
-                return false;
+    function isMatchedToFilter(item, filter) {
+        var categoryName = filter.split(':')[0];
+        var categoryValue = filter.split(':')[1];
+        if (item.appliedFilter && item.appliedFilter[categoryName]) {
+            return true;
+        }
+        if (!item[categoryName]) {
+            return false;
+        }
+        if (item[categoryName].name === categoryValue) {
+            if (!item.appliedFilter) {
+                item.appliedFilter = {};
+                item.appliedFilter[categoryName] = true;
             }
-            if (item[categoryName].name == categoryValue) {
-                isApplied = true;
-            }
-        return isApplied;
+            return true;
+        }
+        return false;
     };
 
     function applyFilter(filters, arrayToFilter) {
+        if (!filters.length) {
+            return arrayToFilter;
+        }
         var filtersArray = [];
+        var outputArray = [];
         if (typeof filters === 'string') {
             filtersArray.push(filters);
         } else {
             filtersArray = filters;
         }
         for (var item in arrayToFilter) {
-            var itemObject = arrayToFilter[item];
-            for (var filter in filtersArray) {
-                if (isShownByFilter(itemObject, filtersArray[filter])) {
-                    itemObject.sortType = itemObject[sortType].name;
-                    filteredItems.push(itemObject);
-                    if (!itemObject[itemObject[sortType].name]) {
-                        sortSections[itemObject[sortType].name] = true;
-                    }
-                }
+            var isApplied = true;
+            for (var section in filtersArray) {
+                var currentItem = arrayToFilter[item];
+                var currentFilter = filtersArray[section];
+                if (!isMatchedToFilter(currentItem, currentFilter)) {
+                    isApplied = false;
+                    break;
+                };
+            }
+            if (isApplied) {
+                outputArray.push(arrayToFilter[item]);
             }
         }
+        
         applyDefer.resolve();
-        return filteredItems;
+        return outputArray;
     };
 
     function resetFilters() {
@@ -340,10 +347,8 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
     };
     return {
         getFilteredItems: getFilteredItems,
-        sortSections: sortSections,
         resetFilters: resetFilters,
-        setSortType: setSortType,
-        applyFilter: applyFilter
+        setSortTypeHeaders: setSortTypeHeaders
     };
 }]);
 angular.module('d2RollsApp').factory('languageMapService', [ function() {
@@ -606,6 +611,24 @@ angular.module('d2RollsApp').factory('styleHandler', [function() {
         setContentHeight: setContentHeight
     }
 }]);
+angular.module('d2RollsApp').controller('filterButtonCtrl', ['$stateParams', 'languageMapService', function (
+    $stateParams,
+    languageMapService
+) {
+    var vm = this;
+    var lang = $stateParams.language;
+    vm.text = languageMapService.getDictionary(lang, 'filter').button;
+    vm.isExpanded = false;
+}]);
+angular.module('d2RollsApp')
+    .directive('filterButton', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: 'filterButtonCtrl as filterButton',
+            templateUrl: '../html/components/filterButton/filterButton.tpl.html'
+        }
+    });
 angular.module('d2RollsApp').controller('footerPanelCtrl', ['$state', '$stateParams', '$transitions', 'languageMapService', function (
     $state,
     $stateParams,
@@ -630,24 +653,6 @@ angular.module('d2RollsApp')
             controller: 'footerPanelCtrl',
             controllerAs: 'footer',
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
-        }
-    });
-angular.module('d2RollsApp').controller('filterButtonCtrl', ['$stateParams', 'languageMapService', function (
-    $stateParams,
-    languageMapService
-) {
-    var vm = this;
-    var lang = $stateParams.language;
-    vm.text = languageMapService.getDictionary(lang, 'filter').button;
-    vm.isExpanded = false;
-}]);
-angular.module('d2RollsApp')
-    .directive('filterButton', function () {
-        return {
-            restrict: 'E',
-            replace: false,
-            controller: 'filterButtonCtrl as filterButton',
-            templateUrl: '../html/components/filterButton/filterButton.tpl.html'
         }
     });
 function menuLinkCtrl($state) {
@@ -818,7 +823,6 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     var includedFilters = [];
     var filterInit = $q.defer();
     var sectionCounter = {};
-    var itemsToSort;
     
     vm.moveToList = moveToList;
     vm.itemsDetected;
@@ -828,9 +832,6 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
         vm.hashToName = initialHashes;
         filterInit.resolve();
     }, lang);
-    fetchManifestService.getWeaponList(lang, function(data){
-        itemsToSort = data;
-    });
 
     $q.when(filterInit.promise).then(function(){
         init();
@@ -848,7 +849,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
             setIncludedNumber(target, filterBy, hash);
             target.isIncluded = !target.isIncluded;
             filterService.getFilteredItems(function(data){
-                console.log(data);
+                vm.itemsDetected = data.length;
             }, includedFilters);
         };
     };
@@ -1062,15 +1063,17 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     vm.lang = lang;
     vm.isLoaded = false;
     vm.isFilterActive = false;
-    filterService.getFilteredItems(function(filteredObject) {
-        vm.list = filteredObject.items;
-        vm.categoryHeaders = filteredObject.sections;
-        vm.isLoaded = !!vm.list.length;
-    }, filters);
-
+    vm.categoryHeaders;
+    fetchManifestService.getHashToName(function(initialHashes) {
+        vm.categoryHeaders = filterService.setSortTypeHeaders(initialHashes);
+        filterService.getFilteredItems(function(filteredItems) {
+            console.log(filteredItems);
+            vm.list = filteredItems;
+            vm.isLoaded = !!vm.list.length;
+        }, filters);
+    }, lang);
 
     function getRarityClass(hash) {
-
         return rarityMap[hash];
     };
 }]);
