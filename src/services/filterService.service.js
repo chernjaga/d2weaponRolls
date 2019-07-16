@@ -42,7 +42,7 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
         if (!item[categoryName]) {
             return false;
         }
-        if (item[categoryName].name.toString() === categoryValue) {
+        if (item[categoryName].name == categoryValue) {
             if (!item.appliedFilter) {
                 item.appliedFilter = {};
                 item.appliedFilter[categoryName] = true;

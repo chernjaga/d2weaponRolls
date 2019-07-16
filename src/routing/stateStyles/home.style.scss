@@ -10,19 +10,18 @@
     text-align: center;
     align-items: center;
     vertical-align: middle;
+    background-position: center top;
     &.season {
         background: url("../img/covers/menu_new_stuff.jpg");
-        background-position: center;
+        
         background-size: cover;
     }
     &.source {
         background: url("../img/covers/menu_weapon_sources.jpg");
-        background-position: center;
         background-size: cover;
     }
     &.godRoll {
         background: url("../img/covers/menu_god_roll.jpg");
-        background-position: center;
         background-size: cover;
     }
     &:last-child {
