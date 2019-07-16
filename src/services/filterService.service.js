@@ -1,11 +1,12 @@
 angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fetchManifestService', function($q, $stateParams, fetchManifestService) {
-    var itemsArray = [];
+    var itemsObject = {};
     var sortType = 'class';
     var applyDefer = $q.defer();
+    var filteredItems = {};
     var sortSections = {};
     var fetchItems = new Promise(function(resolve){
         fetchManifestService.getWeaponList($stateParams.language, function(items){
-            itemsArray = items;
+            itemsObject = items;
             resolve(items);
         });
     });
@@ -13,20 +14,23 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
     //todo: language dependency
 
     function setSortTypeHeaders(initialHashes) {
-        var sortBy = 'class'
-        
+        var sortBy = 'class'   
         return initialHashes[sortBy];
     };
 
     function getFilteredItems(callback, filters) {
-        if (!itemsArray.length) {
+        if (Object.keys(filteredItems).length) {
+            console.log(filteredItems);
+            callback(applyFilter(null, filteredItems));
+            return;
+        }
+        if (!Object.keys(itemsObject).length) {
             fetchItems.then(function(){
-                callback(applyFilter(filters, itemsArray));
+                callback(applyFilter(filters, itemsObject));
             });
             return;
         }
-
-        callback(applyFilter(filters, itemsArray));
+        callback(applyFilter(filters, itemsObject));
     };
 
     function isMatchedToFilter(item, filter) {
@@ -38,7 +42,7 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
         if (!item[categoryName]) {
             return false;
         }
-        if (item[categoryName].name === categoryValue) {
+        if (item[categoryName].name.toString() === categoryValue) {
             if (!item.appliedFilter) {
                 item.appliedFilter = {};
                 item.appliedFilter[categoryName] = true;
@@ -48,10 +52,14 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
         return false;
     };
 
-    function applyFilter(filters, arrayToFilter) {
-        if (!filters.length) {
-            return arrayToFilter;
+    function applyFilter(filters, objToFilter) {
+        if (!filters) {
+            return Object.keys(objToFilter).map(function(key) {
+                return objToFilter[key];
+            });
         }
+        filteredItems = {};
+
         var filtersArray = [];
         var outputArray = [];
         if (typeof filters === 'string') {
@@ -59,10 +67,10 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
         } else {
             filtersArray = filters;
         }
-        for (var item in arrayToFilter) {
+        for (var item in objToFilter) {
             var isApplied = true;
             for (var section in filtersArray) {
-                var currentItem = arrayToFilter[item];
+                var currentItem = objToFilter[item];
                 var currentFilter = filtersArray[section];
                 if (!isMatchedToFilter(currentItem, currentFilter)) {
                     isApplied = false;
@@ -70,7 +78,8 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
                 };
             }
             if (isApplied) {
-                outputArray.push(arrayToFilter[item]);
+                outputArray.push(objToFilter[item]);
+                filteredItems[item] = objToFilter[item];
             }
         }
         
@@ -79,7 +88,7 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
     };
 
     function resetFilters() {
-        filteredItems = [];
+        filteredItems = {};
     };
     return {
         getFilteredItems: getFilteredItems,

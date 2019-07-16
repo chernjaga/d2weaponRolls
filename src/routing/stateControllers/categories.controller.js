@@ -9,7 +9,6 @@ angular
     var sortingType = $stateParams.sortBy;
     var lang = $stateParams.language;
 
-    console.log($stateParams);
     styleHandler.setContentHeight('category');
 
     vm.isLoaded = false;
