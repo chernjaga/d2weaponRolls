@@ -9,8 +9,7 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
         url: '/weaponList/{language}?sortBy&categories&filters',
         params: {
             language: 'en',
-            filters: [],
-            isFullList: false
+            filters: []
         },
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',
         controller: 'weaponListCtrl',
@@ -655,9 +654,13 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
     });
-function menuLinkCtrl($state) {
+function menuLinkCtrl($state, filterService) {
     var vm = this;
     vm.clickHandler = function() {
+        filterService.getFilteredItems(function(data){
+            
+            console.log(vm.params);
+        }, []);
         $state.go(vm.goTo, vm.params);
     };
 }

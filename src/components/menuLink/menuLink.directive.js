@@ -1,6 +1,10 @@
-function menuLinkCtrl($state) {
+function menuLinkCtrl($state, filterService) {
     var vm = this;
     vm.clickHandler = function() {
+        filterService.getFilteredItems(function(data){
+            
+            console.log(vm.params);
+        }, []);
         $state.go(vm.goTo, vm.params);
     };
 }
