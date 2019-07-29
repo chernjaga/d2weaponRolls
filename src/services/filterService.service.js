@@ -20,8 +20,7 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
 
     function getFilteredItems(callback, filters) {
         if (Object.keys(filteredItems).length) {
-            console.log(filteredItems);
-            callback(applyFilter(null, filteredItems));
+            callback(applyFilter(filters, filteredItems));
             return;
         }
         if (!Object.keys(itemsObject).length) {
@@ -36,32 +35,25 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
     function isMatchedToFilter(item, filter) {
         var categoryName = filter.split(':')[0];
         var categoryValue = filter.split(':')[1];
-        if (item.appliedFilter && item.appliedFilter[categoryName]) {
-            return true;
-        }
+
         if (!item[categoryName]) {
             return false;
         }
         if (item[categoryName].name == categoryValue) {
-            if (!item.appliedFilter) {
-                item.appliedFilter = {};
-                item.appliedFilter[categoryName] = true;
-            }
             return true;
         }
         return false;
     };
 
     function applyFilter(filters, objToFilter) {
+        var filtersArray = [];
+        var outputArray = [];
         if (!filters) {
             return Object.keys(objToFilter).map(function(key) {
                 return objToFilter[key];
             });
         }
-        filteredItems = {};
 
-        var filtersArray = [];
-        var outputArray = [];
         if (typeof filters === 'string') {
             filtersArray.push(filters);
         } else {
@@ -75,13 +67,18 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
                 if (!isMatchedToFilter(currentItem, currentFilter)) {
                     isApplied = false;
                     break;
-                };
+                }
             }
             if (isApplied) {
                 outputArray.push(objToFilter[item]);
                 filteredItems[item] = objToFilter[item];
             }
         }
+
+        // if (!outputArray.length) {
+        //     console.log('reApply');
+        //     return applyFilter(filters, itemsObject);
+        // }
         
         applyDefer.resolve();
         return outputArray;

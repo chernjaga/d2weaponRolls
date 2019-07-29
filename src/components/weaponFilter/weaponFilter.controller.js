@@ -43,7 +43,8 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
             }
             setIncludedNumber(target, filterBy, hash);
             target.isIncluded = !target.isIncluded;
-            filterService.getFilteredItems(function(data){
+            filterService.getFilteredItems(function(data) {
+                console.log(data);
                 vm.itemsDetected = data.length;
             }, includedFilters);
         };
