@@ -67,7 +67,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         ]).then(function(responses) {
             var items = responses[0];
             for (var hash in items) {
-
+                
                 if (!hashToName.class[items[hash].class.hash]) {
                     hashToName.class[items[hash].class.hash] = items[hash].class.name;
                 }

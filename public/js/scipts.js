@@ -139,7 +139,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         ]).then(function(responses) {
             var items = responses[0];
             for (var hash in items) {
-
+                
                 if (!hashToName.class[items[hash].class.hash]) {
                     hashToName.class[items[hash].class.hash] = items[hash].class.name;
                 }
@@ -263,10 +263,8 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
 }]);
 angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fetchManifestService', function($q, $stateParams, fetchManifestService) {
     var itemsObject = {};
-    var sortType = 'class';
     var applyDefer = $q.defer();
-    var filteredItems = {};
-    var sortSections = {};
+    var filteredItems = [];
     var fetchItems = new Promise(function(resolve){
         fetchManifestService.getWeaponList($stateParams.language, function(items){
             itemsObject = items;
@@ -279,11 +277,11 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
     function setSortTypeHeaders(initialHashes) {
         var sortBy = 'class'   
         return initialHashes[sortBy];
-    };
+    }
 
-    function getFilteredItems(callback, filters) {
-        if (Object.keys(filteredItems).length) {
-            callback(applyFilter(filters, filteredItems));
+    function getFilteredItems(callback, filters, isFilterState) {
+        if (filteredItems.length && !isFilterState) {
+            callback(filteredItems);
             return;
         }
         if (!Object.keys(itemsObject).length) {
@@ -293,63 +291,77 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
             return;
         }
         callback(applyFilter(filters, itemsObject));
-    };
+    }
 
-    function isMatchedToFilter(item, filter) {
-        var categoryName = filter.split(':')[0];
-        var categoryValue = filter.split(':')[1];
-
-        if (!item[categoryName]) {
-            return false;
-        }
-        if (item[categoryName].name == categoryValue) {
-            return true;
-        }
-        return false;
-    };
-
-    function applyFilter(filters, objToFilter) {
-        var filtersArray = [];
+    function applyFilter(inputFilters, objToFilter) {
+        var filtersMap = initFiltersMap(inputFilters);
         var outputArray = [];
-        if (!filters) {
-            return Object.keys(objToFilter).map(function(key) {
-                return objToFilter[key];
+        if (filtersMap.class) {
+            filtersMap.class.forEach(function(filterValue) {
+                outputArray = outputArray.concat(applyFilterPart(objToFilter, filtersMap, filterValue));
             });
-        }
-
-        if (typeof filters === 'string') {
-            filtersArray.push(filters);
         } else {
-            filtersArray = filters;
+            outputArray = applyFilterPart(objToFilter, filtersMap);
         }
-        for (var item in objToFilter) {
-            var isApplied = true;
-            for (var section in filtersArray) {
-                var currentItem = objToFilter[item];
-                var currentFilter = filtersArray[section];
-                if (!isMatchedToFilter(currentItem, currentFilter)) {
-                    isApplied = false;
-                    break;
-                }
-            }
-            if (isApplied) {
-                outputArray.push(objToFilter[item]);
-                filteredItems[item] = objToFilter[item];
-            }
-        }
-
-        // if (!outputArray.length) {
-        //     console.log('reApply');
-        //     return applyFilter(filters, itemsObject);
-        // }
-        
+        filteredItems = outputArray;
         applyDefer.resolve();
         return outputArray;
-    };
+    }
+
+    function applyFilterPart(objToFilter, filters, weaponClass) {
+        var outputPart = [];
+        for (var hash in objToFilter) {
+            var item = objToFilter[hash];
+            var isApplied = true;
+            if (Object.keys(filters).length === 1 && filters.class) {
+                isApplied = item.class.name === weaponClass
+            } else {
+                for (var valuesName in filters) {
+                    var filterValueArray = filters[valuesName];
+                    
+                    if (valuesName !== 'class') {
+                        item[valuesName].name = item[valuesName].name.toString();
+                        if (weaponClass) {
+                            isApplied = isApplied && filterValueArray.includes(item[valuesName].name) && item.class.name === weaponClass;
+                        } else {
+                            isApplied = isApplied && filterValueArray.includes(item[valuesName].name);
+                        }
+                    } else if (valuesName === 'class') {
+                        isApplied = isApplied && filterValueArray.includes(weaponClass);
+                    } else {
+                        isApplied = false;
+                    }
+                };
+            }
+            if (isApplied) {
+                outputPart.push(item);
+            }
+        }
+        return outputPart;
+    }
+
+    function initFiltersMap(filters) {
+        if (typeof filters === 'string') {
+            filters = [filters];
+        }
+        var map = {};
+        filters.forEach(function(filter) {
+            var key = filter.split(':')[0];
+            var value = filter.split(':')[1];
+            if (!map[key]) {
+                map[key] = [value];
+            } else {
+                map[key].push(value)
+            }
+        });
+
+        return map;
+    }
 
     function resetFilters() {
         filteredItems = {};
-    };
+    }
+
     return {
         getFilteredItems: getFilteredItems,
         resetFilters: resetFilters,
@@ -851,6 +863,9 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     
     function init() {
         vm.text = languageMapService.getDictionary(lang, 'filter');
+        filterService.getFilteredItems(function(data) {
+            vm.itemsDetected = data.length;
+        }, [], true);
         vm.toggleFilter = function(target, filterBy, hash) {   
             var filterItem = `${filterBy}:${hash}`;
             if (!includedFilters.includes(filterItem)) {
@@ -858,12 +873,13 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
             } else {
                 includedFilters = removeFromFilters(includedFilters, filterItem);
             }
+            
             setIncludedNumber(target, filterBy, hash);
+
             target.isIncluded = !target.isIncluded;
             filterService.getFilteredItems(function(data) {
-                console.log(data);
                 vm.itemsDetected = data.length;
-            }, includedFilters);
+            }, includedFilters, true);
         };
     };
 

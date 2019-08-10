@@ -34,6 +34,9 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     
     function init() {
         vm.text = languageMapService.getDictionary(lang, 'filter');
+        filterService.getFilteredItems(function(data) {
+            vm.itemsDetected = data.length;
+        }, [], true);
         vm.toggleFilter = function(target, filterBy, hash) {   
             var filterItem = `${filterBy}:${hash}`;
             if (!includedFilters.includes(filterItem)) {
@@ -41,12 +44,13 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
             } else {
                 includedFilters = removeFromFilters(includedFilters, filterItem);
             }
+            
             setIncludedNumber(target, filterBy, hash);
+
             target.isIncluded = !target.isIncluded;
             filterService.getFilteredItems(function(data) {
-                console.log(data);
                 vm.itemsDetected = data.length;
-            }, includedFilters);
+            }, includedFilters, true);
         };
     };
 

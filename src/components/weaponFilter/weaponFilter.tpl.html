@@ -1,5 +1,5 @@
 <div class="body-padding">
-    <div>Item detected {{filter.itemsDetected}}</div>
+    <div class="filter-section-title">Items found : {{filter.itemsDetected ? filter.itemsDetected : 0}}</div>
     <div class="weapon-filter" ng-repeat="(itemName, itemContent) in ::filter.hashToName">
         <div class="filter-section-title">
             {{::filter.text[itemName]}} 
@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-        <div class="filter-section-content">
+        <div class="filter-section-content mb50">
             <div class="filter-button" ng-click="filter.moveToList()">
                 {{::filter.text.apply}}
             </div>
