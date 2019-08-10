@@ -90,6 +90,8 @@ $word-spacing-damage-type: $body-padding*0.25;
         &::placeholder {
             color: $cl-main-bg-red;
         };
+        color: $cl-main-bg-red;
+        font-size: $body-padding*2;
         background: $cl-empty-bg-black;
         text-align: center;
         width: 100%;

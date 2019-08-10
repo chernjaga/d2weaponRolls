@@ -645,13 +645,18 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/filterButton/filterButton.tpl.html'
         }
     });
-angular.module('d2RollsApp').controller('footerPanelCtrl', ['$state', '$stateParams', '$transitions', 'languageMapService', function (
+angular.module('d2RollsApp').controller('footerPanelCtrl', ['$rootScope', '$state', '$stateParams', '$transitions', 'languageMapService', function (
+    $rootScope,
     $state,
     $stateParams,
     $transitions,
     languageMapService
     ) {
     var vm = this;
+
+    vm.clickHandler = function() {
+        $rootScope.$emit('changeStateStart');
+    }
    
     $transitions.onSuccess({}, function() {
         if (!vm.text) {
@@ -726,6 +731,27 @@ angular.module('d2RollsApp')
             },
             controller: perksBinderCtrl,
             controllerAs: 'binder'
+        }
+    });
+angular.module('d2RollsApp')
+    .directive('spinner', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: function($scope, $timeout, $rootScope) {
+                $rootScope.$on('$locationChangeStart', function() { 
+                    $scope.isLoading = true;
+                });
+                $rootScope.$on('changeStateStart', function() { 
+                    $scope.isLoading = true;
+                });
+                $rootScope.$on('$viewContentLoaded', function() {
+                    $timeout(function() {
+                        $scope.isLoading = false;
+                    });
+                }, 1200);
+            },
+            templateUrl: '../html/components/spinner/spinner.tpl.html'
         }
     });
 function scaleCtrl () {};
