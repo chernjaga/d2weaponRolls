@@ -627,24 +627,6 @@ angular.module('d2RollsApp').factory('styleHandler', [function() {
         setContentHeight: setContentHeight
     }
 }]);
-angular.module('d2RollsApp').controller('filterButtonCtrl', ['$stateParams', 'languageMapService', function (
-    $stateParams,
-    languageMapService
-) {
-    var vm = this;
-    var lang = $stateParams.language;
-    vm.text = languageMapService.getDictionary(lang, 'filter').button;
-    vm.isExpanded = false;
-}]);
-angular.module('d2RollsApp')
-    .directive('filterButton', function () {
-        return {
-            restrict: 'E',
-            replace: false,
-            controller: 'filterButtonCtrl as filterButton',
-            templateUrl: '../html/components/filterButton/filterButton.tpl.html'
-        }
-    });
 angular.module('d2RollsApp').controller('footerPanelCtrl', ['$rootScope', '$state', '$stateParams', '$transitions', 'languageMapService', function (
     $rootScope,
     $state,
@@ -653,10 +635,6 @@ angular.module('d2RollsApp').controller('footerPanelCtrl', ['$rootScope', '$stat
     languageMapService
     ) {
     var vm = this;
-
-    vm.clickHandler = function() {
-        $rootScope.$emit('changeStateStart');
-    }
    
     $transitions.onSuccess({}, function() {
         if (!vm.text) {
@@ -675,6 +653,37 @@ angular.module('d2RollsApp')
             controllerAs: 'footer',
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
+    });
+angular.module('d2RollsApp').controller('filterButtonCtrl', ['$stateParams', 'languageMapService', function (
+    $stateParams,
+    languageMapService
+) {
+    var vm = this;
+    var lang = $stateParams.language;
+    vm.lang = lang;
+    vm.text = languageMapService.getDictionary(lang, 'filter').button;
+}]);
+angular.module('d2RollsApp')
+    .directive('filterButton', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: 'filterButtonCtrl as filterButton',
+            templateUrl: '../html/components/filterButton/filterButton.tpl.html'
+        }
+    });
+angular.module('d2RollsApp')
+    .directive('loadingTrigger', function ($rootScope) {
+        return {
+            restrict: 'A',
+            replace: false,
+            link: function(scope, element) {
+                element.on('click', function() {
+                    console.log('trigerred');
+                    $rootScope.$emit('changeStateStart');
+                });
+            }
+        };
     });
 function menuLinkCtrl($state, filterService) {
     var vm = this;
@@ -739,17 +748,15 @@ angular.module('d2RollsApp')
             restrict: 'E',
             replace: false,
             controller: function($scope, $timeout, $rootScope) {
-                $rootScope.$on('$locationChangeStart', function() { 
-                    $scope.isLoading = true;
-                });
-                $rootScope.$on('changeStateStart', function() { 
+
+                $rootScope.$on('changeStateStart', function() {
                     $scope.isLoading = true;
                 });
                 $rootScope.$on('$viewContentLoaded', function() {
                     $timeout(function() {
                         $scope.isLoading = false;
                     });
-                }, 1200);
+                });
             },
             templateUrl: '../html/components/spinner/spinner.tpl.html'
         }

@@ -27,7 +27,8 @@
                             ng-if="::(item.class.name === key)"
                             role="menuitem">
                             <a ui-sref="weaponView({weaponHash: item.hash, language: weapons.lang})"
-                                role="link" 
+                                role="link"
+                                loading-trigger
                                 title="{{::listItem.displayedProperties.name}}">
                                 <weapon-list-item 
                                     list-item="::item"

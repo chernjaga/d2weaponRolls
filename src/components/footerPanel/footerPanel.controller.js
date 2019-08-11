@@ -6,10 +6,6 @@ angular.module('d2RollsApp').controller('footerPanelCtrl', ['$rootScope', '$stat
     languageMapService
     ) {
     var vm = this;
-
-    vm.clickHandler = function() {
-        $rootScope.$emit('changeStateStart');
-    }
    
     $transitions.onSuccess({}, function() {
         if (!vm.text) {

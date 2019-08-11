@@ -4,6 +4,6 @@ angular.module('d2RollsApp').controller('filterButtonCtrl', ['$stateParams', 'la
 ) {
     var vm = this;
     var lang = $stateParams.language;
+    vm.lang = lang;
     vm.text = languageMapService.getDictionary(lang, 'filter').button;
-    vm.isExpanded = false;
 }]);
