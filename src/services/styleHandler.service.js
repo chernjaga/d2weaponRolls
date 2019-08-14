@@ -3,7 +3,8 @@ angular.module('d2RollsApp').factory('styleHandler', [function() {
     function setContentHeight(stateName) {
         var statesHeights = {
             category: 74,
-            home: 16
+            home: 74,
+            filter: 100
         }
         if (contentHeight) {
             return contentHeight;

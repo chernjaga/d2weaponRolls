@@ -5,13 +5,15 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     'filterService',
     'languageMapService',
     'fetchManifestService',
+    'styleHandler',
     function (
         $q,
         $state,
         $stateParams,
         filterService,
         languageMapService,
-        fetchManifestService
+        fetchManifestService,
+        styleHandler
     ) {
     var vm = this;
     var lang = $stateParams.language;
@@ -22,6 +24,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     vm.moveToList = moveToList;
     vm.itemsDetected;
     vm.includedItems = {};
+    styleHandler.setContentHeight('filter')
     filterService.resetFilters();
     fetchManifestService.getHashToName(function(initialHashes) {
         vm.hashToName = initialHashes;

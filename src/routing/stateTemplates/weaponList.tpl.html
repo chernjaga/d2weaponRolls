@@ -16,7 +16,7 @@
     </div>
     <div class="style-screen-adaptor" ng-if="!weapons.isFilterActive">
         <div class="body-padding weapon-list-margin bottom-offset" id="#a11yMainContent">
-            <ul>
+            <ul class="weapon-list">
                 <li ng-repeat="key in ::weapons.categoryHeaders" ng-init="isExpanded = true">
                     <div class="category-title pointer" ng-click="isExpanded = !isExpanded" ng-hide="searchForm.search.$valid">
                         {{::key}} <span ng-show="!isExpanded">&#9651;</span><span ng-show="isExpanded">&#9661;</span>

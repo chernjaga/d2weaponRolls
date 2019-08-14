@@ -610,7 +610,8 @@ angular.module('d2RollsApp').factory('styleHandler', [function() {
     function setContentHeight(stateName) {
         var statesHeights = {
             category: 74,
-            home: 16
+            home: 74,
+            filter: 100
         }
         if (contentHeight) {
             return contentHeight;
@@ -627,6 +628,24 @@ angular.module('d2RollsApp').factory('styleHandler', [function() {
         setContentHeight: setContentHeight
     }
 }]);
+angular.module('d2RollsApp').controller('filterButtonCtrl', ['$stateParams', 'languageMapService', function (
+    $stateParams,
+    languageMapService
+) {
+    var vm = this;
+    var lang = $stateParams.language;
+    vm.lang = lang;
+    vm.text = languageMapService.getDictionary(lang, 'filter').button;
+}]);
+angular.module('d2RollsApp')
+    .directive('filterButton', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: 'filterButtonCtrl as filterButton',
+            templateUrl: '../html/components/filterButton/filterButton.tpl.html'
+        }
+    });
 angular.module('d2RollsApp').controller('footerPanelCtrl', ['$rootScope', '$state', '$stateParams', '$transitions', 'languageMapService', function (
     $rootScope,
     $state,
@@ -652,24 +671,6 @@ angular.module('d2RollsApp')
             controller: 'footerPanelCtrl',
             controllerAs: 'footer',
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
-        }
-    });
-angular.module('d2RollsApp').controller('filterButtonCtrl', ['$stateParams', 'languageMapService', function (
-    $stateParams,
-    languageMapService
-) {
-    var vm = this;
-    var lang = $stateParams.language;
-    vm.lang = lang;
-    vm.text = languageMapService.getDictionary(lang, 'filter').button;
-}]);
-angular.module('d2RollsApp')
-    .directive('filterButton', function () {
-        return {
-            restrict: 'E',
-            replace: false,
-            controller: 'filterButtonCtrl as filterButton',
-            templateUrl: '../html/components/filterButton/filterButton.tpl.html'
         }
     });
 angular.module('d2RollsApp')
@@ -867,13 +868,15 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     'filterService',
     'languageMapService',
     'fetchManifestService',
+    'styleHandler',
     function (
         $q,
         $state,
         $stateParams,
         filterService,
         languageMapService,
-        fetchManifestService
+        fetchManifestService,
+        styleHandler
     ) {
     var vm = this;
     var lang = $stateParams.language;
@@ -884,6 +887,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     vm.moveToList = moveToList;
     vm.itemsDetected;
     vm.includedItems = {};
+    styleHandler.setContentHeight('filter')
     filterService.resetFilters();
     fetchManifestService.getHashToName(function(initialHashes) {
         vm.hashToName = initialHashes;
@@ -1107,12 +1111,18 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
 
     fetchManifestService.getWeaponList(lang, function(){});
 }]);
-angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'languageMapService', 'fetchManifestService', 'filterService', function(
-    $stateParams,
-    languageMapService,
-    fetchManifestService,
-    filterService
-){
+angular.module('d2RollsApp').controller('weaponListCtrl', [
+    '$stateParams',
+    'languageMapService',
+    'fetchManifestService',
+    'filterService',
+    function(
+        $stateParams,
+        languageMapService,
+        fetchManifestService,
+        filterService
+    )
+{
     var vm = this;
     var lang = $stateParams.language;
     var search = languageMapService.getDictionary(lang).search;
@@ -1125,6 +1135,7 @@ angular.module('d2RollsApp').controller('weaponListCtrl', ['$stateParams', 'lang
     vm.isLoaded = false;
     vm.isFilterActive = false;
     vm.categoryHeaders;
+
     fetchManifestService.getHashToName(function(initialHashes) {
         vm.categoryHeaders = filterService.setSortTypeHeaders(initialHashes);
         filterService.getFilteredItems(function(filteredItems) {
