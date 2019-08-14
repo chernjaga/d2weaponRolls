@@ -24,9 +24,10 @@
                 </div>
             </a>
             <a ui-sref="weaponList({language: footer.lang})"
+               ui-sref-opts="{reload: true}"
                role="link"
                class="footer-button w-{{footer.currentState}}"
-               loading-trigger
+               loading-trigger='startOnClick'
                title="Show All list">
                <div class="active-highlight">
                     <div></div>

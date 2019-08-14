@@ -10,9 +10,7 @@ angular
     var lang = $stateParams.language;
 
     styleHandler.setContentHeight('category');
-
-    vm.isLoaded = false;
-    vm.categories = [];
+    vm.categories;
     vm.lang = lang;
     vm.sortingType = sortingType;
 
@@ -32,6 +30,5 @@ angular
             };
         };
         vm.categories = categoriesArray;
-        vm.isLoaded = !!vm.categories.length;
     });
 }]);

@@ -608,20 +608,22 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
 angular.module('d2RollsApp').factory('styleHandler', [function() {
     var contentHeight;
     function setContentHeight(stateName) {
+        var view = document.getElementsByClassName('view')[0];
         var statesHeights = {
-            category: 74,
-            home: 74,
+            category: 62,
+            home: 62,
             filter: 100
         }
         if (contentHeight) {
-            return contentHeight;
+            view.style.height = contentHeight;
+            return;
         }
         var footer = document.getElementsByClassName('footer-panel')[0];
         var bodyHeight = footer.getBoundingClientRect().top;
         var differentHeight = statesHeights[stateName] || 0;
         var menuHeight = bodyHeight - differentHeight;
-        var view = document.getElementsByClassName('view')[0];
         view.style.height = menuHeight + 'px';
+        contentHeight = menuHeight + 'px';
     };
     
     return {
@@ -646,19 +648,20 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/filterButton/filterButton.tpl.html'
         }
     });
-angular.module('d2RollsApp').controller('footerPanelCtrl', ['$rootScope', '$state', '$stateParams', '$transitions', 'languageMapService', function (
-    $rootScope,
+angular.module('d2RollsApp').controller('footerPanelCtrl', ['$state', '$stateParams', '$transitions', 'languageMapService', function (
     $state,
     $stateParams,
     $transitions,
     languageMapService
     ) {
     var vm = this;
-   
+    var lang;
+    vm.$onInit = function() {
+        lang = $stateParams.language || 'en';
+        vm.text = languageMapService.getDictionary(lang, 'footerMenu');
+        vm.currentState = $state.current.name;
+    }
     $transitions.onSuccess({}, function() {
-        if (!vm.text) {
-            vm.text = languageMapService.getDictionary($stateParams.language, 'footerMenu');
-        }
         vm.currentState = $state.current.name;
     });
 
@@ -677,11 +680,18 @@ angular.module('d2RollsApp')
     .directive('loadingTrigger', function ($rootScope) {
         return {
             restrict: 'A',
+            scope: {
+                finishOnLast: '<'
+            },
             replace: false,
-            link: function(scope, element) {
+            link: function(scope, element, attr) {
+                if (attr.loadingTrigger === 'isFinishState' || scope.finishOnLast) {
+                    $rootScope.$emit('changeStateFinish');
+                }
                 element.on('click', function() {
-                    console.log('trigerred');
-                    $rootScope.$emit('changeStateStart');
+                    if (attr.loadingTrigger === 'startOnClick') {
+                        $rootScope.$emit('changeStateStart');
+                    }            
                 });
             }
         };
@@ -743,22 +753,26 @@ angular.module('d2RollsApp')
             controllerAs: 'binder'
         }
     });
+function spinnerCtrl($timeout, $rootScope) {
+    var vm = this;
+    vm.isLoading = true;
+    $rootScope.$on('changeStateStart', function() {
+        vm.isLoading = true;
+    });
+    $rootScope.$on('changeStateFinish', function() {
+        $timeout(function() {
+            vm.isLoading = false;
+        });
+    });
+}
+
 angular.module('d2RollsApp')
     .directive('spinner', function () {
         return {
             restrict: 'E',
             replace: false,
-            controller: function($scope, $timeout, $rootScope) {
-
-                $rootScope.$on('changeStateStart', function() {
-                    $scope.isLoading = true;
-                });
-                $rootScope.$on('$viewContentLoaded', function() {
-                    $timeout(function() {
-                        $scope.isLoading = false;
-                    });
-                });
-            },
+            controller: spinnerCtrl,
+            controllerAs: 'spinner',
             templateUrl: '../html/components/spinner/spinner.tpl.html'
         }
     });
@@ -1055,9 +1069,7 @@ angular
     var lang = $stateParams.language;
 
     styleHandler.setContentHeight('category');
-
-    vm.isLoaded = false;
-    vm.categories = [];
+    vm.categories;
     vm.lang = lang;
     vm.sortingType = sortingType;
 
@@ -1077,7 +1089,6 @@ angular
             };
         };
         vm.categories = categoriesArray;
-        vm.isLoaded = !!vm.categories.length;
     });
 }]);
 angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'styleHandler', function(

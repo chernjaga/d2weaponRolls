@@ -2,11 +2,18 @@ angular.module('d2RollsApp')
     .directive('loadingTrigger', function ($rootScope) {
         return {
             restrict: 'A',
+            scope: {
+                finishOnLast: '<'
+            },
             replace: false,
-            link: function(scope, element) {
+            link: function(scope, element, attr) {
+                if (attr.loadingTrigger === 'isFinishState' || scope.finishOnLast) {
+                    $rootScope.$emit('changeStateFinish');
+                }
                 element.on('click', function() {
-                    console.log('trigerred');
-                    $rootScope.$emit('changeStateStart');
+                    if (attr.loadingTrigger === 'startOnClick') {
+                        $rootScope.$emit('changeStateStart');
+                    }            
                 });
             }
         };

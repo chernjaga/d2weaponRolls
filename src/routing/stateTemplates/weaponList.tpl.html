@@ -14,7 +14,7 @@
             </form>
         </div>
     </div>
-    <div class="style-screen-adaptor" ng-if="!weapons.isFilterActive">
+    <div class="style-screen-adaptor">
         <div class="body-padding weapon-list-margin bottom-offset" id="#a11yMainContent">
             <ul class="weapon-list">
                 <li ng-repeat="key in ::weapons.categoryHeaders" ng-init="isExpanded = true">
@@ -23,19 +23,20 @@
                     </div>
                     <ul class="weapon-list-box" role="menu" ng-show="isExpanded">
                         <li 
-                            ng-repeat="item in weapons.list | filter: weaponSearch | orderBy: ['-rarity.hash','-season.name'] track by $index"
+                            ng-repeat="item in weapons.list | filter: weaponSearch | orderBy: ['-rarity.hash','-season.name']"
                             ng-if="::(item.class.name === key)"
                             role="menuitem">
                             <a ui-sref="weaponView({weaponHash: item.hash, language: weapons.lang})"
                                 role="link"
-                                loading-trigger
+                                loading-trigger='startOnClick'
+                                finish-on-last='!!$last'
                                 title="{{::listItem.displayedProperties.name}}">
                                 <weapon-list-item 
                                     list-item="::item"
                                     language="::weapons.lang"
                                     offset="offset-1"
                                     class="weapon-list-item bgc"
-                                    ng-class="weapons.getRarityClass(item.rarity.hash)">
+                                    ng-class="::weapons.getRarityClass(item.rarity.hash)">
                                 </weapon-list-item > 
                             </a>
                         </li>
