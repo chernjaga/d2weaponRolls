@@ -8,44 +8,41 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
             resolve(items);
         });
     });
+    var sortByArray = {};
 
     //todo: language dependency
 
-    function setSortTypeHeaders(initialHashes) {
-        var sortBy = 'class'   
-        return initialHashes[sortBy];
-    }
-
-    function getFilteredItems(callback, filters, isFilterState) {
+    function getFilteredItems(callback, filters, isFilterState, sortBy) {
         if (filteredItems.length && !isFilterState) {
-            callback(filteredItems);
+            callback(filteredItems, sortByArray);
             return;
         }
         if (!Object.keys(itemsObject).length) {
             fetchItems.then(function(){
-                callback(applyFilter(filters, itemsObject));
+                callback(applyFilter(filters, itemsObject, sortBy), sortByArray);
             });
             return;
         }
-        callback(applyFilter(filters, itemsObject));
+        callback(applyFilter(filters, itemsObject, sortBy), sortByArray);
     }
 
-    function applyFilter(inputFilters, objToFilter) {
+    function applyFilter(inputFilters, objToFilter, sort) {
+        sortByArray = {};
         var filtersMap = initFiltersMap(inputFilters);
         var outputArray = [];
         if (filtersMap.class) {
             filtersMap.class.forEach(function(filterValue) {
-                outputArray = outputArray.concat(applyFilterPart(objToFilter, filtersMap, filterValue));
+                outputArray = outputArray.concat(applyFilterPart(objToFilter, filtersMap, filterValue, sort));
             });
         } else {
-            outputArray = applyFilterPart(objToFilter, filtersMap);
+            outputArray = applyFilterPart(objToFilter, filtersMap, null , sort);
         }
         filteredItems = outputArray;
         applyDefer.resolve();
         return outputArray;
     }
 
-    function applyFilterPart(objToFilter, filters, weaponClass) {
+    function applyFilterPart(objToFilter, filters, weaponClass, sort) {
         var outputPart = [];
         for (var hash in objToFilter) {
             var item = objToFilter[hash];
@@ -76,6 +73,9 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
             }
             if (isApplied) {
                 outputPart.push(item);
+                if (sort && !sortByArray[item[sort].name]) {
+                    sortByArray[item[sort].name] = true;
+                }
             }
         }
         return outputPart;
@@ -105,7 +105,6 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
 
     return {
         getFilteredItems: getFilteredItems,
-        resetFilters: resetFilters,
-        setSortTypeHeaders: setSortTypeHeaders
+        resetFilters: resetFilters
     };
 }]);

@@ -17,14 +17,23 @@
     <div class="style-screen-adaptor">
         <div class="body-padding weapon-list-margin bottom-offset" id="#a11yMainContent">
             <ul class="weapon-list">
-                <li ng-repeat="key in ::weapons.categoryHeaders" ng-init="isExpanded = true">
-                    <div class="category-title pointer" ng-click="isExpanded = !isExpanded" ng-hide="searchForm.search.$valid">
-                        {{::key}} <span ng-show="!isExpanded">&#9651;</span><span ng-show="isExpanded">&#9661;</span>
+                <li ng-repeat="(key, categoryValue) in ::weapons.categoryHeaders"
+                    ng-init="isExpanded = true"
+                    class="category-list">
+                    <div class="category-title pointer"
+                         ng-click="isExpanded = !isExpanded"
+                         ng-hide="searchForm.search.$valid">
+                         <span>
+                             {{::key}}
+                         </span>
+                        <span>
+                            <span ng-show="!isExpanded" class="icon-right-list"></span><span ng-show="isExpanded" class="icon-down-list"></span>
+                        </span> 
                     </div>
                     <ul class="weapon-list-box" role="menu" ng-show="isExpanded">
                         <li 
                             ng-repeat="item in weapons.list | filter: weaponSearch | orderBy: ['-rarity.hash','-season.name']"
-                            ng-if="::(item.class.name === key)"
+                            ng-if="::(item[weapons.sorting].name === key)"
                             role="menuitem">
                             <a ui-sref="weaponView({weaponHash: item.hash, language: weapons.lang})"
                                 role="link"

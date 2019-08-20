@@ -3,8 +3,17 @@
 $word-spacing-damage-type: $body-padding*0.25;
 
 .category-title {
-    color: $cl-main-bg-red;
+    color: $cl-white-tint1;
+    font-size: 2.5*$body-padding;
+    font-weight: 600;
     margin-bottom: $body-padding;
+    padding: 2*$body-padding $body-padding;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.category-list {
+    background: $cl-empty-bg-black;
 }
 .weapon-list {
     margin-bottom: 40px;
@@ -82,7 +91,7 @@ $word-spacing-damage-type: $body-padding*0.25;
     // background: -webkit-linear-gradient(top, rgba(169,169,169,1) 0%,rgba(188,188,188,0.62) 59%,rgba(182,182,182,0.61) 61%,rgba(212,212,212,0.43) 89%,rgba(215,215,215,0.43) 92%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom, rgb(22, 22, 22) 0%,rgb(21, 24, 31) 10%,rgba(38, 37, 53, 0.85) 40%,rgba(57, 52, 66, 0.6) 70%,rgba(75, 70, 83, 0.4) 90%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a9a9a9', endColorstr='#6ed7d7d7',GradientType=0 ); /* IE6-9 */
-    font-size: $body-padding*2;
+    font-size: $body-padding*2.5;
     z-index: 2;
     position: fixed;
     padding: $body-padding*2 $body-padding;
@@ -92,9 +101,11 @@ $word-spacing-damage-type: $body-padding*0.25;
     input {
         &::placeholder {
             color: $cl-main-bg-red;
+            font-size: $body-padding*2.5;
+            font-weight: 900;
         };
         color: $cl-main-bg-red;
-        font-size: $body-padding*2;
+        font-size: $body-padding*2.5;
         background: $cl-empty-bg-black;
         text-align: center;
         width: 100%;

@@ -93,6 +93,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         season: {},
         ammoType: {},
         source: {},
+        subSource: {},
         damageType: {}
     };
 
@@ -155,6 +156,9 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                 if (!hashToName.source[items[hash].source.sectionHash] && items[hash].source.sectionHash) {
                     hashToName.source[items[hash].source.sectionHash] = items[hash].source.name;
                 }
+                if (!hashToName.subSource[items[hash].subSource.name] && items[hash].subSource.name) {
+                    hashToName.subSource[items[hash].subSource.name] = items[hash].subSource.name;
+                }
                 if (!hashToName.damageType[items[hash].damageType.hash]) {
                     hashToName.damageType[items[hash].damageType.hash] = items[hash].damageType.name;
                 }
@@ -171,7 +175,6 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
     };
     function getHashToName(callback, language) {
         if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
-            console.log(hashToName);
             callback(hashToName);
             return;
         }
@@ -272,44 +275,41 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
             resolve(items);
         });
     });
+    var sortByArray = {};
 
     //todo: language dependency
 
-    function setSortTypeHeaders(initialHashes) {
-        var sortBy = 'class'   
-        return initialHashes[sortBy];
-    }
-
-    function getFilteredItems(callback, filters, isFilterState) {
+    function getFilteredItems(callback, filters, isFilterState, sortBy) {
         if (filteredItems.length && !isFilterState) {
-            callback(filteredItems);
+            callback(filteredItems, sortByArray);
             return;
         }
         if (!Object.keys(itemsObject).length) {
             fetchItems.then(function(){
-                callback(applyFilter(filters, itemsObject));
+                callback(applyFilter(filters, itemsObject, sortBy), sortByArray);
             });
             return;
         }
-        callback(applyFilter(filters, itemsObject));
+        callback(applyFilter(filters, itemsObject, sortBy), sortByArray);
     }
 
-    function applyFilter(inputFilters, objToFilter) {
+    function applyFilter(inputFilters, objToFilter, sort) {
+        sortByArray = {};
         var filtersMap = initFiltersMap(inputFilters);
         var outputArray = [];
         if (filtersMap.class) {
             filtersMap.class.forEach(function(filterValue) {
-                outputArray = outputArray.concat(applyFilterPart(objToFilter, filtersMap, filterValue));
+                outputArray = outputArray.concat(applyFilterPart(objToFilter, filtersMap, filterValue, sort));
             });
         } else {
-            outputArray = applyFilterPart(objToFilter, filtersMap);
+            outputArray = applyFilterPart(objToFilter, filtersMap, null , sort);
         }
         filteredItems = outputArray;
         applyDefer.resolve();
         return outputArray;
     }
 
-    function applyFilterPart(objToFilter, filters, weaponClass) {
+    function applyFilterPart(objToFilter, filters, weaponClass, sort) {
         var outputPart = [];
         for (var hash in objToFilter) {
             var item = objToFilter[hash];
@@ -340,6 +340,9 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
             }
             if (isApplied) {
                 outputPart.push(item);
+                if (sort && !sortByArray[item[sort].name]) {
+                    sortByArray[item[sort].name] = true;
+                }
             }
         }
         return outputPart;
@@ -369,8 +372,7 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
 
     return {
         getFilteredItems: getFilteredItems,
-        resetFilters: resetFilters,
-        setSortTypeHeaders: setSortTypeHeaders
+        resetFilters: resetFilters
     };
 }]);
 angular.module('d2RollsApp').factory('languageMapService', [ function() {
@@ -760,6 +762,29 @@ angular.module('d2RollsApp')
             controllerAs: 'binder'
         }
     });
+function spinnerCtrl($timeout, $rootScope) {
+    var vm = this;
+    vm.isLoading = true;
+    $rootScope.$on('changeStateStart', function() {
+        vm.isLoading = true;
+    });
+    $rootScope.$on('changeStateFinish', function() {
+        $timeout(function() {
+            vm.isLoading = false;
+        });
+    });
+}
+
+angular.module('d2RollsApp')
+    .directive('spinner', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: spinnerCtrl,
+            controllerAs: 'spinner',
+            templateUrl: '../html/components/spinner/spinner.tpl.html'
+        }
+    });
 function scaleCtrl () {};
 
 angular.module('d2RollsApp')
@@ -787,29 +812,6 @@ angular.module('d2RollsApp')
                     primaryStat.style.width = primaryValue + '%';
                 });
             }
-        }
-    });
-function spinnerCtrl($timeout, $rootScope) {
-    var vm = this;
-    vm.isLoading = true;
-    $rootScope.$on('changeStateStart', function() {
-        vm.isLoading = true;
-    });
-    $rootScope.$on('changeStateFinish', function() {
-        $timeout(function() {
-            vm.isLoading = false;
-        });
-    });
-}
-
-angular.module('d2RollsApp')
-    .directive('spinner', function () {
-        return {
-            restrict: 'E',
-            replace: false,
-            controller: spinnerCtrl,
-            controllerAs: 'spinner',
-            templateUrl: '../html/components/spinner/spinner.tpl.html'
         }
     });
 function statsRefresherCtrl(utils) {
@@ -1079,7 +1081,7 @@ angular
     vm.categories;
     vm.lang = lang;
     vm.sortingType = sortingType;
-
+    
     fetchManifestService.getWeaponList(lang, function(arrayOfItems) {
         var sortObject = {};
         var categoriesArray = [];
@@ -1146,20 +1148,28 @@ angular.module('d2RollsApp').controller('weaponListCtrl', [
     var search = languageMapService.getDictionary(lang).search;
     var rarityMap = fetchManifestService.rarityMap;
     var filters = $stateParams.filters;
+    var sortBy = $stateParams.sortBy
+
     
     vm.getRarityClass = getRarityClass;
     vm.searchPlaceHolder = search;
     vm.lang = lang;
-    vm.isLoaded = false;
     vm.isFilterActive = false;
     vm.categoryHeaders;
 
-    fetchManifestService.getHashToName(function(initialHashes) {
-        vm.categoryHeaders = filterService.setSortTypeHeaders(initialHashes);
-        filterService.getFilteredItems(function(filteredItems) {
+    switch (sortBy) {
+        case 'source': vm.sorting = 'subSource';
+            break;
+        case 'season': vm.sorting = 'class';
+            break;
+        default: vm.sorting = 'class';
+    }
+    
+    fetchManifestService.getHashToName(function(initialHashes) { 
+        filterService.getFilteredItems(function(filteredItems, sortByArray) {
+            vm.categoryHeaders = sortByArray;
             vm.list = filteredItems;
-            vm.isLoaded = !!vm.list.length;
-        }, filters, true);
+        }, filters, true, vm.sorting);
     }, lang);
 
     function getRarityClass(hash) {

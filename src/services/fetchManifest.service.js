@@ -21,6 +21,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         season: {},
         ammoType: {},
         source: {},
+        subSource: {},
         damageType: {}
     };
 
@@ -83,6 +84,9 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                 if (!hashToName.source[items[hash].source.sectionHash] && items[hash].source.sectionHash) {
                     hashToName.source[items[hash].source.sectionHash] = items[hash].source.name;
                 }
+                if (!hashToName.subSource[items[hash].subSource.name] && items[hash].subSource.name) {
+                    hashToName.subSource[items[hash].subSource.name] = items[hash].subSource.name;
+                }
                 if (!hashToName.damageType[items[hash].damageType.hash]) {
                     hashToName.damageType[items[hash].damageType.hash] = items[hash].damageType.name;
                 }
@@ -99,7 +103,6 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
     };
     function getHashToName(callback, language) {
         if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
-            console.log(hashToName);
             callback(hashToName);
             return;
         }

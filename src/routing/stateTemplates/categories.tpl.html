@@ -1,7 +1,7 @@
 <div class="style-screen-adaptor body-padding">
     <div class="home-sorting-menu categories">
         <menu-link ng-repeat="category in ::sorting.categories | orderBy: category: 'reverse'"
-            params="{language: sorting.lang, filters: sorting.sortingType + ':' + category}"
+            params="{language: sorting.lang, filters: sorting.sortingType + ':' + category, sortBy: sorting.sortingType}"
             link-text="category"
             link-class="{'activity': sorting.sortingType === 'source'}"
             go-to="'weaponList'">

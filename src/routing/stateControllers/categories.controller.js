@@ -13,7 +13,7 @@ angular
     vm.categories;
     vm.lang = lang;
     vm.sortingType = sortingType;
-
+    
     fetchManifestService.getWeaponList(lang, function(arrayOfItems) {
         var sortObject = {};
         var categoriesArray = [];
