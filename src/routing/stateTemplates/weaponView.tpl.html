@@ -1,6 +1,6 @@
 
 
-<div class="style-screen-adaptor" stats-refresher>
+<div class="style-screen-adaptor weapon-view-state" stats-refresher>
     <div class="weapon-view-header bg" ng-class="::weapon.rarityClass">
         <div class="weapon-view-header-banner">
                 <img ng-src="https://www.bungie.net{{::weapon.data.secondaryData.screenshot}}" 
@@ -20,6 +20,7 @@
         </weapon-perks-panel>
     </div>
     <stats-view
+        loading-trigger='isFinishState'
         input-stats="refresher.data">
     </stats-view>
     <div class="body-padding weapon-view-text-content bottom-offset">

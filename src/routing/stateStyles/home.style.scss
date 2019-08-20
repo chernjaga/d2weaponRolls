@@ -2,15 +2,18 @@
 
 .sorting-link {
     background:$cl-main-bg-red;
+    position: relative;
     margin-bottom: $body-padding;
     padding: 2*$body-padding;   
-    display: flex;
     color: $cl-white-tint1;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
     vertical-align: middle;
     background-position: center top;
+    .title {
+        font-size: 3*$body-padding;
+        font-weight: 900;
+        color: $cl-white-tint1;
+        flex-wrap: 900;
+    }
     &.season {
         background: url("../img/covers/menu_new_stuff.jpg");
         
@@ -33,9 +36,14 @@
 .view > div {
     height: inherit;
 }
+
 .home-sorting-menu {
     display: grid;
     height: inherit;
+    .sorting-link .title {
+        position: absolute;
+        bottom: 20%;
+    }
 }
 .categories {
     .sorting-link.activity:last-child {

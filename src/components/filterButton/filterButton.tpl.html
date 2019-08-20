@@ -1,10 +1,6 @@
-<div class="filter-view" ng-class="{'expanded': filterButton.isExpanded}">
-    <div class="filter-button"
-         ng-click="filterButton.isExpanded =  weapons.isFilterActive = true"
-         ng-hide="filterButton.isExpanded ">
-        {{::filterButton.text}} | lll
-    </div>
-    <div class="filter-container style-screen-adaptor" ng-show="filterButton.isExpanded">
-        <weapon-filter></weapon-filter>
-    </div>
+<div class="filter-view">
+    <a  ui-sref="filterState({lang: filterButton.lang})" 
+        class="filter-button">
+            {{::filterButton.text}} | lll
+    </a>
 </div>

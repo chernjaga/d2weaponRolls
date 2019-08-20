@@ -5,13 +5,15 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     'filterService',
     'languageMapService',
     'fetchManifestService',
+    'styleHandler',
     function (
         $q,
         $state,
         $stateParams,
         filterService,
         languageMapService,
-        fetchManifestService
+        fetchManifestService,
+        styleHandler
     ) {
     var vm = this;
     var lang = $stateParams.language;
@@ -22,6 +24,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     vm.moveToList = moveToList;
     vm.itemsDetected;
     vm.includedItems = {};
+    styleHandler.setContentHeight('filter')
     filterService.resetFilters();
     fetchManifestService.getHashToName(function(initialHashes) {
         vm.hashToName = initialHashes;
@@ -34,6 +37,9 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     
     function init() {
         vm.text = languageMapService.getDictionary(lang, 'filter');
+        filterService.getFilteredItems(function(data) {
+            vm.itemsDetected = data.length;
+        }, [], true);
         vm.toggleFilter = function(target, filterBy, hash) {   
             var filterItem = `${filterBy}:${hash}`;
             if (!includedFilters.includes(filterItem)) {
@@ -41,11 +47,13 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
             } else {
                 includedFilters = removeFromFilters(includedFilters, filterItem);
             }
+            
             setIncludedNumber(target, filterBy, hash);
+
             target.isIncluded = !target.isIncluded;
-            filterService.getFilteredItems(function(data){
+            filterService.getFilteredItems(function(data) {
                 vm.itemsDetected = data.length;
-            }, includedFilters);
+            }, includedFilters, true);
         };
     };
 

@@ -8,9 +8,13 @@
     grid-template-columns: repeat(autofit, 1fr);
     margin-bottom: $body-padding*1.5;
 }
+.filter-state, .weapon-view-state {
+    margin-bottom: 46px;
+}
 
 .filter-section-title {
     grid-column: 1;
+    color: $cl-main-bg-red;
 }
 
 .filter-section-content {

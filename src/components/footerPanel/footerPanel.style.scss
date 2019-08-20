@@ -20,7 +20,7 @@
     img {
         width: 30%;
     }
-    &.h-home, &.h-categories, &.w-weaponList, &.s-settings, &.w-filterState {
+    &.h-home, &.h-categories, &.w-weaponList, &.s-settings, &.w-filterState, &.w-weaponView {
         background: rgb(204,0,1);
         background: radial-gradient(circle at 50% 155%, $cl-main-bg-red 0%, $cl-empty-bg-black 55%);
         .active-highlight {

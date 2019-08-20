@@ -5,11 +5,13 @@ angular.module('d2RollsApp').controller('footerPanelCtrl', ['$state', '$statePar
     languageMapService
     ) {
     var vm = this;
-   
+    var lang;
+    vm.$onInit = function() {
+        lang = $stateParams.language || 'en';
+        vm.text = languageMapService.getDictionary(lang, 'footerMenu');
+        vm.currentState = $state.current.name;
+    }
     $transitions.onSuccess({}, function() {
-        if (!vm.text) {
-            vm.text = languageMapService.getDictionary($stateParams.language, 'footerMenu');
-        }
         vm.currentState = $state.current.name;
     });
 

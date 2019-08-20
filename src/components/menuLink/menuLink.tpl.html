@@ -1,6 +1,10 @@
 <div ng-click="::link.clickHandler()"
      role="link" 
-     class="sorting-link {{::link.linkClass}}" 
+     class="sorting-link {{::link.linkClass}}"
+     loading-trigger='startOnClick'
+     finish-on-last='!!$last'
      title="{{::link.linkText}}">
-        {{::link.linkText}}
+     <div class="title">
+         {{::link.linkText}}
+     </div>
 </div>

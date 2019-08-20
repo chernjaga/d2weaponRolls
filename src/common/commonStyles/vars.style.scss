@@ -20,8 +20,10 @@ $cl-stat-positive: rgb(62, 161, 83);
 
 // restyling colors
 $cl-main-bg-black: rgb(45, 49, 58);
+$cl-main-bg-black-trans: rgba(45, 49, 58, 0.5);
 $cl-empty-bg-black: rgb(35, 38, 46);
-$cl-main-bg-red: #CC0001;
+$cl-main-bg-red: rgb(204, 0, 1);
+$cl-main-bg-trans: rgba(240, 0, 1, 0.5);
 $cl-filter-item-bg: rgba(240, 238, 234, 0.295);
 
 
