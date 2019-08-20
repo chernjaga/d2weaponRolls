@@ -152,8 +152,8 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                 if (!hashToName.season[items[hash].season.hash]) {
                     hashToName.season[items[hash].season.name] = items[hash].season.name;
                 }
-                if (!hashToName.source[items[hash].source.hash]) {
-                    hashToName.source[items[hash].source.hash] = items[hash].source.name;
+                if (!hashToName.source[items[hash].source.sectionHash]) {
+                    hashToName.source[items[hash].source.sectionHash] = items[hash].source.name;
                 }
                 if (!hashToName.damageType[items[hash].damageType.hash]) {
                     hashToName.damageType[items[hash].damageType.hash] = items[hash].damageType.name;
@@ -324,7 +324,11 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
                         if (weaponClass) {
                             isApplied = isApplied && filterValueArray.includes(item[valuesName].name) && item.class.name === weaponClass;
                         } else {
-                            isApplied = isApplied && filterValueArray.includes(item[valuesName].name);
+                            if (valuesName === 'source' && item.source.bindTo) {
+                                isApplied = isApplied && filterValueArray.includes(item.source.bindTo);
+                            } else {
+                                isApplied = isApplied && filterValueArray.includes(item[valuesName].name);
+                            }
                         }
                     } else if (valuesName === 'class') {
                         isApplied = isApplied && filterValueArray.includes(weaponClass);
