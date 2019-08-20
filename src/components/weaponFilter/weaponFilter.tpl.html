@@ -10,7 +10,7 @@
             </span>
         </div>
         <div class="filter-section-content {{::itemName}}">
-            <div ng-repeat="(hash, name) in ::itemContent"
+            <div ng-repeat="(hash, name) in ::itemContent track by $index"
                 class="filter-section-item"
                 style="grid-column:{{$index+1}}"
                 ng-class="{'included': this.isIncluded}"

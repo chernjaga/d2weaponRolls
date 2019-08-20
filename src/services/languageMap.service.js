@@ -14,6 +14,7 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 perks: 'Перки',
                 cancel: 'Отменить',
                 apply: 'Применить',
+                source: 'Активность',
                 selected: 'Выбрано'
             },
             sorting: {
@@ -60,6 +61,7 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 perks: 'Perks',
                 cancel: 'Cancel',
                 apply: 'Apply',
+                source: 'Activity',
                 selected: 'Selected'
 
             },

@@ -152,7 +152,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                 if (!hashToName.season[items[hash].season.hash]) {
                     hashToName.season[items[hash].season.name] = items[hash].season.name;
                 }
-                if (!hashToName.source[items[hash].source.sectionHash]) {
+                if (!hashToName.source[items[hash].source.sectionHash] && items[hash].source.sectionHash) {
                     hashToName.source[items[hash].source.sectionHash] = items[hash].source.name;
                 }
                 if (!hashToName.damageType[items[hash].damageType.hash]) {
@@ -171,6 +171,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
     };
     function getHashToName(callback, language) {
         if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
+            console.log(hashToName);
             callback(hashToName);
             return;
         }
@@ -388,6 +389,7 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 perks: 'Перки',
                 cancel: 'Отменить',
                 apply: 'Применить',
+                source: 'Активность',
                 selected: 'Выбрано'
             },
             sorting: {
@@ -434,6 +436,7 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 perks: 'Perks',
                 cancel: 'Cancel',
                 apply: 'Apply',
+                source: 'Activity',
                 selected: 'Selected'
 
             },
@@ -757,29 +760,6 @@ angular.module('d2RollsApp')
             controllerAs: 'binder'
         }
     });
-function spinnerCtrl($timeout, $rootScope) {
-    var vm = this;
-    vm.isLoading = true;
-    $rootScope.$on('changeStateStart', function() {
-        vm.isLoading = true;
-    });
-    $rootScope.$on('changeStateFinish', function() {
-        $timeout(function() {
-            vm.isLoading = false;
-        });
-    });
-}
-
-angular.module('d2RollsApp')
-    .directive('spinner', function () {
-        return {
-            restrict: 'E',
-            replace: false,
-            controller: spinnerCtrl,
-            controllerAs: 'spinner',
-            templateUrl: '../html/components/spinner/spinner.tpl.html'
-        }
-    });
 function scaleCtrl () {};
 
 angular.module('d2RollsApp')
@@ -807,6 +787,29 @@ angular.module('d2RollsApp')
                     primaryStat.style.width = primaryValue + '%';
                 });
             }
+        }
+    });
+function spinnerCtrl($timeout, $rootScope) {
+    var vm = this;
+    vm.isLoading = true;
+    $rootScope.$on('changeStateStart', function() {
+        vm.isLoading = true;
+    });
+    $rootScope.$on('changeStateFinish', function() {
+        $timeout(function() {
+            vm.isLoading = false;
+        });
+    });
+}
+
+angular.module('d2RollsApp')
+    .directive('spinner', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: spinnerCtrl,
+            controllerAs: 'spinner',
+            templateUrl: '../html/components/spinner/spinner.tpl.html'
         }
     });
 function statsRefresherCtrl(utils) {
