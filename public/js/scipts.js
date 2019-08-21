@@ -326,7 +326,7 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
                             isApplied = isApplied && filterValueArray.includes(item[valuesName].name) && item.class.name === weaponClass;
                         } else {
                             if (valuesName === 'source' && item.source.bindTo) {
-                                isApplied = isApplied && filterValueArray.includes(item.source.bindTo);
+                                isApplied = isApplied && filterValueArray.includes(item.source.bindTo) || filterValueArray.includes(item.source.bindTo1);
                             } else {
                                 isApplied = isApplied && filterValueArray.includes(item[valuesName].name);
                             }
