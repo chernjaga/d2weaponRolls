@@ -1,22 +1,18 @@
 angular.module('d2RollsApp').factory('styleHandler', [function() {
     var contentHeight;
-    function setContentHeight(stateName) {
+    function setContentHeight(stateCorrectionValue) {
         var view = document.getElementsByClassName('view')[0];
-        var statesHeights = {
-            category: 62,
-            home: 62,
-            filter: 100
-        }
+
+        stateCorrectionValue = stateCorrectionValue || 0
         if (contentHeight) {
             view.style.height = contentHeight;
             return;
         }
         var footer = document.getElementsByClassName('footer-panel')[0];
         var bodyHeight = footer.getBoundingClientRect().top;
-        var differentHeight = statesHeights[stateName] || 0;
-        var menuHeight = bodyHeight - differentHeight;
-        view.style.height = menuHeight + 'px';
-        contentHeight = menuHeight + 'px';
+
+        view.style.height = bodyHeight - 16 - stateCorrectionValue + 'px';
+        contentHeight = view.clientHeight + 'px';
     };
     
     return {

@@ -326,7 +326,9 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
                             isApplied = isApplied && filterValueArray.includes(item[valuesName].name) && item.class.name === weaponClass;
                         } else {
                             if (valuesName === 'source' && item.source.bindTo) {
-                                isApplied = isApplied && filterValueArray.includes(item.source.bindTo) || filterValueArray.includes(item.source.bindTo1);
+                                isApplied = isApplied && filterValueArray.includes(item.source.bindTo) ||
+                                    filterValueArray.includes(item.source.bindTo1) ||
+                                    filterValueArray.includes(item.source.name);
                             } else {
                                 isApplied = isApplied && filterValueArray.includes(item[valuesName].name);
                             }
@@ -616,23 +618,19 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
 }]);
 angular.module('d2RollsApp').factory('styleHandler', [function() {
     var contentHeight;
-    function setContentHeight(stateName) {
+    function setContentHeight(stateCorrectionValue) {
         var view = document.getElementsByClassName('view')[0];
-        var statesHeights = {
-            category: 62,
-            home: 62,
-            filter: 100
-        }
+
+        stateCorrectionValue = stateCorrectionValue || 0
         if (contentHeight) {
             view.style.height = contentHeight;
             return;
         }
         var footer = document.getElementsByClassName('footer-panel')[0];
         var bodyHeight = footer.getBoundingClientRect().top;
-        var differentHeight = statesHeights[stateName] || 0;
-        var menuHeight = bodyHeight - differentHeight;
-        view.style.height = menuHeight + 'px';
-        contentHeight = menuHeight + 'px';
+
+        view.style.height = bodyHeight - 16 - stateCorrectionValue + 'px';
+        contentHeight = view.clientHeight + 'px';
     };
     
     return {
@@ -1073,11 +1071,11 @@ angular
     fetchManifestService,
     styleHandler
 ) {
+    styleHandler.setContentHeight();
     var vm = this;
     var sortingType = $stateParams.sortBy;
     var lang = $stateParams.language;
 
-    styleHandler.setContentHeight('category');
     vm.categories;
     vm.lang = lang;
     vm.sortingType = sortingType;
@@ -1106,6 +1104,7 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
     languageMapService,
     styleHandler
 ) {
+    styleHandler.setContentHeight();
     var vm = this;
     var lang = $stateParams.language;
     var text = languageMapService.getDictionary(lang, 'home');
@@ -1127,9 +1126,10 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
         }
     ];
     vm.lang = lang;
-    styleHandler.setContentHeight('home');
 
-    fetchManifestService.getWeaponList(lang, function(){});
+    fetchManifestService.getWeaponList(lang, function(){
+        
+    });
 }]);
 angular.module('d2RollsApp').controller('weaponListCtrl', [
     '$stateParams',
