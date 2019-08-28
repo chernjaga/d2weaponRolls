@@ -8,6 +8,7 @@ const browserSync = require('browser-sync').create();
 const scripts = require('./scripts');
 const styles = require('./styles');
 
+
 var devMode = false;
 
 gulp.task('sass', function () {
@@ -39,7 +40,10 @@ gulp.task('html', function () {
 
 
 gulp.task('build', function () {
-    return gulp.series(['sass', 'js', 'html']);
+    return new Promise(function(resolve, reject){
+        gulp.series(['sass', 'js', 'html']);
+        resolve();
+    })
 });
 
 gulp.task('browser-sync', function () {
