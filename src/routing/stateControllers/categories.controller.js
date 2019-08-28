@@ -5,11 +5,11 @@ angular
     fetchManifestService,
     styleHandler
 ) {
+    styleHandler.setContentHeight();
     var vm = this;
     var sortingType = $stateParams.sortBy;
     var lang = $stateParams.language;
 
-    styleHandler.setContentHeight('category');
     vm.categories;
     vm.lang = lang;
     vm.sortingType = sortingType;

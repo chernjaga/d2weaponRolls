@@ -10,7 +10,9 @@ body {
     overflow-x: hidden;
     min-width: 320px;
 }
-
+.view {
+    display: block;
+}
 .body-padding {
     padding: $body-padding;
 }

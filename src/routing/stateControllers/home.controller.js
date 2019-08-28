@@ -4,6 +4,7 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
     languageMapService,
     styleHandler
 ) {
+    styleHandler.setContentHeight();
     var vm = this;
     var lang = $stateParams.language;
     var text = languageMapService.getDictionary(lang, 'home');
@@ -25,7 +26,8 @@ angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManif
         }
     ];
     vm.lang = lang;
-    styleHandler.setContentHeight('home');
 
-    fetchManifestService.getWeaponList(lang, function(){});
+    fetchManifestService.getWeaponList(lang, function(){
+        
+    });
 }]);
