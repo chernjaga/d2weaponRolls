@@ -21,11 +21,17 @@ angular.module('d2RollsApp')
             bindToController: {
                 linkClass: '<',
                 goTo: '<',
+                hashData: '<',
                 linkText: '<',
                 params: '<'
             },
             templateUrl: '../html/components/menuLink/menuLink.tpl.html',
             controller: menuLinkCtrl,
-            controllerAs: 'link'
+            controllerAs: 'link',
+            link: function(scope, element, attr) {
+                if (attr.hashData) {
+                    element[0].style.backgroundImage = `url("./img/filterAssets/${scope.link.params.sortBy}/${scope.link.hashData}.png")`;
+                }
+            }
         };
     });

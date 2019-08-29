@@ -45,25 +45,25 @@
     &::-webkit-scrollbar {
         display: none;
     }
+    &.class {
+        .filter-section-item {
+            min-width: 110px;
+        }
+    }
     &.season, &.source {
         display: block;
         position: relative;
         width: 100%;
         padding: 0;
         .filter-section-text {
-            display: block;
+            display: flex;
+            align-items: center;
             position: absolute;
-
+            font-weight: 900;
             width: 100%;
             color: $cl-white-tint1;
         }
         .filter-section-item {
-            img {
-                height: -webkit-fill-available;
-                object-fit: cover;
-                object-position: top;
-                max-width: 100%;
-            }
             padding: 0;
             margin-bottom: $body-padding;
         }
@@ -72,12 +72,16 @@
 .filter-section-text {
     display: none;
     .number {
-        padding: 2*$body-padding;
-        height: 100%;
-        background: $cl-main-bg-black-trans;
+        width: 15%;
+        text-align: center;
+        background-color: $cl-main-bg-black-trans;
+        height: 6*$body-padding;
+        line-height: 6*$body-padding;        
     }
     .text {
         padding: 0 2*$body-padding;
+        height: 6*$body-padding;
+        line-height: 6*$body-padding;  
     }
 }
 .filter-section-item {
@@ -85,19 +89,15 @@
     height: 6*$body-padding;
     justify-content: center;
     align-items: center;
-    background: $cl-empty-bg-black;
+    background-color: $cl-empty-bg-black;
     padding: $body-padding;
-    img {
-        max-width: 100px;       
-    }
+    user-select: none;
+    cursor: pointer;
     &.included {
-        background: $cl-main-bg-red;
-        .season, .source {
-            opacity: 0.4;
+        background-color: $cl-main-bg-red;
+        .number {
+            background-color: $cl-main-bg-red;  
         }
-    }
-    .damageType, .slot {
-        max-width: 30%;
     }
 }
 

@@ -21,7 +21,7 @@ angular
             var itemObject = arrayOfItems[item];
             try {
                 if (!sortObject[itemObject[sortingType].name]) {
-                    sortObject[itemObject[sortingType].name] = true;
+                    sortObject[itemObject[sortingType].name] = itemObject[sortingType].sectionHash || itemObject[sortingType].name;
                     categoriesArray.push(itemObject[sortingType].name);
                 }
 
@@ -29,6 +29,9 @@ angular
                     
             };
         };
+        console.log(categoriesArray);
+        
+        vm.hashObj = sortObject;
         vm.categories = categoriesArray;
     });
 }]);
