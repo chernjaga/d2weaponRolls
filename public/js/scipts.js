@@ -94,6 +94,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         ammoType: {},
         source: {},
         subSource: {},
+        frame: {},
         damageType: {}
     };
 
@@ -162,10 +163,11 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                 if (!hashToName.damageType[items[hash].damageType.hash]) {
                     hashToName.damageType[items[hash].damageType.hash] = items[hash].damageType.name;
                 }
-                hashToName.ammoType = {
-                    1: 1,
-                    2: 2,
-                    3: 3
+                if (!hashToName.ammoType[items[hash].ammoType.hash]) {
+                    hashToName.ammoType[items[hash].ammoType.hash] = items[hash].ammoType.name;
+                }
+                if (!hashToName.frame[items[hash].frame.hash]) {
+                    hashToName.frame[items[hash].frame.hash] = items[hash].frame.name;
                 }
             }
             filterHashesDeferred.resolve();
@@ -275,26 +277,42 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
             resolve(items);
         });
     });
-    var sortByArray = {};
+    var sortByObject = {};
 
     //todo: language dependency
 
     function getFilteredItems(callback, filters, isFilterState, sortBy) {
+        if (!sortBy) {
+            if (isFilterState) {
+                sortBy = setSortBy(filters);
+            }  else {
+                sortBy = 'class';
+            }
+        }
         if (filteredItems.length && !isFilterState) {
-            callback(filteredItems, sortByArray);
+            callback(filteredItems, sortByObject);
             return;
         }
         if (!Object.keys(itemsObject).length) {
             fetchItems.then(function(){
-                callback(applyFilter(filters, itemsObject, sortBy), sortByArray);
+                callback(applyFilter(filters, itemsObject, sortBy), sortByObject);
             });
             return;
         }
-        callback(applyFilter(filters, itemsObject, sortBy), sortByArray);
+        callback(applyFilter(filters, itemsObject, sortBy), sortByObject);
+    }
+
+    function setSortBy(filters) {
+        var filterMap = initFiltersMap(filters);
+        if (!filterMap.season && !filterMap.source) {
+            if (filterMap.class && filterMap.class.length < 3) {
+                return 'frame';
+            }
+        }
     }
 
     function applyFilter(inputFilters, objToFilter, sort) {
-        sortByArray = {};
+        sortByObject = {};
         var filtersMap = initFiltersMap(inputFilters);
         var outputArray = [];
         if (filtersMap.class) {
@@ -342,8 +360,8 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
             }
             if (isApplied) {
                 outputPart.push(item);
-                if (sort && !sortByArray[item[sort].name]) {
-                    sortByArray[item[sort].name] = true;
+                if (sort && !sortByObject[item[sort].name]) {
+                    sortByObject[item[sort].name] = true;
                 }
             }
         }
@@ -364,7 +382,6 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
                 map[key].push(value)
             }
         });
-
         return map;
     }
 

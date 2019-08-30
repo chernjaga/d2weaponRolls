@@ -22,6 +22,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         ammoType: {},
         source: {},
         subSource: {},
+        frame: {},
         damageType: {}
     };
 
@@ -90,10 +91,11 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                 if (!hashToName.damageType[items[hash].damageType.hash]) {
                     hashToName.damageType[items[hash].damageType.hash] = items[hash].damageType.name;
                 }
-                hashToName.ammoType = {
-                    1: 1,
-                    2: 2,
-                    3: 3
+                if (!hashToName.ammoType[items[hash].ammoType.hash]) {
+                    hashToName.ammoType[items[hash].ammoType.hash] = items[hash].ammoType.name;
+                }
+                if (!hashToName.frame[items[hash].frame.hash]) {
+                    hashToName.frame[items[hash].frame.hash] = items[hash].frame.name;
                 }
             }
             filterHashesDeferred.resolve();
