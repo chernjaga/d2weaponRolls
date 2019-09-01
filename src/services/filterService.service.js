@@ -45,7 +45,7 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
             return 'subSource';
         }
         if (!filterMap.season && !filterMap.source) {
-            if (filterMap.class && filterMap.class.length < 3) {
+            if (filterMap.class && filterMap.class.length === 1) {
                 sortByParam = 'frame';
                 return 'frame';
             }

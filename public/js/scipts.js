@@ -323,7 +323,7 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
             return 'subSource';
         }
         if (!filterMap.season && !filterMap.source) {
-            if (filterMap.class && filterMap.class.length < 3) {
+            if (filterMap.class && filterMap.class.length === 1) {
                 sortByParam = 'frame';
                 return 'frame';
             }
@@ -707,14 +707,18 @@ angular.module('d2RollsApp')
         }
     });
 function frameFilter(mapping, frameName) {
-    return frameName; 
+    return frameName ; 
 }
 
 angular.module('d2RollsApp')
     .filter('weaponListSection', function ($stateParams, entityMapping) {
         var sortBy = $stateParams.sortBy;
+        var filters = $stateParams.filters;
+        console.log(filters);
         switch (sortBy) {
-            case 'frame': return frameFilter.bind(this, entityMapping.frameStringCorrection());
+            case 'frame': 
+                console.log('object');
+                return frameFilter.bind(this, entityMapping.frameStringCorrection());
         }       
     });
 angular.module('d2RollsApp')
