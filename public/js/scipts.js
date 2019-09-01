@@ -552,6 +552,19 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
         return dictionary[lang];  
     }
 
+    function searchForSection(target, section) {
+        for (var property in target) {
+            if (property === section) {
+                categoryToReturn = target[property];
+                break;
+            } else if (typeof target[property] === 'object') {
+                searchForSection(target[property], section);
+            }
+        };
+
+        return categoryToReturn;
+    }
+    
     return {
         getDictionary: getDictionary
     };
@@ -684,180 +697,6 @@ angular.module('d2RollsApp').factory('styleHandler', [function() {
         setContentHeight: setContentHeight
     }
 }]);
-angular
-.module('d2RollsApp')
-.controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'styleHandler', function(
-    $stateParams,
-    fetchManifestService,
-    styleHandler
-) {
-    styleHandler.setContentHeight();
-    var vm = this;
-    var sortingType = $stateParams.sortBy;
-    var lang = $stateParams.language;
-
-    vm.categories;
-    vm.lang = lang;
-    vm.sortingType = sortingType;
-    
-    fetchManifestService.getWeaponList(lang, function(arrayOfItems) {
-        var sortObject = {};
-        var categoriesArray = [];
-        for (var item in arrayOfItems) {
-            var itemObject = arrayOfItems[item];
-            try {
-                if (!sortObject[itemObject[sortingType].name]) {
-                    sortObject[itemObject[sortingType].name] = itemObject[sortingType].sectionHash || itemObject[sortingType].name;
-                    categoriesArray.push(itemObject[sortingType].name);
-                }
-
-            } catch (e) {
-                    
-            };
-        };
-        
-        vm.hashObj = sortObject;
-        vm.categories = categoriesArray;
-    });
-}]);
-angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'styleHandler', function(
-    $stateParams,
-    fetchManifestService,
-    languageMapService,
-    styleHandler
-) {
-    styleHandler.setContentHeight();
-    var vm = this;
-    var lang = $stateParams.language;
-    var text = languageMapService.getDictionary(lang, 'home');
-    vm.sorting = [
-        {
-            sortBy: 'season',
-            toState: 'categories',
-            text: text.newStuff
-        },
-        {
-            sortBy: 'source',
-            toState: 'categories',
-            text: text.sources
-        },
-        {
-            sortBy: 'godRoll',
-            toState: 'filterState',
-            text: text.godRoll
-        }
-    ];
-    vm.lang = lang;
-
-    fetchManifestService.getWeaponList(lang, function(){
-        
-    });
-}]);
-angular.module('d2RollsApp').controller('weaponListCtrl', [
-    '$stateParams',
-    'languageMapService',
-    'fetchManifestService',
-    'filterService',
-    function(
-        $stateParams,
-        languageMapService,
-        fetchManifestService,
-        filterService
-    )
-{
-    var vm = this;
-    var lang = $stateParams.language;
-    var search = languageMapService.getDictionary(lang).search;
-    var rarityMap = fetchManifestService.rarityMap;
-    var filters = $stateParams.filters;
-    var sortBy = $stateParams.sortBy
-
-    
-    vm.getRarityClass = getRarityClass;
-    vm.searchPlaceHolder = search;
-    vm.lang = lang;
-    vm.isFilterActive = false;
-    vm.categoryHeaders;
-
-    if (sortBy === 'season') {
-        vm.sorting = 'subSource';
-    } else {
-        vm.sorting = sortBy || 'class';
-    }
-    
-    fetchManifestService.getHashToName(function(initialHashes) { 
-        filterService.getFilteredItems(function(filteredItems, sortByArray) {
-            vm.categoryHeaders = sortByArray;
-            vm.list = filteredItems;
-        }, filters, true, vm.sorting);
-    }, lang);
-
-    function getRarityClass(hash) {
-        return rarityMap[hash];
-    };
-}]);
-angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'utils', function(
-    $stateParams,
-    fetchManifestService,
-    languageMapService,
-    utils
-) {  
-    var vm = this;
-    var rarityMap = fetchManifestService.rarityMap;
-    var lang = $stateParams.language;
-    var weaponHash = $stateParams.weaponHash;
-
-    var perksPanel = languageMapService.getDictionary(lang, 'perksPanel');
-    var statsPanel = languageMapService.getDictionary(lang, 'statsPanel');
-
-    vm.perksPanelTextContent = {
-        perksPanelHeader: perksPanel.header,
-        perksPanelExpand: perksPanel.expand,
-        perksPanelCollapse: perksPanel.collapse
-    };
-    vm.statsPanelTextContent = {
-        statsPanelHeader: statsPanel.header
-    };
-    
-
-    fetchManifestService.getSingleWeaponData(lang, weaponHash, function(incomingData){
-        var rarityHash = incomingData.rarity.hash;
-        vm.rarityClass = rarityMap[rarityHash];
-        vm.data = {
-            primaryData: incomingData
-        };
-
-    }, function(incomingData) {
-        vm.data.secondaryData = incomingData;
-        setWeaponStats(vm.data.secondaryData.stats, vm.data.primaryData.hash);
-        getPerksBucket(vm.data.secondaryData.perks);
-
-    }, function(incomingData) {
-        var rarityHash = incomingData.primaryData.rarity.hash
-        vm.rarityClass = rarityMap[rarityHash];
-        vm.data = incomingData;      
-        setWeaponStats(vm.data.secondaryData.stats, vm.data.primaryData.hash); 
-        getPerksBucket(vm.data.secondaryData.perks);
-    });
-
-    function setWeaponStats(data, hash) {
-        utils.initWeaponStats(data, hash);
-        console.log(vm.data.primaryData.hash);
-    }
-
-    function getPerksBucket(data) {
-        var roll = $stateParams.roll;
-        if (!!roll.length) {
-            for (var index = 0; index < roll.length; index++) {
-                data[index].vendorPerk = roll[index];
-            }
-        }
-        fetchManifestService.getPerksForSingleWeapon(data, function(perksBucket) {
-            vm.perksBucket = perksBucket;
-        });
-    };
-
-}]);
 angular.module('d2RollsApp')
     .filter('seasons', function ($stateParams, languageMapService) {
         var lang = $stateParams.language;
@@ -868,16 +707,21 @@ angular.module('d2RollsApp')
     });
 angular.module('d2RollsApp').controller('advancedFilterCtrl', [
     '$stateParams',
+    'fetchManifestService',
     'languageMapService',
     function (
         $stateParams,
+        fetchManifestService,
         languageMapService
     ) {
     var vm = this;
     vm.$onInit = function() {
         var lang = $stateParams.language;
         vm.text = languageMapService.getDictionary(lang, 'filter').advancedFilter;
-        console.log(vm.foundItems);
+        // console.log(vm.foundItems);
+        // for (var hash in vm.foundItems) {
+        //     fetchManifestService.getPerksForSingleWeapon(vm.foundItems, hash)
+        // }
     }
 }]);
 angular.module('d2RollsApp')
@@ -1368,3 +1212,176 @@ angular.module('d2RollsApp')
             }
         };
     }]);
+angular
+.module('d2RollsApp')
+.controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'styleHandler', function(
+    $stateParams,
+    fetchManifestService,
+    styleHandler
+) {
+    styleHandler.setContentHeight();
+    var vm = this;
+    var sortingType = $stateParams.sortBy;
+    var lang = $stateParams.language;
+
+    vm.categories;
+    vm.lang = lang;
+    vm.sortingType = sortingType;
+    
+    fetchManifestService.getWeaponList(lang, function(arrayOfItems) {
+        var sortObject = {};
+        var categoriesArray = [];
+        for (var item in arrayOfItems) {
+            var itemObject = arrayOfItems[item];
+            try {
+                if (!sortObject[itemObject[sortingType].name]) {
+                    sortObject[itemObject[sortingType].name] = itemObject[sortingType].sectionHash || itemObject[sortingType].name;
+                    categoriesArray.push(itemObject[sortingType].name);
+                }
+
+            } catch (e) {
+                    
+            };
+        };
+        
+        vm.hashObj = sortObject;
+        vm.categories = categoriesArray;
+    });
+}]);
+angular.module('d2RollsApp').controller('homeCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'styleHandler', function(
+    $stateParams,
+    fetchManifestService,
+    languageMapService,
+    styleHandler
+) {
+    styleHandler.setContentHeight();
+    var vm = this;
+    var lang = $stateParams.language;
+    var text = languageMapService.getDictionary(lang, 'home');
+    vm.sorting = [
+        {
+            sortBy: 'season',
+            toState: 'categories',
+            text: text.newStuff
+        },
+        {
+            sortBy: 'source',
+            toState: 'categories',
+            text: text.sources
+        },
+        {
+            sortBy: 'godRoll',
+            toState: 'filterState',
+            text: text.godRoll
+        }
+    ];
+    vm.lang = lang;
+
+    fetchManifestService.getWeaponList(lang, function(){
+        
+    });
+}]);
+angular.module('d2RollsApp').controller('weaponListCtrl', [
+    '$stateParams',
+    'languageMapService',
+    'fetchManifestService',
+    'filterService',
+    function(
+        $stateParams,
+        languageMapService,
+        fetchManifestService,
+        filterService
+    )
+{
+    var vm = this;
+    var lang = $stateParams.language;
+    var search = languageMapService.getDictionary(lang).search;
+    var rarityMap = fetchManifestService.rarityMap;
+    var filters = $stateParams.filters;
+    var sortBy = $stateParams.sortBy
+
+    
+    vm.getRarityClass = getRarityClass;
+    vm.searchPlaceHolder = search;
+    vm.lang = lang;
+    vm.isFilterActive = false;
+    vm.categoryHeaders;
+
+    if (sortBy === 'season') {
+        vm.sorting = 'subSource';
+    } else {
+        vm.sorting = sortBy || 'class';
+    }
+    
+    fetchManifestService.getHashToName(function(initialHashes) { 
+        filterService.getFilteredItems(function(filteredItems, sortByArray) {
+            vm.categoryHeaders = sortByArray;
+            vm.list = filteredItems;
+        }, filters, true, vm.sorting);
+    }, lang);
+
+    function getRarityClass(hash) {
+        return rarityMap[hash];
+    };
+}]);
+angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetchManifestService', 'languageMapService', 'utils', function(
+    $stateParams,
+    fetchManifestService,
+    languageMapService,
+    utils
+) {  
+    var vm = this;
+    var rarityMap = fetchManifestService.rarityMap;
+    var lang = $stateParams.language;
+    var weaponHash = $stateParams.weaponHash;
+
+    var perksPanel = languageMapService.getDictionary(lang, 'perksPanel');
+    var statsPanel = languageMapService.getDictionary(lang, 'statsPanel');
+
+    vm.perksPanelTextContent = {
+        perksPanelHeader: perksPanel.header,
+        perksPanelExpand: perksPanel.expand,
+        perksPanelCollapse: perksPanel.collapse
+    };
+    vm.statsPanelTextContent = {
+        statsPanelHeader: statsPanel.header
+    };
+    
+
+    fetchManifestService.getSingleWeaponData(lang, weaponHash, function(incomingData){
+        var rarityHash = incomingData.rarity.hash;
+        vm.rarityClass = rarityMap[rarityHash];
+        vm.data = {
+            primaryData: incomingData
+        };
+
+    }, function(incomingData) {
+        vm.data.secondaryData = incomingData;
+        setWeaponStats(vm.data.secondaryData.stats, vm.data.primaryData.hash);
+        getPerksBucket(vm.data.secondaryData.perks);
+
+    }, function(incomingData) {
+        var rarityHash = incomingData.primaryData.rarity.hash
+        vm.rarityClass = rarityMap[rarityHash];
+        vm.data = incomingData;      
+        setWeaponStats(vm.data.secondaryData.stats, vm.data.primaryData.hash); 
+        getPerksBucket(vm.data.secondaryData.perks);
+    });
+
+    function setWeaponStats(data, hash) {
+        utils.initWeaponStats(data, hash);
+    }
+
+    function getPerksBucket(data) {
+        var roll = $stateParams.roll;
+        if (!!roll.length) {
+            for (var index = 0; index < roll.length; index++) {
+                data[index].vendorPerk = roll[index];
+            }
+        }
+        fetchManifestService.getPerksForSingleWeapon(data, function(perksBucket) {
+            vm.perksBucket = perksBucket;
+        });
+    };
+
+}]);

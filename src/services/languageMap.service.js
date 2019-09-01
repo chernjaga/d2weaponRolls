@@ -138,6 +138,19 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
         return dictionary[lang];  
     }
 
+    function searchForSection(target, section) {
+        for (var property in target) {
+            if (property === section) {
+                categoryToReturn = target[property];
+                break;
+            } else if (typeof target[property] === 'object') {
+                searchForSection(target[property], section);
+            }
+        };
+
+        return categoryToReturn;
+    }
+    
     return {
         getDictionary: getDictionary
     };
