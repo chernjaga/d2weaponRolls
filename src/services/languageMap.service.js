@@ -15,7 +15,11 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 cancel: 'Отменить',
                 apply: 'Применить',
                 source: 'Активность',
-                selected: 'Выбрано'
+                selected: 'Выбрано',
+                advanced: 'Поиск по перкам',
+                advancedFilter: {
+                    frame: 'Рама'
+                }
             },
             sorting: {
                 weaponRarity: {
@@ -80,8 +84,11 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 cancel: 'Cancel',
                 apply: 'Apply',
                 source: 'Activity',
-                selected: 'Selected'
-
+                selected: 'Selected',
+                advanced: 'Search by perks',
+                advancedFilter: {
+                    frame: 'Frame'
+                }
             },
             sorting: {
                 weaponRarity: {
@@ -128,22 +135,8 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
             return searchForSection(dictionary[lang], section);
         }
         
-        return dictionary[lang];
-       
-    };
-
-    function searchForSection(target, section) {
-        for (var property in target) {
-            if (property === section) {
-                categoryToReturn = target[property];
-                break;
-            } else if (typeof target[property] === 'object') {
-                searchForSection(target[property], section);
-            }
-        };
-
-        return categoryToReturn;
-    };
+        return dictionary[lang];  
+    }
 
     return {
         getDictionary: getDictionary

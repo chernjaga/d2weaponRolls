@@ -62,12 +62,12 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
             }
         });
         return output;
-    };
+    }
 
     function initWeaponStats(stats) {
             statsStoreObject = JSON.parse(JSON.stringify(stats));
             statInit.resolve(stats);        
-    };
+    }
 
     function collectStats(investmentStats) {
         if (Object.keys(statsStoreObject).length) {
@@ -77,7 +77,7 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
         $q.when(statInit.promise).then(function() {
             recalculateStats(investmentStats);
         });
-    };
+    }
 
     function recalculateStats(newStats) {
         recalculatedStats = JSON.parse(JSON.stringify(statsStoreObject));
@@ -89,14 +89,14 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
         }
         
         recalculateDeffer.resolve(recalculatedStats);
-    };
+    }
 
     function getNewStats(callback) {
         $q.when(recalculateDeffer.promise).then(function() {
             var output = statsFilter(recalculatedStats);
             callback(output);
         });
-    };
+    }
 
     return {
         collectStats: collectStats,

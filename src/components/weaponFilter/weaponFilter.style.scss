@@ -8,13 +8,27 @@
     grid-template-columns: repeat(autofit, 1fr);
     margin-bottom: $body-padding*1.5;
 }
+
 .filter-state {
     margin-top: 5*$body-padding;
+    padding-bottom: 10*$body-padding;
 }
- .filter-state, .weapon-view-state {
+
+.filter-state,
+.weapon-view-state {
     margin-bottom: 46px;
- }
-.filter-section-header{
+}
+
+.advanced-filter-button {
+    background: $cl-empty-bg-black;
+    font-weight: 900;
+    color: $cl-white-tint1;
+    font-size: 100%;
+    text-align: center;
+    padding: $body-padding;
+}
+
+.filter-section-header {
     position: fixed;
     background: $cl-main-bg-red;
     top: 0;
@@ -26,13 +40,15 @@
     font-weight: 900;
     padding: $body-padding;
     z-index: 999;
-    text-align: center; 
+    text-align: center;
 }
-.filter-section-title { 
+
+.filter-section-title {
     .selected {
         color: $cl-main-bg-red;
         margin-left: 1.5*$body-padding;
     }
+
     grid-column: 1;
     color: $cl-gray-tint3;
 }
@@ -44,19 +60,24 @@
     grid-template-rows: subgrid;
     overflow-x: auto;
     overflow-y: hidden;
+
     &::-webkit-scrollbar {
         display: none;
     }
+
     &.class {
         .filter-section-item {
             min-width: 110px;
         }
     }
-    &.season, &.source {
+
+    &.season,
+    &.source {
         display: block;
         position: relative;
         width: 100%;
         padding: 0;
+
         .filter-section-text {
             display: flex;
             align-items: center;
@@ -65,27 +86,32 @@
             width: 100%;
             color: $cl-white-tint1;
         }
+
         .filter-section-item {
             padding: 0;
             margin-bottom: $body-padding;
         }
     }
 }
+
 .filter-section-text {
     display: none;
+
     .number {
         width: 15%;
         text-align: center;
         background-color: $cl-main-bg-black-trans;
         height: 6*$body-padding;
-        line-height: 6*$body-padding;        
+        line-height: 6*$body-padding;
     }
+
     .text {
         padding: 0 2*$body-padding;
         height: 6*$body-padding;
-        line-height: 6*$body-padding;  
+        line-height: 6*$body-padding;
     }
 }
+
 .filter-section-item {
     display: flex;
     height: 6*$body-padding;
@@ -95,14 +121,16 @@
     padding: $body-padding;
     user-select: none;
     cursor: pointer;
+
     &.included {
         background-color: $cl-main-bg-red;
+
         .number {
-            background-color: $cl-main-bg-red;  
+            background-color: $cl-main-bg-red;
         }
     }
 }
 
 .filter-button {
-    grid-column: 1 /1 ;
+    grid-column: 1 /1;
 }

@@ -2,7 +2,8 @@
     <div class="filter-section-header">{{filter.itemsDetected ? filter.itemsDetected : 0}} Items found</div>
     <div class="weapon-filter"
          ng-repeat="(itemName, itemContent) in ::filter.hashToName"
-         ng-if="::itemName !== 'subSource'"
+         ng-show="::itemName !== 'subSource'"
+         ng-if="::itemName !== 'frame'"
          loading-trigger="isFinishState">
         <div class="filter-section-title">
             {{::filter.text[itemName]}} 
@@ -35,6 +36,16 @@
             </div>
         </div>
     </div>
+    <div role="button"
+         class="advanced-filter-button"
+         ng-click="filter.isExpandingDisplayed = !filter.isExpandingDisplayed">
+             {{::filter.text.advanced}}
+            <span>
+                <span ng-show="!filter.isExpandingDisplayed" class="icon-right-list"></span><span ng-show="filter.isExpandingDisplayed" class="icon-down-list"></span>
+            </span>
+    </div>
+    <advanced-filter ng-if="filter.isExpandingDisplayed"
+                     found-items="filter.searchResults"></advanced-filter>
     <div class="filter-view">
         <div class="filter-button" ng-click="filter.moveToList()">
             {{::filter.text.apply}}

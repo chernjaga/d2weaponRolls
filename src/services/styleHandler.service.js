@@ -13,6 +13,7 @@ angular.module('d2RollsApp').factory('styleHandler', [function() {
 
         view.style.height = bodyHeight - 16 - stateCorrectionValue + 'px';
         contentHeight = view.clientHeight + 'px';
+        console.log(contentHeight);
     };
     
     return {

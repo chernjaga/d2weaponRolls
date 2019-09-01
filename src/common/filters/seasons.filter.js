@@ -4,5 +4,5 @@ angular.module('d2RollsApp')
         var seasons = languageMapService.getDictionary(lang).seasons;
         return function(seasonNumber) {
             return seasons[seasonNumber];
-        }
+        };
     });
