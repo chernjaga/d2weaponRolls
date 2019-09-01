@@ -20,6 +20,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     var includedFilters = [];
     var filterInit = $q.defer();
     var sectionCounter = {};
+    var sortBy = 'class';
     
     vm.moveToList = moveToList;
     vm.itemsDetected;
@@ -55,7 +56,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
                 vm.itemsDetected = data.length;
             }, includedFilters, true);
         };
-    };
+    }
 
     function setIncludedNumber(target, filterBy, hash) {
         if (!sectionCounter[filterBy]) {
@@ -73,11 +74,13 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
         return filtersArray.filter(function(element){
             return element != item;
         }); 
-    };
+    }
 
     function moveToList() {
+        sortBy = filterService.getSortParam();
         $state.go('weaponList', {
             language: lang,
+            sortBy: sortBy,
             filters: includedFilters
         });
     }

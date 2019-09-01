@@ -29,7 +29,6 @@ angular
                     
             };
         };
-        console.log(categoriesArray);
         
         vm.hashObj = sortObject;
         vm.categories = categoriesArray;

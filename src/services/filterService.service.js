@@ -9,6 +9,7 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
         });
     });
     var sortByObject = {};
+    var sortByParam = 'class';
 
     //todo: language dependency
 
@@ -35,11 +36,22 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
 
     function setSortBy(filters) {
         var filterMap = initFiltersMap(filters);
+        if (filterMap.season && !filterMap.source) {
+            sortByParam = 'season';
+            return 'season';
+        }
+        if (!filterMap.season && filterMap.source) {
+            sortByParam = 'subSource';
+            return 'subSource';
+        }
         if (!filterMap.season && !filterMap.source) {
             if (filterMap.class && filterMap.class.length < 3) {
+                sortByParam = 'frame';
                 return 'frame';
             }
         }
+        sortByParam = 'class';
+        return 'class';
     }
 
     function applyFilter(inputFilters, objToFilter, sort) {
@@ -120,8 +132,13 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
         filteredItems = {};
     }
 
+    function getSortParam() {
+        return sortByParam;
+    }
+
     return {
         getFilteredItems: getFilteredItems,
+        getSortParam: getSortParam,
         resetFilters: resetFilters
     };
 }]);

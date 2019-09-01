@@ -24,12 +24,10 @@ angular.module('d2RollsApp').controller('weaponListCtrl', [
     vm.isFilterActive = false;
     vm.categoryHeaders;
 
-    switch (sortBy) {
-        case 'source': vm.sorting = 'subSource';
-            break;
-        case 'season': vm.sorting = 'class';
-            break;
-        default: vm.sorting = 'class';
+    if (sortBy === 'season') {
+        vm.sorting = 'subSource';
+    } else {
+        vm.sorting = sortBy;
     }
     
     fetchManifestService.getHashToName(function(initialHashes) { 

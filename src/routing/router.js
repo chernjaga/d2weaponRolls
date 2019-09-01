@@ -9,6 +9,7 @@ angular.module('d2RollsApp', ['ui.router', 'ngAnimate'])
         url: '/weaponList/{language}?sortBy&categories&filters',
         params: {
             language: 'en',
+            sortBy: '',
             filters: []
         },
         templateUrl: '../html/routing/stateTemplates/weaponList.tpl.html',

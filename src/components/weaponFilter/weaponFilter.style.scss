@@ -8,10 +8,12 @@
     grid-template-columns: repeat(autofit, 1fr);
     margin-bottom: $body-padding*1.5;
 }
-.filter-state, .weapon-view-state {
-    margin-bottom: 46px;
+.filter-state {
     margin-top: 5*$body-padding;
 }
+ .filter-state, .weapon-view-state {
+    margin-bottom: 46px;
+ }
 .filter-section-header{
     position: fixed;
     background: $cl-main-bg-red;
