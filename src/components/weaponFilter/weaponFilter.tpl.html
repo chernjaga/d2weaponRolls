@@ -23,8 +23,13 @@
                         <span class="number">
                                 {{::hash}}
                         </span>
-                        <span class="text">
-                            {{::name}}
+                        <span ng-switch="::itemName">
+                            <span class="text" ng-switch-when="season">
+                                {{::name | seasons}}
+                            </span>
+                            <span class="text" ng-switch-default>
+                                {{::name}}
+                            </span>
                         </span>
                     </span>
             </div>

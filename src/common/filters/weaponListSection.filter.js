@@ -1,5 +1,4 @@
 function frameFilter(mapping, frameName) {
-    
     return frameName; 
 }
 

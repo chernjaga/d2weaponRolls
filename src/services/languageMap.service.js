@@ -45,9 +45,27 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 home: 'Домашняя',
                 weapon: 'Арсенал',
                 settings: 'Настройки'
-            }
+            },
+            seasons: {
+                1: 'Destiny 2',
+                2: 'Course of Osiris',
+                3: 'Warmind',
+                4: 'Forsaken',
+                5: 'The Black Armory',
+                6: 'Joker\'\s Wild',
+                7: 'Opulence' 
+            },
         },
         en: {
+            seasons: {
+                1: 'Destiny 2',
+                2: 'Course of Osiris',
+                3: 'Warmind',
+                4: 'Forsaken',
+                5: 'The Black Armory',
+                6: 'Joker\'\s Wild',
+                7: 'opulence' 
+            },
             search: 'Search',
             filter: {
                 button: 'Filter',
