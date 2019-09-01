@@ -654,22 +654,15 @@ angular.module('d2RollsApp').factory('styleHandler', [function() {
         setContentHeight: setContentHeight
     }
 }]);
-angular.module('d2RollsApp').controller('filterButtonCtrl', ['$stateParams', 'languageMapService', function (
-    $stateParams,
-    languageMapService
-) {
-    var vm = this;
-    var lang = $stateParams.language;
-    vm.lang = lang;
-    vm.text = languageMapService.getDictionary(lang, 'filter').button;
-}]);
 angular.module('d2RollsApp')
-    .directive('filterButton', function () {
+    .directive('customComponentTemplate', function () {
         return {
-            restrict: 'E',
             replace: false,
-            controller: 'filterButtonCtrl as filterButton',
-            templateUrl: '../html/components/filterButton/filterButton.tpl.html'
+            restrict: 'E',
+            scope: {
+                myText: '<'
+            },
+            templateUrl: '../html/components/customComponentTemplate/customComponentTemplate.tpl.html'
         }
     });
 angular.module('d2RollsApp').controller('footerPanelCtrl', ['$state', '$stateParams', '$transitions', 'languageMapService', function (
@@ -698,6 +691,24 @@ angular.module('d2RollsApp')
             controller: 'footerPanelCtrl',
             controllerAs: 'footer',
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
+        }
+    });
+angular.module('d2RollsApp').controller('filterButtonCtrl', ['$stateParams', 'languageMapService', function (
+    $stateParams,
+    languageMapService
+) {
+    var vm = this;
+    var lang = $stateParams.language;
+    vm.lang = lang;
+    vm.text = languageMapService.getDictionary(lang, 'filter').button;
+}]);
+angular.module('d2RollsApp')
+    .directive('filterButton', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: 'filterButtonCtrl as filterButton',
+            templateUrl: '../html/components/filterButton/filterButton.tpl.html'
         }
     });
 angular.module('d2RollsApp')
