@@ -1,1 +1,1 @@
-<div ng-click="::link.clickHandler()" role="link" class="sorting-link {{::link.linkClass}}" loading-trigger="startOnClick" finish-on-last="!!$last" title="{{::link.linkText}}"><div class="title">{{::link.linkText}}</div></div>
+<div ng-click="::link.clickHandler()" role="link" class="sorting-link {{::link.linkClass}}" loading-trigger="startOnClick" finish-on-last="!!$last" title="{{::link.linkText}}"><div class="title"><span ng-if="::link.linkText.length">{{::link.linkText}} </span><span ng-if="::!link.linkText.length">{{::link.linkText | seasons}}</span></div></div>

@@ -18,5 +18,13 @@ $pd-filter-button: $fs-filter-button*0.5;
     font-size: $fs-filter-button;
     line-height: $fs-filter-button;
     border-radius: $pd-filter-button + $fs-filter-button;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
+    .icon-filter {
+        font-size: $fs-filter-button;
+        padding-right: $body-padding;
+        margin-bottom: -0.5*$body-padding;
+    }
 }

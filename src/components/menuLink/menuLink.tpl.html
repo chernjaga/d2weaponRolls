@@ -5,6 +5,11 @@
      finish-on-last='!!$last'
      title="{{::link.linkText}}">
      <div class="title">
-         {{::link.linkText}}
+         <span ng-if="::link.linkText.length">
+            {{::link.linkText}}
+         </span>
+         <span ng-if="::!link.linkText.length">
+            {{::link.linkText | seasons}}
+         </span>
      </div>
 </div>

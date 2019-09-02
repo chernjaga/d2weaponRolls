@@ -26,6 +26,9 @@
     font-size: 100%;
     text-align: center;
     padding: $body-padding;
+    .icon-right-list, .icon-down-list {
+        font-size: 80%;
+    }
 }
 
 .filter-section-header {
