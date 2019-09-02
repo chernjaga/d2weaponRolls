@@ -16,6 +16,7 @@ var weaponPerks = {
     en: require('../data/en/perksBucket.json')
 };
 
+var perk2hash = require('../data/perk2Hash.json');
 
 /* GET home page. */
 router.get('/*', function (req, res, next) {
@@ -30,6 +31,10 @@ router.post('/getWeaponList', function (req, res) {
 router.post('/getWeaponData', function (req, res) {
     var lang = req.body.language;
     res.send(JSON.stringify(weaponData[lang]));
+});
+
+router.post('/getPerk2hash', function (req, res) {
+    res.send(JSON.stringify(perk2hash));
 });
 
 router.post('/getWeaponPerks', function (req, res) {

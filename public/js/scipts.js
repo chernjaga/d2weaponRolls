@@ -83,10 +83,12 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         5: 'legendary',
         6: 'exotic'
     };
+    var perk2hash;
 
     var dataDownloadDeferred = $q.defer();
     var filterHashesDeferred = $q.defer();
     var perksDownloadDeferred = $q.defer();
+    var perk2hashDeferred = $q.defer();
     var hashToName = {
         class: {},
         rarity: {},
@@ -172,10 +174,17 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                 }
             }
             filterHashesDeferred.resolve();
+            return;
+        }).then(function(){
+            $http.post('/getPerk2hash', JSON.stringify({language: language})).then(function(response) {
+                perk2hash = response.data;
+                perk2hashDeferred.resolve();
+            });
         }).catch(function(error) {
             console.log(error);
         });
-    };
+    }
+
     function getHashToName(callback, language) {
         if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
             callback(hashToName);
@@ -184,8 +193,8 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         $q.when(filterHashesDeferred.promise).then(function() {
             callback(hashToName);
         });
-    };
-    
+    }
+
     function getSingleWeaponData (language, hash, listCallback, dataCallback, singleDataCallback) {
         if (
             Object.keys(weaponListObject).length && 
@@ -227,7 +236,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         }).catch(function(error) {
             console.log(error);
         });
-    };
+    }
 
     function getPerksForSingleWeapon(bucket, perksPanelCallback) {
         var bucketToReturn = [];
@@ -259,10 +268,21 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         }
     }
 
+    function getPerk2hash(callback) {
+        if (Object.keys(perk2hash).length) {
+            callback(perk2hash, perksBucket, weaponData);
+        } else {
+            $q.when(perk2hashDeferred.promise).then(function(){
+                callback(perk2hash, perksBucket, weaponData);
+            });
+        }
+    }
+
     return {
         getPerksForSingleWeapon: getPerksForSingleWeapon,
         getSingleWeaponData: getSingleWeaponData,
         getWeaponList: getWeaponList,
+        getPerk2hash: getPerk2hash,
         rarityMap: rarityMap,
         getHashToName: getHashToName,
         weaponData: weaponData
@@ -718,10 +738,31 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
     vm.$onInit = function() {
         var lang = $stateParams.language;
         vm.text = languageMapService.getDictionary(lang, 'filter').advancedFilter;
-        // console.log(vm.foundItems);
-        // for (var hash in vm.foundItems) {
-        //     fetchManifestService.getPerksForSingleWeapon(vm.foundItems, hash)
-        // }
+        calculatePerkHashes();
+    };
+
+    function calculatePerkHashes() {
+        fetchManifestService.getPerk2hash(function(perk2hash, perksBucket, hash2perk){
+            var perksMap = {
+                frame: {},
+                weaponStatPerk1: {},
+                weaponStatPerk2: {},
+                additionalPerk1: {},
+                additionalPerk2: {},
+                absolutePerk: {}
+            };
+            for (var weapon of vm.foundItems) {
+                var weaponHash = weapon.hash; 
+                var frame = hash2perk[weaponHash].perks[0].vendorPerk;
+                if (!perksMap.frame[frame]) {
+                   perksMap.frame[frame] = {};
+                   perksMap.frame[frame] = {
+                       name: perksBucket[frame].name,
+                       icon: perksBucket[frame].icon,
+                   };
+                }
+            }
+        });
     }
 }]);
 angular.module('d2RollsApp')
@@ -793,26 +834,6 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
     });
-angular.module('d2RollsApp')
-    .directive('loadingTrigger', function ($rootScope) {
-        return {
-            restrict: 'A',
-            scope: {
-                finishOnLast: '<'
-            },
-            replace: false,
-            link: function(scope, element, attr) {
-                if (attr.loadingTrigger === 'isFinishState' || scope.finishOnLast) {
-                    $rootScope.$emit('changeStateFinish');
-                }
-                element.on('click', function() {
-                    if (attr.loadingTrigger === 'startOnClick') {
-                        $rootScope.$emit('changeStateStart');
-                    }            
-                });
-            }
-        };
-    });
 function menuLinkCtrl($state, filterService) {
     var vm = this;
     vm.clickHandler = function() {
@@ -850,6 +871,49 @@ angular.module('d2RollsApp')
             }
         };
     });
+angular.module('d2RollsApp')
+    .directive('loadingTrigger', function ($rootScope) {
+        return {
+            restrict: 'A',
+            scope: {
+                finishOnLast: '<'
+            },
+            replace: false,
+            link: function(scope, element, attr) {
+                if (attr.loadingTrigger === 'isFinishState' || scope.finishOnLast) {
+                    $rootScope.$emit('changeStateFinish');
+                }
+                element.on('click', function() {
+                    if (attr.loadingTrigger === 'startOnClick') {
+                        $rootScope.$emit('changeStateStart');
+                    }            
+                });
+            }
+        };
+    });
+function spinnerCtrl($timeout, $rootScope) {
+    var vm = this;
+    vm.isLoading = true;
+    $rootScope.$on('changeStateStart', function() {
+        vm.isLoading = true;
+    });
+    $rootScope.$on('changeStateFinish', function() {
+        $timeout(function() {
+            vm.isLoading = false;
+        });
+    });
+}
+
+angular.module('d2RollsApp')
+    .directive('spinner', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: spinnerCtrl,
+            controllerAs: 'spinner',
+            templateUrl: '../html/components/spinner/spinner.tpl.html'
+        }
+    });
 function perksBinderCtrl(){
     var vm = this;
     vm.$onInit = function() {
@@ -876,27 +940,24 @@ angular.module('d2RollsApp')
             controllerAs: 'binder'
         }
     });
-function spinnerCtrl($timeout, $rootScope) {
+function statsRefresherCtrl(utils) {
     var vm = this;
-    vm.isLoading = true;
-    $rootScope.$on('changeStateStart', function() {
-        vm.isLoading = true;
-    });
-    $rootScope.$on('changeStateFinish', function() {
-        $timeout(function() {
-            vm.isLoading = false;
+    vm.$onInit = getData;
+    vm.refresh = getData;
+    function getData (){
+        utils.getNewStats(function(data){
+            vm.data = data;
         });
-    });
+    }
 }
 
 angular.module('d2RollsApp')
-    .directive('spinner', function () {
+    .directive('statsRefresher', function() {
         return {
-            restrict: 'E',
+            restrict: 'A',
             replace: false,
-            controller: spinnerCtrl,
-            controllerAs: 'spinner',
-            templateUrl: '../html/components/spinner/spinner.tpl.html'
+            controller: statsRefresherCtrl,
+            controllerAs: 'refresher'
         }
     });
 function scaleCtrl () {};
@@ -926,26 +987,6 @@ angular.module('d2RollsApp')
                     primaryStat.style.width = primaryValue + '%';
                 });
             }
-        }
-    });
-function statsRefresherCtrl(utils) {
-    var vm = this;
-    vm.$onInit = getData;
-    vm.refresh = getData;
-    function getData (){
-        utils.getNewStats(function(data){
-            vm.data = data;
-        });
-    }
-}
-
-angular.module('d2RollsApp')
-    .directive('statsRefresher', function() {
-        return {
-            restrict: 'A',
-            replace: false,
-            controller: statsRefresherCtrl,
-            controllerAs: 'refresher'
         }
     });
 angular.module('d2RollsApp').controller('statsViewCtrl', [ function ($timeout) {

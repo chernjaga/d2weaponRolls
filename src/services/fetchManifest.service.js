@@ -10,10 +10,12 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         5: 'legendary',
         6: 'exotic'
     };
+    var perk2hash;
 
     var dataDownloadDeferred = $q.defer();
     var filterHashesDeferred = $q.defer();
     var perksDownloadDeferred = $q.defer();
+    var perk2hashDeferred = $q.defer();
     var hashToName = {
         class: {},
         rarity: {},
@@ -99,10 +101,17 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                 }
             }
             filterHashesDeferred.resolve();
+            return;
+        }).then(function(){
+            $http.post('/getPerk2hash', JSON.stringify({language: language})).then(function(response) {
+                perk2hash = response.data;
+                perk2hashDeferred.resolve();
+            });
         }).catch(function(error) {
             console.log(error);
         });
-    };
+    }
+
     function getHashToName(callback, language) {
         if (Object.keys(weaponListObject).length && lastLanguage === language && callback) {
             callback(hashToName);
@@ -111,8 +120,8 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         $q.when(filterHashesDeferred.promise).then(function() {
             callback(hashToName);
         });
-    };
-    
+    }
+
     function getSingleWeaponData (language, hash, listCallback, dataCallback, singleDataCallback) {
         if (
             Object.keys(weaponListObject).length && 
@@ -154,7 +163,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         }).catch(function(error) {
             console.log(error);
         });
-    };
+    }
 
     function getPerksForSingleWeapon(bucket, perksPanelCallback) {
         var bucketToReturn = [];
@@ -186,10 +195,21 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         }
     }
 
+    function getPerk2hash(callback) {
+        if (Object.keys(perk2hash).length) {
+            callback(perk2hash, perksBucket, weaponData);
+        } else {
+            $q.when(perk2hashDeferred.promise).then(function(){
+                callback(perk2hash, perksBucket, weaponData);
+            });
+        }
+    }
+
     return {
         getPerksForSingleWeapon: getPerksForSingleWeapon,
         getSingleWeaponData: getSingleWeaponData,
         getWeaponList: getWeaponList,
+        getPerk2hash: getPerk2hash,
         rarityMap: rarityMap,
         getHashToName: getHashToName,
         weaponData: weaponData

@@ -11,9 +11,30 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
     vm.$onInit = function() {
         var lang = $stateParams.language;
         vm.text = languageMapService.getDictionary(lang, 'filter').advancedFilter;
-        // console.log(vm.foundItems);
-        // for (var hash in vm.foundItems) {
-        //     fetchManifestService.getPerksForSingleWeapon(vm.foundItems, hash)
-        // }
+        calculatePerkHashes();
+    };
+
+    function calculatePerkHashes() {
+        fetchManifestService.getPerk2hash(function(perk2hash, perksBucket, hash2perk){
+            var perksMap = {
+                frame: {},
+                weaponStatPerk1: {},
+                weaponStatPerk2: {},
+                additionalPerk1: {},
+                additionalPerk2: {},
+                absolutePerk: {}
+            };
+            for (var weapon of vm.foundItems) {
+                var weaponHash = weapon.hash; 
+                var frame = hash2perk[weaponHash].perks[0].vendorPerk;
+                if (!perksMap.frame[frame]) {
+                   perksMap.frame[frame] = {};
+                   perksMap.frame[frame] = {
+                       name: perksBucket[frame].name,
+                       icon: perksBucket[frame].icon,
+                   };
+                }
+            }
+        });
     }
 }]);
