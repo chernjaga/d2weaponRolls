@@ -83,7 +83,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         5: 'legendary',
         6: 'exotic'
     };
-    var perk2hash;
+    var perk2hash = {};
 
     var dataDownloadDeferred = $q.defer();
     var filterHashesDeferred = $q.defer();
@@ -91,14 +91,15 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
     var perk2hashDeferred = $q.defer();
     var hashToName = {
         class: {},
-        rarity: {},
-        slot: {},
-        season: {},
         ammoType: {},
+        slot: {},
+        damageType: {},
+        rarity: {},
+        perkSection: true,
+        season: {},
         source: {},
         subSource: {},
-        frame: {},
-        damageType: {}
+        frame: {}
     };
 
     function getWeaponList (language, callback) {
@@ -717,6 +718,14 @@ angular.module('d2RollsApp').factory('styleHandler', [function() {
         setContentHeight: setContentHeight
     }
 }]);
+angular.module('d2RollsApp')
+    .filter('seasons', function ($stateParams, languageMapService) {
+        var lang = $stateParams.language || 'en';
+        var seasons = languageMapService.getDictionary(lang).seasons;
+        return function(seasonNumber) {
+            return seasons[seasonNumber];
+        };
+    });
 angular.module('d2RollsApp').controller('advancedFilterCtrl', [
     '$stateParams',
     'fetchManifestService',
@@ -734,6 +743,9 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
         vm.toggleFilter = function(target, filterBy, hash) {
             target.isIncluded = !target.isIncluded;
         };
+        vm.setName = function(perk) {
+            return perk.item.name;
+        }
     };
 
     function calculatePerkHashes() {
@@ -819,7 +831,7 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
     }
 }]);
 angular.module('d2RollsApp')
-    .directive('advancedFilter', function () {
+    .directive('advancedFilter',['$interval', function ($interval) {
         return {
             restrict: 'E',
             replace: false,
@@ -827,17 +839,44 @@ angular.module('d2RollsApp')
                 foundItems: '<'
             },
             controller: 'advancedFilterCtrl as advancedFilter',
-            templateUrl: '../html/components/advancedFilter/advancedFilter.tpl.html'
+            templateUrl: '../html/components/advancedFilter/advancedFilter.tpl.html',
+            link: function(scope, element) {
+                var timer;
+                var isHolding = false;
+                var target;
+                element.on('contextmenu', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation(); // not necessary in my case, could leave in case stopImmediateProp isn't available? 
+                    event.stopImmediatePropagation();
+                    return false;
+                });
+                element.on('mousedown touchstart', function(event) {
+                    var previousElement = element[0].getElementsByClassName('has-tooltip')[0];
+                    isHolding = true;
+                    target = event.target;
+                    if (previousElement && previousElement != target.parentElement) {
+                        previousElement.classList.remove('has-tooltip');
+                    }
+                    timer = $interval(function() {                   
+                        if (isHolding && target === event.target) {
+                            addToolTip(target);       
+                        }
+                    }, 300, 1, true);
+                });
+                element.on('mouseup touchend', function(event) {
+                    isHolding = false;
+                    $interval.cancel(timer);
+                    return false;
+                });
+
+                function addToolTip(eventTarget) {
+                    if (eventTarget.className.includes('perk-icon')) {
+                            eventTarget.parentElement.classList.add('has-tooltip');
+                    }
+                };
+            }
         }
-    });
-angular.module('d2RollsApp')
-    .filter('seasons', function ($stateParams, languageMapService) {
-        var lang = $stateParams.language || 'en';
-        var seasons = languageMapService.getDictionary(lang).seasons;
-        return function(seasonNumber) {
-            return seasons[seasonNumber];
-        };
-    });
+    }]);
 angular.module('d2RollsApp')
     .directive('customComponentTemplate', function () {
         return {
@@ -895,6 +934,26 @@ angular.module('d2RollsApp')
             templateUrl: '../html/components/footerPanel/footerPanel.tpl.html'
         }
     });
+angular.module('d2RollsApp')
+    .directive('loadingTrigger', function ($rootScope) {
+        return {
+            restrict: 'A',
+            scope: {
+                finishOnLast: '<'
+            },
+            replace: false,
+            link: function(scope, element, attr) {
+                if (attr.loadingTrigger === 'isFinishState' || scope.finishOnLast) {
+                    $rootScope.$emit('changeStateFinish');
+                }
+                element.on('click', function() {
+                    if (attr.loadingTrigger === 'startOnClick') {
+                        $rootScope.$emit('changeStateStart');
+                    }            
+                });
+            }
+        };
+    });
 function menuLinkCtrl($state, filterService) {
     var vm = this;
     vm.clickHandler = function() {
@@ -932,26 +991,6 @@ angular.module('d2RollsApp')
             }
         };
     });
-angular.module('d2RollsApp')
-    .directive('loadingTrigger', function ($rootScope) {
-        return {
-            restrict: 'A',
-            scope: {
-                finishOnLast: '<'
-            },
-            replace: false,
-            link: function(scope, element, attr) {
-                if (attr.loadingTrigger === 'isFinishState' || scope.finishOnLast) {
-                    $rootScope.$emit('changeStateFinish');
-                }
-                element.on('click', function() {
-                    if (attr.loadingTrigger === 'startOnClick') {
-                        $rootScope.$emit('changeStateStart');
-                    }            
-                });
-            }
-        };
-    });
 function perksBinderCtrl(){
     var vm = this;
     vm.$onInit = function() {
@@ -976,6 +1015,29 @@ angular.module('d2RollsApp')
             },
             controller: perksBinderCtrl,
             controllerAs: 'binder'
+        }
+    });
+function spinnerCtrl($timeout, $rootScope) {
+    var vm = this;
+    vm.isLoading = true;
+    $rootScope.$on('changeStateStart', function() {
+        vm.isLoading = true;
+    });
+    $rootScope.$on('changeStateFinish', function() {
+        $timeout(function() {
+            vm.isLoading = false;
+        });
+    });
+}
+
+angular.module('d2RollsApp')
+    .directive('spinner', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: spinnerCtrl,
+            controllerAs: 'spinner',
+            templateUrl: '../html/components/spinner/spinner.tpl.html'
         }
     });
 function scaleCtrl () {};
@@ -1005,29 +1067,6 @@ angular.module('d2RollsApp')
                     primaryStat.style.width = primaryValue + '%';
                 });
             }
-        }
-    });
-function spinnerCtrl($timeout, $rootScope) {
-    var vm = this;
-    vm.isLoading = true;
-    $rootScope.$on('changeStateStart', function() {
-        vm.isLoading = true;
-    });
-    $rootScope.$on('changeStateFinish', function() {
-        $timeout(function() {
-            vm.isLoading = false;
-        });
-    });
-}
-
-angular.module('d2RollsApp')
-    .directive('spinner', function () {
-        return {
-            restrict: 'E',
-            replace: false,
-            controller: spinnerCtrl,
-            controllerAs: 'spinner',
-            templateUrl: '../html/components/spinner/spinner.tpl.html'
         }
     });
 function statsRefresherCtrl(utils) {
@@ -1203,18 +1242,26 @@ angular.module('d2RollsApp')
             scope: {
                 backgroundSection: '<',
                 backgroundName: '<',
+                backgroundUrl: '<',
                 gridColumn: '<'
             },
             link: function(scope, element) {
-                var isVerticalList = scope.backgroundSection === 'season' || scope.backgroundSection === 'source';
-                var isShortList = scope.backgroundSection === 'ammoType' || scope.backgroundSection === 'slot' || scope.backgroundSection === 'damageType';
-                element[0].style.backgroundImage = `url('./img/filterAssets/${scope.backgroundSection}/${scope.backgroundName}.png')`;
-                element[0].style.backgroundRepeat = 'no-repeat';
-                element[0].style.backgroundOrigin = 'content-box';
-                if (isVerticalList) {
-                    element[0].style.backgroundPosition = 'top';
+                var isVerticalList = scope.backgroundSection === 'season' ||
+                    scope.backgroundSection === 'source';
+                var isShortList = scope.backgroundSection === 'ammoType' ||
+                    scope.backgroundSection === 'slot' ||
+                    scope.backgroundSection === 'damageType';
+                if (scope.backgroundUrl) {
+                    element[0].style.backgroundImage = `url('https://www.bungie.net${scope.backgroundUrl}')`;
                 } else {
-                    element[0].style.backgroundPosition = 'center';
+                    element[0].style.backgroundImage = `url('./img/filterAssets/${scope.backgroundSection}/${scope.backgroundName}.png')`;
+                    element[0].style.backgroundRepeat = 'no-repeat';
+                    element[0].style.backgroundOrigin = 'content-box';
+                    if (isVerticalList) {
+                        element[0].style.backgroundPosition = 'top';
+                    } else {
+                        element[0].style.backgroundPosition = 'center';
+                    }
                 }
                 if (isShortList) {
                     element[0].style.backgroundSize = "40%"
@@ -1224,6 +1271,19 @@ angular.module('d2RollsApp')
                 element[0].style.gridColumn = scope.gridColumn;
             }
         };
+    })
+angular.module('d2RollsApp')
+    .directive('weaponListItem', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                listItem: '<',
+                language: '<',
+                offset: '@'
+            },
+            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
+        }
     })
 angular.module('d2RollsApp').controller('weaponPerksPanelCtrl', ['$location', '$stateParams','utils', function ($location, $stateParams, utils) {
     var vm = this;
@@ -1301,19 +1361,6 @@ angular.module('d2RollsApp')
             }
         };
     }]);
-angular.module('d2RollsApp')
-    .directive('weaponListItem', function () {
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                listItem: '<',
-                language: '<',
-                offset: '@'
-            },
-            templateUrl: '../html/components/weaponListItem/weaponListItem.tpl.html',
-        }
-    })
 angular
 .module('d2RollsApp')
 .controller('categoriesCtrl', ['$stateParams', 'fetchManifestService', 'styleHandler', function(

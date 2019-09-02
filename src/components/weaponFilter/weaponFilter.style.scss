@@ -7,9 +7,9 @@
     grid-template-rows: repeat(autofit, 1fr);
     grid-template-columns: repeat(autofit, 1fr);
     margin-bottom: $body-padding*1.5;
-    &.advanced {
-        margin-top: 2*$body-padding;
-    }
+    // &.advanced {
+    //     margin-top: 2*$body-padding;
+    // }
 }
 
 .filter-state {
@@ -127,7 +127,12 @@
     padding: $body-padding;
     user-select: none;
     cursor: pointer;
-
+    &.perk {
+        width: 6*$body-padding;
+        height: 6*$body-padding;
+        border-radius: 40px;
+        background-color: inherit;
+    }
     &.included {
         background-color: $cl-main-bg-red;
 

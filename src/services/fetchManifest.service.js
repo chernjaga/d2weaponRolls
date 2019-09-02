@@ -10,7 +10,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         5: 'legendary',
         6: 'exotic'
     };
-    var perk2hash;
+    var perk2hash = {};
 
     var dataDownloadDeferred = $q.defer();
     var filterHashesDeferred = $q.defer();
@@ -18,14 +18,15 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
     var perk2hashDeferred = $q.defer();
     var hashToName = {
         class: {},
-        rarity: {},
-        slot: {},
-        season: {},
         ammoType: {},
+        slot: {},
+        damageType: {},
+        rarity: {},
+        perkSection: true,
+        season: {},
         source: {},
         subSource: {},
-        frame: {},
-        damageType: {}
+        frame: {}
     };
 
     function getWeaponList (language, callback) {

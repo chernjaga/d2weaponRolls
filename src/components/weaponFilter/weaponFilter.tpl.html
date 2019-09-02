@@ -5,10 +5,16 @@
          ng-show="::itemName !== 'subSource'"
          ng-if="::itemName !== 'frame'"
          loading-trigger="isFinishState">
-        <div class="filter-section-title">
-            {{::filter.text[itemName]}} 
-            <span ng-show="filter.includedItems[itemName]" class="selected">
-                {{filter.includedItems[itemName]}}
+        <div class="filter-section-title" ng-switch="::itemName">
+            <span ng-switch-when="perkSection">
+                    <advanced-filter
+                    found-items="filter.searchResults"></advanced-filter>
+            </span>
+            <span ng-switch-default>
+                {{::filter.text[itemName]}} 
+                <span ng-show="filter.includedItems[itemName]" class="selected">
+                    {{filter.includedItems[itemName]}}
+                </span>
             </span>
         </div>
         <div class="filter-section-content {{::itemName}}">
@@ -36,7 +42,7 @@
             </div>
         </div>
     </div>
-    <div role="button"
+    <!-- <div role="button"
          class="advanced-filter-button"
          ng-click="filter.isExpandingDisplayed = !filter.isExpandingDisplayed">
              {{::filter.text.advanced}}
@@ -45,7 +51,7 @@
             </span>
     </div>
     <advanced-filter ng-if="filter.isExpandingDisplayed"
-                     found-items="filter.searchResults"></advanced-filter>
+                     found-items="filter.searchResults"></advanced-filter> -->
     <div class="filter-view">
         <div class="filter-button" ng-click="filter.moveToList()">
              <span class="icon-filter"></span> <span>{{::filter.text.apply}}</span> 

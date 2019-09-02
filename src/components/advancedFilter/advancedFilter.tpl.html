@@ -4,13 +4,14 @@
          {{::section}}
      </div>
      <div class="filter-section-content">
-         <div class="filter-section-item"
+         <div class="filter-section-item perk perk-icon"
             ng-class="{'included': this.isIncluded}"
             background-src
+            background-url="::item.icon"
             grid-column="::$index+1"
             ng-click="::advancedFilter.toggleFilter(this, itemName, this.name)"
             ng-repeat="item in sectionContent">
-                {{::item.name}}
+            <perk-tooltip title="advancedFilter.setName(this);"></perk-tooltip>
          </div>
      </div>
 </div>

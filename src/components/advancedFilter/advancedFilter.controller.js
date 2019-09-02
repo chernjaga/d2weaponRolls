@@ -15,6 +15,9 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
         vm.toggleFilter = function(target, filterBy, hash) {
             target.isIncluded = !target.isIncluded;
         };
+        vm.setName = function(perk) {
+            return perk.item.name;
+        }
     };
 
     function calculatePerkHashes() {
