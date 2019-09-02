@@ -68,7 +68,7 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 4: 'Forsaken',
                 5: 'The Black Armory',
                 6: 'Joker\'\s Wild',
-                7: 'opulence' 
+                7: 'Opulence' 
             },
             search: 'Search',
             filter: {
