@@ -24,7 +24,7 @@ angular.module('d2RollsApp').controller('weaponListCtrl', [
     vm.isFilterActive = false;
     vm.categoryHeaders;
 
-    if (sortBy === 'season') {
+    if (sortBy === 'source') {
         vm.sorting = 'subSource';
     } else {
         vm.sorting = sortBy || 'class';
