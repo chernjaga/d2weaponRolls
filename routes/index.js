@@ -16,7 +16,7 @@ var weaponPerks = {
     en: require('../data/en/perksBucket.json')
 };
 
-var perk2hash = require('../data/perk2Hash.json');
+var perk2hash = require('../data/perk2hash.json');
 
 /* GET home page. */
 router.get('/*', function (req, res, next) {
