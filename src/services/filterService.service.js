@@ -93,7 +93,11 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
                         valuesName === 'additionalPerk1' ||
                         valuesName === 'additionalPerk2'
                     ) {
-                        isApplied = isApplied && isPerkBelong(valuesName, filterValueArray, hash);
+                        if (!weaponClass) {
+                            isApplied = isApplied && isPerkBelong(valuesName, filterValueArray, hash);
+                        } else {
+                            isApplied = isApplied && isPerkBelong(valuesName, filterValueArray, hash) && item.class.name === weaponClass;
+                        }
                     } else {
                         if (valuesName !== 'class') {
                             item[valuesName].name = item[valuesName].name.toString();
@@ -128,19 +132,19 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
 
     function isPerkBelong(indexName, valuesArray, weaponHash) {
         var index = propertyIndexMap[indexName];
-        var isAllowed = true;
+        var isBelong = true;
         fetchManifestService.getWeaponData(function(data) {
             var weaponPerks;
             if (data[weaponHash].perks[index]) {
                 weaponPerks = data[weaponHash].perks[index].randomizedPerks;
-                valuesArray.forEach(function(value) {
-                    isAllowed = weaponPerks.includes(value);
+                weaponPerks.forEach(function(value) {
+                    isBelong = valuesArray.includes(value.toString());
                 });
             } else {
-                isAllowed = false;
+                isBelong = false;
             }
         });
-        return isAllowed;
+        return isBelong;
     }
 
     function initFiltersMap(filters) {

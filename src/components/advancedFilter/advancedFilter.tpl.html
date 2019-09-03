@@ -1,8 +1,8 @@
 <div class="weapon-filter advanced"
      ng-repeat="(section, sectionContent) in advancedFilter.perksMap">
      <div class="filter-section-title">
-         {{section}}
-         <span ng-show="filter.includedItems[itemName]" class="selected">
+         {{::section}}
+         <span ng-show="filter.includedItems[section]" class="selected">
             {{filter.includedItems[section]}}
         </span>
      </div>
@@ -12,7 +12,7 @@
             ng-repeat="item in sectionContent"
             background-src
             background-url="::item.icon"
-            ng-click="::filter.toggleFilter(this, section, this.item.hash)">
+            ng-click="::filter.toggleFilter(this, section, this.item.hash, true)">
             <div class="void-content"></div>
          </div>
      </div>

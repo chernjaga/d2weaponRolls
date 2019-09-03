@@ -393,7 +393,11 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
                         valuesName === 'additionalPerk1' ||
                         valuesName === 'additionalPerk2'
                     ) {
-                        isApplied = isApplied && isPerkBelong(valuesName, filterValueArray, hash);
+                        if (!weaponClass) {
+                            isApplied = isApplied && isPerkBelong(valuesName, filterValueArray, hash);
+                        } else {
+                            isApplied = isApplied && isPerkBelong(valuesName, filterValueArray, hash) && item.class.name === weaponClass;
+                        }
                     } else {
                         if (valuesName !== 'class') {
                             item[valuesName].name = item[valuesName].name.toString();
@@ -428,19 +432,19 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
 
     function isPerkBelong(indexName, valuesArray, weaponHash) {
         var index = propertyIndexMap[indexName];
-        var isAllowed = true;
+        var isBelong = true;
         fetchManifestService.getWeaponData(function(data) {
             var weaponPerks;
             if (data[weaponHash].perks[index]) {
                 weaponPerks = data[weaponHash].perks[index].randomizedPerks;
-                valuesArray.forEach(function(value) {
-                    isAllowed = weaponPerks.includes(value);
+                weaponPerks.forEach(function(value) {
+                    isBelong = valuesArray.includes(value.toString());
                 });
             } else {
-                isAllowed = false;
+                isBelong = false;
             }
         });
-        return isAllowed;
+        return isBelong;
     }
 
     function initFiltersMap(filters) {
@@ -767,17 +771,6 @@ angular.module('d2RollsApp')
             return seasons[seasonNumber];
         };
     });
-angular.module('d2RollsApp')
-    .directive('customComponentTemplate', function () {
-        return {
-            replace: false,
-            restrict: 'E',
-            scope: {
-                myText: '<'
-            },
-            templateUrl: '../html/components/customComponentTemplate/customComponentTemplate.tpl.html'
-        }
-    });
 angular.module('d2RollsApp').controller('advancedFilterCtrl', [
     '$scope',
     '$stateParams',
@@ -790,19 +783,18 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
         languageMapService
     ) {
     var vm = this;
+
     vm.$onInit = function() {
         var lang = $stateParams.language;
         vm.text = languageMapService.getDictionary(lang, 'filter').advancedFilter;
         calculatePerkHashes();
         $scope.$on('refresh', function(event, data) {
-            refresh(data);
-        })
+            vm.foundItems = data.items;
+            if (data.refresh) {
+                calculatePerkHashes();
+            }
+        });
     };
-
-    function refresh(data) {
-        vm.foundItems = data;
-        calculatePerkHashes();
-    }
 
     function calculatePerkHashes() {
         fetchManifestService.getPerk2hash(function(perk2hash, perksBucket, hash2perk){
@@ -811,8 +803,7 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                 weaponStatPerk1: {},
                 weaponStatPerk2: {},
                 additionalPerk1: {},
-                additionalPerk2: {},
-                absolutePerk: {}
+                additionalPerk2: {}
             };
             for (let weapon of vm.foundItems) {
                 let weaponHash = weapon.hash; 
@@ -846,7 +837,8 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                     let additionalPerk2 = additionalPerk2Array[index];
                     if (weaponStatPerk1 &&
                         !perksMap.weaponStatPerk1[weaponStatPerk1] &&
-                        perksBucket[weaponStatPerk1]
+                        perksBucket[weaponStatPerk1] &&
+                        !perksBucket[weaponStatPerk1].name.includes('Tier')
                     ) {
                         perksMap.weaponStatPerk1[weaponStatPerk1] = {
                             name: perksBucket[weaponStatPerk1].name,
@@ -856,7 +848,8 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                     }
                     if (weaponStatPerk2 &&
                         !perksMap.weaponStatPerk2[weaponStatPerk2] &&
-                        perksBucket[weaponStatPerk2]
+                        perksBucket[weaponStatPerk2] &&
+                        !perksBucket[weaponStatPerk2].name.includes('Tier')
                     ) {
                         perksMap.weaponStatPerk2[weaponStatPerk2] = {
                             name: perksBucket[weaponStatPerk2].name,
@@ -866,7 +859,8 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                     }
                     if (additionalPerk1 &&
                         !perksMap.additionalPerk1[additionalPerk1] &&
-                        perksBucket[additionalPerk1]
+                        perksBucket[additionalPerk1] &&
+                        !perksBucket[additionalPerk1].name.includes('Tier')
                     ) {
                         perksMap.additionalPerk1[additionalPerk1] = {
                             name: perksBucket[additionalPerk1].name,
@@ -876,7 +870,8 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                     }
                     if (additionalPerk2 &&
                         !perksMap.additionalPerk2[additionalPerk2] &&
-                        perksBucket[additionalPerk2]
+                        perksBucket[additionalPerk2] &&
+                        !perksBucket[additionalPerk2].name.includes('Tier')
                     ) {
                         perksMap.additionalPerk2[additionalPerk2] = {
                             name: perksBucket[additionalPerk2].name,
@@ -937,6 +932,17 @@ angular.module('d2RollsApp')
             }
         }
     }]);
+angular.module('d2RollsApp')
+    .directive('customComponentTemplate', function () {
+        return {
+            replace: false,
+            restrict: 'E',
+            scope: {
+                myText: '<'
+            },
+            templateUrl: '../html/components/customComponentTemplate/customComponentTemplate.tpl.html'
+        }
+    });
 angular.module('d2RollsApp').controller('filterButtonCtrl', ['$stateParams', 'languageMapService', function (
     $stateParams,
     languageMapService
@@ -1040,29 +1046,6 @@ angular.module('d2RollsApp')
             }
         };
     });
-function spinnerCtrl($timeout, $rootScope) {
-    var vm = this;
-    vm.isLoading = true;
-    $rootScope.$on('changeStateStart', function() {
-        vm.isLoading = true;
-    });
-    $rootScope.$on('changeStateFinish', function() {
-        $timeout(function() {
-            vm.isLoading = false;
-        });
-    });
-}
-
-angular.module('d2RollsApp')
-    .directive('spinner', function () {
-        return {
-            restrict: 'E',
-            replace: false,
-            controller: spinnerCtrl,
-            controllerAs: 'spinner',
-            templateUrl: '../html/components/spinner/spinner.tpl.html'
-        }
-    });
 function perksBinderCtrl(){
     var vm = this;
     vm.$onInit = function() {
@@ -1087,6 +1070,29 @@ angular.module('d2RollsApp')
             },
             controller: perksBinderCtrl,
             controllerAs: 'binder'
+        }
+    });
+function spinnerCtrl($timeout, $rootScope) {
+    var vm = this;
+    vm.isLoading = true;
+    $rootScope.$on('changeStateStart', function() {
+        vm.isLoading = true;
+    });
+    $rootScope.$on('changeStateFinish', function() {
+        $timeout(function() {
+            vm.isLoading = false;
+        });
+    });
+}
+
+angular.module('d2RollsApp')
+    .directive('spinner', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: spinnerCtrl,
+            controllerAs: 'spinner',
+            templateUrl: '../html/components/spinner/spinner.tpl.html'
         }
     });
 function scaleCtrl () {};
@@ -1117,6 +1123,21 @@ angular.module('d2RollsApp')
                 });
             }
         }
+    });
+angular.module('d2RollsApp').controller('statsViewCtrl', [ function ($timeout) {
+    
+}]);
+angular.module('d2RollsApp')
+    .directive('statsView', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: 'statsViewCtrl as stats',
+            bindToController: {
+                inputStats: '<'
+            },
+            templateUrl: '../html/components/statsView/statsView.tpl.html'
+        };
     });
 function statsRefresherCtrl(utils) {
     var vm = this;
@@ -1155,21 +1176,6 @@ angular.module('d2RollsApp')
                 refresh: '<'
             }
         }
-    });
-angular.module('d2RollsApp').controller('statsViewCtrl', [ function ($timeout) {
-    
-}]);
-angular.module('d2RollsApp')
-    .directive('statsView', function () {
-        return {
-            restrict: 'E',
-            replace: false,
-            controller: 'statsViewCtrl as stats',
-            bindToController: {
-                inputStats: '<'
-            },
-            templateUrl: '../html/components/statsView/statsView.tpl.html'
-        };
     });
 angular.module('d2RollsApp')
     .directive('perkTooltip', function () {
@@ -1214,7 +1220,6 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     
     vm.moveToList = moveToList;
     vm.itemsDetected;
-    vm.isExpandingDisplayed = false;
     vm.includedItems = {};
     filterService.resetFilters();
     fetchManifestService.getHashToName(function(initialHashes) {
@@ -1232,23 +1237,40 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
             vm.searchResults = data;
             vm.itemsDetected = data.length;
         }, [], true);
-        vm.toggleFilter = function(target, filterBy, hash) {
+        vm.toggleFilter = function(target, filterBy, hash, isPerksSections) {
             var filterItem = `${filterBy}:${hash}`; 
             if (!includedFilters.includes(filterItem)) {
                 includedFilters.push(filterItem);
             } else {
                 includedFilters = removeFromFilters(includedFilters, filterItem);
             }
-            
+            if (!isPerksSections && filterBy === 'class') {
+                cleanPerksFilter(includedFilters);
+            }
             setIncludedNumber(target, filterBy, hash);
 
             target.isIncluded = !target.isIncluded;
             filterService.getFilteredItems(function(data) {
                 vm.searchResults = data;
                 vm.itemsDetected = data.length;
+                if (data.length !== 0) {
+                    $scope.$broadcast('refresh', {items: vm.searchResults, refresh: !isPerksSections});
+                }
             }, includedFilters, true);
-            $scope.$broadcast('refresh', vm.searchResults);
         };
+    }
+
+    function cleanPerksFilter(filters) {
+        filters.forEach(function(item, index) {
+            if (item.includes('frame') ||
+                item.includes('weaponStatPerk1') ||
+                item.includes('weaponStatPerk2') ||
+                item.includes('additionalPerk1') ||
+                item.includes('additionalPerk2')
+            ) {
+                filters.splice(index, 1);
+            }
+        })
     }
 
     function setIncludedNumber(target, filterBy, hash) {

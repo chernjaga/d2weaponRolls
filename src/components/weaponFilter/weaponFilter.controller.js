@@ -24,7 +24,6 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     
     vm.moveToList = moveToList;
     vm.itemsDetected;
-    vm.isExpandingDisplayed = false;
     vm.includedItems = {};
     filterService.resetFilters();
     fetchManifestService.getHashToName(function(initialHashes) {
@@ -42,23 +41,40 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
             vm.searchResults = data;
             vm.itemsDetected = data.length;
         }, [], true);
-        vm.toggleFilter = function(target, filterBy, hash) {
+        vm.toggleFilter = function(target, filterBy, hash, isPerksSections) {
             var filterItem = `${filterBy}:${hash}`; 
             if (!includedFilters.includes(filterItem)) {
                 includedFilters.push(filterItem);
             } else {
                 includedFilters = removeFromFilters(includedFilters, filterItem);
             }
-            
+            if (!isPerksSections && filterBy === 'class') {
+                cleanPerksFilter(includedFilters);
+            }
             setIncludedNumber(target, filterBy, hash);
 
             target.isIncluded = !target.isIncluded;
             filterService.getFilteredItems(function(data) {
                 vm.searchResults = data;
                 vm.itemsDetected = data.length;
+                if (data.length !== 0) {
+                    $scope.$broadcast('refresh', {items: vm.searchResults, refresh: !isPerksSections});
+                }
             }, includedFilters, true);
-            $scope.$broadcast('refresh', vm.searchResults);
         };
+    }
+
+    function cleanPerksFilter(filters) {
+        filters.forEach(function(item, index) {
+            if (item.includes('frame') ||
+                item.includes('weaponStatPerk1') ||
+                item.includes('weaponStatPerk2') ||
+                item.includes('additionalPerk1') ||
+                item.includes('additionalPerk2')
+            ) {
+                filters.splice(index, 1);
+            }
+        })
     }
 
     function setIncludedNumber(target, filterBy, hash) {

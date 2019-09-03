@@ -10,19 +10,18 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
         languageMapService
     ) {
     var vm = this;
+
     vm.$onInit = function() {
         var lang = $stateParams.language;
         vm.text = languageMapService.getDictionary(lang, 'filter').advancedFilter;
         calculatePerkHashes();
         $scope.$on('refresh', function(event, data) {
-            refresh(data);
-        })
+            vm.foundItems = data.items;
+            if (data.refresh) {
+                calculatePerkHashes();
+            }
+        });
     };
-
-    function refresh(data) {
-        vm.foundItems = data;
-        calculatePerkHashes();
-    }
 
     function calculatePerkHashes() {
         fetchManifestService.getPerk2hash(function(perk2hash, perksBucket, hash2perk){
@@ -31,8 +30,7 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                 weaponStatPerk1: {},
                 weaponStatPerk2: {},
                 additionalPerk1: {},
-                additionalPerk2: {},
-                absolutePerk: {}
+                additionalPerk2: {}
             };
             for (let weapon of vm.foundItems) {
                 let weaponHash = weapon.hash; 
@@ -66,7 +64,8 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                     let additionalPerk2 = additionalPerk2Array[index];
                     if (weaponStatPerk1 &&
                         !perksMap.weaponStatPerk1[weaponStatPerk1] &&
-                        perksBucket[weaponStatPerk1]
+                        perksBucket[weaponStatPerk1] &&
+                        !perksBucket[weaponStatPerk1].name.includes('Tier')
                     ) {
                         perksMap.weaponStatPerk1[weaponStatPerk1] = {
                             name: perksBucket[weaponStatPerk1].name,
@@ -76,7 +75,8 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                     }
                     if (weaponStatPerk2 &&
                         !perksMap.weaponStatPerk2[weaponStatPerk2] &&
-                        perksBucket[weaponStatPerk2]
+                        perksBucket[weaponStatPerk2] &&
+                        !perksBucket[weaponStatPerk2].name.includes('Tier')
                     ) {
                         perksMap.weaponStatPerk2[weaponStatPerk2] = {
                             name: perksBucket[weaponStatPerk2].name,
@@ -86,7 +86,8 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                     }
                     if (additionalPerk1 &&
                         !perksMap.additionalPerk1[additionalPerk1] &&
-                        perksBucket[additionalPerk1]
+                        perksBucket[additionalPerk1] &&
+                        !perksBucket[additionalPerk1].name.includes('Tier')
                     ) {
                         perksMap.additionalPerk1[additionalPerk1] = {
                             name: perksBucket[additionalPerk1].name,
@@ -96,7 +97,8 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                     }
                     if (additionalPerk2 &&
                         !perksMap.additionalPerk2[additionalPerk2] &&
-                        perksBucket[additionalPerk2]
+                        perksBucket[additionalPerk2] &&
+                        !perksBucket[additionalPerk2].name.includes('Tier')
                     ) {
                         perksMap.additionalPerk2[additionalPerk2] = {
                             name: perksBucket[additionalPerk2].name,
