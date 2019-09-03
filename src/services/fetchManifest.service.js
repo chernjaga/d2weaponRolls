@@ -52,7 +52,7 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
                     callback(weaponListObject);
                 }
 
-                dataDownloadDeferred.resolve();;
+                dataDownloadDeferred.resolve();
             }));
         });
 
@@ -206,6 +206,15 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         }
     }
 
+    function getWeaponData(callback) {
+       if (Object.keys(weaponData).length) {
+            callback(weaponData);
+        } else {
+            $q.when(dataDownloadDeferred.promise).then(function(){
+                callback(weaponData);
+            });
+        } 
+    }
     return {
         getPerksForSingleWeapon: getPerksForSingleWeapon,
         getSingleWeaponData: getSingleWeaponData,
@@ -213,6 +222,6 @@ angular.module('d2RollsApp').factory('fetchManifestService', ['$http', '$q', fun
         getPerk2hash: getPerk2hash,
         rarityMap: rarityMap,
         getHashToName: getHashToName,
-        weaponData: weaponData
+        getWeaponData: getWeaponData
     };
 }]);

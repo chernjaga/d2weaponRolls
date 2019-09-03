@@ -1,8 +1,10 @@
 angular.module('d2RollsApp').controller('advancedFilterCtrl', [
+    '$scope',
     '$stateParams',
     'fetchManifestService',
     'languageMapService',
     function (
+        $scope,
         $stateParams,
         fetchManifestService,
         languageMapService
@@ -12,13 +14,15 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
         var lang = $stateParams.language;
         vm.text = languageMapService.getDictionary(lang, 'filter').advancedFilter;
         calculatePerkHashes();
-        vm.toggleFilter = function(target, filterBy, hash) {
-            target.isIncluded = !target.isIncluded;
-        };
-        vm.setName = function(perk) {
-            return perk.item.name;
-        }
+        $scope.$on('refresh', function(event, data) {
+            refresh(data);
+        })
     };
+
+    function refresh(data) {
+        vm.foundItems = data;
+        calculatePerkHashes();
+    }
 
     function calculatePerkHashes() {
         fetchManifestService.getPerk2hash(function(perk2hash, perksBucket, hash2perk){
@@ -51,7 +55,8 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                    perksMap.frame[frame] = {};
                    perksMap.frame[frame] = {
                        name: perksBucket[frame].name,
-                       icon: perksBucket[frame].icon
+                       icon: perksBucket[frame].icon,
+                       hash: frame
                    };
                 }
                 for (let index=0; index<maxArrayLength; index++) {
@@ -65,7 +70,8 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                     ) {
                         perksMap.weaponStatPerk1[weaponStatPerk1] = {
                             name: perksBucket[weaponStatPerk1].name,
-                            icon: perksBucket[weaponStatPerk1].icon
+                            icon: perksBucket[weaponStatPerk1].icon,
+                            hash: weaponStatPerk1
                         }
                     }
                     if (weaponStatPerk2 &&
@@ -74,7 +80,8 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                     ) {
                         perksMap.weaponStatPerk2[weaponStatPerk2] = {
                             name: perksBucket[weaponStatPerk2].name,
-                            icon: perksBucket[weaponStatPerk2].icon
+                            icon: perksBucket[weaponStatPerk2].icon,
+                            hash: weaponStatPerk2
                         }
                     }
                     if (additionalPerk1 &&
@@ -83,7 +90,8 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                     ) {
                         perksMap.additionalPerk1[additionalPerk1] = {
                             name: perksBucket[additionalPerk1].name,
-                            icon: perksBucket[additionalPerk1].icon
+                            icon: perksBucket[additionalPerk1].icon,
+                            hash: additionalPerk1
                         }
                     }
                     if (additionalPerk2 &&
@@ -92,13 +100,13 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
                     ) {
                         perksMap.additionalPerk2[additionalPerk2] = {
                             name: perksBucket[additionalPerk2].name,
-                            icon: perksBucket[additionalPerk2].icon
+                            icon: perksBucket[additionalPerk2].icon,
+                            hash: additionalPerk2
                         }
                     }
                 }
             }
             vm.perksMap = perksMap;
-            console.log(perksMap);
         });
     }
 }]);

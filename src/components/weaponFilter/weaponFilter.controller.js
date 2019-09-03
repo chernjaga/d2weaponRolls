@@ -1,4 +1,5 @@
 angular.module('d2RollsApp').controller('weaponFilterCtrl', [
+    '$scope',
     '$q',
     '$state',
     '$stateParams',
@@ -6,6 +7,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     'languageMapService',
     'fetchManifestService',
     function (
+        $scope,
         $q,
         $state,
         $stateParams,
@@ -40,8 +42,8 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
             vm.searchResults = data;
             vm.itemsDetected = data.length;
         }, [], true);
-        vm.toggleFilter = function(target, filterBy, hash) {   
-            var filterItem = `${filterBy}:${hash}`;
+        vm.toggleFilter = function(target, filterBy, hash) {
+            var filterItem = `${filterBy}:${hash}`; 
             if (!includedFilters.includes(filterItem)) {
                 includedFilters.push(filterItem);
             } else {
@@ -55,6 +57,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
                 vm.searchResults = data;
                 vm.itemsDetected = data.length;
             }, includedFilters, true);
+            $scope.$broadcast('refresh', vm.searchResults);
         };
     }
 

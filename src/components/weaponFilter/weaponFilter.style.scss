@@ -70,12 +70,27 @@
     &::-webkit-scrollbar {
         display: none;
     }
-
+    &.perks {
+        display: flex;
+       .perk {
+            display: inline-block;
+            width: 6*$body-padding ;
+            height: 6*$body-padding;
+            margin-right: $body-padding;
+            border-radius: 40px;
+            background-color: inherit;
+            .void-content {
+                width: 6*$body-padding;
+            }
+        }
+    }
     &.class {
         .filter-section-item {
             min-width: 110px;
         }
     }
+
+
 
     &.season,
     &.source {
@@ -127,12 +142,6 @@
     padding: $body-padding;
     user-select: none;
     cursor: pointer;
-    &.perk {
-        width: 6*$body-padding;
-        height: 6*$body-padding;
-        border-radius: 40px;
-        background-color: inherit;
-    }
     &.included {
         background-color: $cl-main-bg-red;
 

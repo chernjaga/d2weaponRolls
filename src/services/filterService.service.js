@@ -10,6 +10,13 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
     });
     var sortByObject = {};
     var sortByParam = 'class';
+    var propertyIndexMap = {
+        frame: 0,
+        weaponStatPerk1: 1,
+        weaponStatPerk2: 2,
+        additionalPerk1: 3,
+        additionalPerk2: 4
+    };
 
     //todo: language dependency
 
@@ -80,24 +87,32 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
             } else {
                 for (var valuesName in filters) {
                     var filterValueArray = filters[valuesName];
-                    
-                    if (valuesName !== 'class') {
-                        item[valuesName].name = item[valuesName].name.toString();
-                        if (weaponClass) {
-                            isApplied = isApplied && filterValueArray.includes(item[valuesName].name) && item.class.name === weaponClass;
-                        } else {
-                            if (valuesName === 'source' && item.source.bindTo) {
-                                isApplied = isApplied && filterValueArray.includes(item.source.bindTo) ||
-                                    filterValueArray.includes(item.source.bindTo1) ||
-                                    filterValueArray.includes(item.source.name);
-                            } else {
-                                isApplied = isApplied && filterValueArray.includes(item[valuesName].name);
-                            }
-                        }
-                    } else if (valuesName === 'class') {
-                        isApplied = isApplied && filterValueArray.includes(weaponClass);
+                    if (valuesName === 'frame' ||
+                        valuesName === 'weaponStatPerk1' ||
+                        valuesName === 'weaponStatPerk2' ||
+                        valuesName === 'additionalPerk1' ||
+                        valuesName === 'additionalPerk2'
+                    ) {
+                        isApplied = isApplied && isPerkBelong(valuesName, filterValueArray, hash);
                     } else {
-                        isApplied = false;
+                        if (valuesName !== 'class') {
+                            item[valuesName].name = item[valuesName].name.toString();
+                            if (weaponClass) {
+                                isApplied = isApplied && filterValueArray.includes(item[valuesName].name) && item.class.name === weaponClass;
+                            } else {
+                                if (valuesName === 'source' && item.source.bindTo) {
+                                    isApplied = isApplied && filterValueArray.includes(item.source.bindTo) ||
+                                        filterValueArray.includes(item.source.bindTo1) ||
+                                        filterValueArray.includes(item.source.name);
+                                } else {
+                                    isApplied = isApplied && filterValueArray.includes(item[valuesName].name);
+                                }
+                            }
+                        } else if (valuesName === 'class') {
+                            isApplied = isApplied && filterValueArray.includes(weaponClass);
+                        } else {
+                            isApplied = false;
+                        }
                     }
                 };
             }
@@ -109,6 +124,23 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
             }
         }
         return outputPart;
+    }
+
+    function isPerkBelong(indexName, valuesArray, weaponHash) {
+        var index = propertyIndexMap[indexName];
+        var isAllowed = true;
+        fetchManifestService.getWeaponData(function(data) {
+            var weaponPerks;
+            if (data[weaponHash].perks[index]) {
+                weaponPerks = data[weaponHash].perks[index].randomizedPerks;
+                valuesArray.forEach(function(value) {
+                    isAllowed = weaponPerks.includes(value);
+                });
+            } else {
+                isAllowed = false;
+            }
+        });
+        return isAllowed;
     }
 
     function initFiltersMap(filters) {
