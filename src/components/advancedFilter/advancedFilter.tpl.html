@@ -1,7 +1,7 @@
 <div class="weapon-filter advanced"
-     ng-repeat="(section, sectionContent) in advancedFilter.perksMap">
+     ng-repeat="(section, sectionContent) in advancedFilter.perksMap" >
      <div class="filter-section-title">
-         {{::section}}
+         {{::section | perks}}
          <span ng-show="filter.includedItems[section]" class="selected">
             {{filter.includedItems[section]}}
         </span>

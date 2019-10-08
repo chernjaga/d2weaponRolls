@@ -123,6 +123,17 @@ ul {
     font-style: normal;
 }
 
+* {
+    font-family: 'Roboto';
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto/Roboto-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
 [class*='icon-']:before {
     display: inline-block;
     font-family: 'd2rolls';

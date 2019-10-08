@@ -562,12 +562,17 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 frame: 'Frame',
                 perks: 'Perks',
                 cancel: 'Cancel',
-                apply: 'Apply',
+                apply: 'Show',
+                notFound: 'Not found',
                 source: 'Activity',
                 selected: 'Selected',
                 advanced: 'Search by perks',
                 advancedFilter: {
-                    frame: 'Frame'
+                    frame: 'Frame',
+                    weaponStatPerk1: '1st perk',
+                    weaponStatPerk2: '2nd perk',
+                    additionalPerk1: '3rd perk',
+                    additionalPerk2: '4th perk'
                 }
             },
             sorting: {
@@ -596,14 +601,14 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 }
             },
             home: {
-                newStuff: 'NEW STUFF',
-                sources: 'WEAPON SOURCES',
-                godRoll: 'GOD ROLL'
+                newStuff: 'SEARCH IN SEASONS',
+                sources: 'SEARCH IN SOURCES',
+                godRoll: 'SEARCH BY ...'
             },
             footerMenu: {
-                home: 'Home',
-                weapon: 'Weapon',
-                settings: 'Settings'
+                home: 'HOME',
+                weapon: 'WEAPON',
+                settings: 'SETTINGS'
             }
         }
     };
@@ -764,6 +769,14 @@ angular.module('d2RollsApp').factory('styleHandler', [function() {
     }
 }]);
 angular.module('d2RollsApp')
+    .filter('perks', function ($stateParams, languageMapService) {
+        var lang = $stateParams.language || 'en';
+        var perks = languageMapService.getDictionary(lang).filter.advancedFilter;
+        return function(name) {
+            return perks[name];
+        };
+    });
+angular.module('d2RollsApp')
     .filter('seasons', function ($stateParams, languageMapService) {
         var lang = $stateParams.language || 'en';
         var seasons = languageMapService.getDictionary(lang).seasons;
@@ -790,9 +803,7 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
         calculatePerkHashes();
         $scope.$on('refresh', function(event, data) {
             vm.foundItems = data.items;
-            if (data.refresh) {
                 calculatePerkHashes();
-            }
         });
     };
 
@@ -1124,21 +1135,6 @@ angular.module('d2RollsApp')
             }
         }
     });
-angular.module('d2RollsApp').controller('statsViewCtrl', [ function ($timeout) {
-    
-}]);
-angular.module('d2RollsApp')
-    .directive('statsView', function () {
-        return {
-            restrict: 'E',
-            replace: false,
-            controller: 'statsViewCtrl as stats',
-            bindToController: {
-                inputStats: '<'
-            },
-            templateUrl: '../html/components/statsView/statsView.tpl.html'
-        };
-    });
 function statsRefresherCtrl(utils) {
     var vm = this;
     vm.$onInit = getData;
@@ -1158,6 +1154,21 @@ angular.module('d2RollsApp')
             controller: statsRefresherCtrl,
             controllerAs: 'refresher'
         }
+    });
+angular.module('d2RollsApp').controller('statsViewCtrl', [ function ($timeout) {
+    
+}]);
+angular.module('d2RollsApp')
+    .directive('statsView', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            controller: 'statsViewCtrl as stats',
+            bindToController: {
+                inputStats: '<'
+            },
+            templateUrl: '../html/components/statsView/statsView.tpl.html'
+        };
     });
 function statsViewRefresherCtrl($timeout) {
     var vm = this;
@@ -1221,6 +1232,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     vm.moveToList = moveToList;
     vm.itemsDetected;
     vm.includedItems = {};
+    vm.resetFilter = resetFilter;
     filterService.resetFilters();
     fetchManifestService.getHashToName(function(initialHashes) {
         vm.hashToName = initialHashes;
@@ -1285,19 +1297,25 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
         vm.includedItems[filterBy] = Object.keys(sectionCounter[filterBy]).length;
     }
 
+    function resetFilter() {
+        $state.reload();
+    }
+
     function removeFromFilters(filtersArray, item) {
         return filtersArray.filter(function(element){
             return element != item;
         }); 
     }
 
-    function moveToList() {
-        sortBy = filterService.getSortParam();
-        $state.go('weaponList', {
-            language: lang,
-            sortBy: sortBy,
-            filters: includedFilters
-        });
+    function moveToList(isAllowed) {
+        if (isAllowed) {
+            sortBy = filterService.getSortParam();
+            $state.go('weaponList', {
+                language: lang,
+                sortBy: sortBy,
+                filters: includedFilters
+            });
+        }
     }
 }]);
 angular.module('d2RollsApp')

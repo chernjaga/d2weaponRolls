@@ -25,6 +25,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     vm.moveToList = moveToList;
     vm.itemsDetected;
     vm.includedItems = {};
+    vm.resetFilter = resetFilter;
     filterService.resetFilters();
     fetchManifestService.getHashToName(function(initialHashes) {
         vm.hashToName = initialHashes;
@@ -89,18 +90,24 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
         vm.includedItems[filterBy] = Object.keys(sectionCounter[filterBy]).length;
     }
 
+    function resetFilter() {
+        $state.reload();
+    }
+
     function removeFromFilters(filtersArray, item) {
         return filtersArray.filter(function(element){
             return element != item;
         }); 
     }
 
-    function moveToList() {
-        sortBy = filterService.getSortParam();
-        $state.go('weaponList', {
-            language: lang,
-            sortBy: sortBy,
-            filters: includedFilters
-        });
+    function moveToList(isAllowed) {
+        if (isAllowed) {
+            sortBy = filterService.getSortParam();
+            $state.go('weaponList', {
+                language: lang,
+                sortBy: sortBy,
+                filters: includedFilters
+            });
+        }
     }
 }]);

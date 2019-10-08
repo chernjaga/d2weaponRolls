@@ -1,5 +1,6 @@
 <div class="filter-view">
     <a  ui-sref="filterState({lang: filterButton.lang})" 
+        loading-trigger="startOnClick"
         class="filter-button">
             <span class="icon-filter"></span> <span>{{::filterButton.text}}</span>
     </a>

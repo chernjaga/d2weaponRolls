@@ -17,9 +17,7 @@ angular.module('d2RollsApp').controller('advancedFilterCtrl', [
         calculatePerkHashes();
         $scope.$on('refresh', function(event, data) {
             vm.foundItems = data.items;
-            if (data.refresh) {
                 calculatePerkHashes();
-            }
         });
     };
 

@@ -5,7 +5,7 @@ $pd-filter-button: $fs-filter-button*0.5;
 .filter-view {
     position: fixed;
     bottom: 12*$body-padding;
-    right: 5*$body-padding;
+    right: 3*$body-padding;
     border-radius: $pd-filter-button + $fs-filter-button;
     width: max-content;
     max-height: $pd-filter-button + $fs-filter-button;

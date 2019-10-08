@@ -21,7 +21,6 @@
 
 .advanced-filter-button {
     background: $cl-empty-bg-black;
-    font-weight: 900;
     color: $cl-white-tint1;
     font-size: 100%;
     text-align: center;
@@ -33,6 +32,7 @@
 
 .filter-section-header {
     position: fixed;
+    cursor: pointer;
     background: $cl-main-bg-red;
     top: 0;
     left: 0;
@@ -89,9 +89,6 @@
             min-width: 110px;
         }
     }
-
-
-
     &.season,
     &.source {
         display: block;
@@ -103,7 +100,6 @@
             display: flex;
             align-items: center;
             position: absolute;
-            font-weight: 900;
             width: 100%;
             color: $cl-white-tint1;
         }
@@ -152,4 +148,25 @@
 
 .filter-button {
     grid-column: 1 /1;
+}
+
+$button-size: 2.2*$body-padding;
+.reset-button-icon {
+    span {
+        font-size: $button-size;
+        line-height: $button-size;
+        color: $cl-main-bg-red;
+        border-radius: 50%; 
+        height: $button-size;
+        width: $button-size;
+        background-color: $cl-main-bg-black;
+        display: flex;
+    }
+    .reset-button-icon-text {
+        margin: auto;
+        display: block;
+        transform: rotate(45deg);
+    }
+    margin-left: $body-padding;
+    display: inline-block;
 }

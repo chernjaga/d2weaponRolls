@@ -5,7 +5,6 @@ $word-spacing-damage-type: $body-padding*0.25;
 .category-title {
     color: $cl-white-tint1;
     font-size: 2.5*$body-padding;
-    font-weight: 600;
     margin-bottom: $body-padding;
     padding: 2*$body-padding $body-padding;
     display: flex;
@@ -77,12 +76,10 @@ $word-spacing-damage-type: $body-padding*0.25;
         word-wrap: normal;
         overflow-wrap: normal;
         width: max-content;
-        font-weight: 900;
     }
 
     .weapon-list-item-description {
         font-size: $fs-weapon-list-item*0.7;
-        font-weight: 300;
     }
 }
 
@@ -102,7 +99,6 @@ $word-spacing-damage-type: $body-padding*0.25;
         &::placeholder {
             color: $cl-main-bg-red;
             font-size: $body-padding*2.5;
-            font-weight: 900;
         };
         color: $cl-main-bg-red;
         font-size: $body-padding*2.5;

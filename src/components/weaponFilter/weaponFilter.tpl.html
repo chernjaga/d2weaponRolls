@@ -1,5 +1,7 @@
 <div class="body-padding filter-state">
-    <div class="filter-section-header">{{filter.itemsDetected ? filter.itemsDetected : 0}} Items found</div>
+    <div class="filter-section-header" ng-click="filter.resetFilter()" loading-trigger="startOnClick">
+        {{filter.itemsDetected ? filter.itemsDetected : 0}} Items found <ng-include src="'./html/components/weaponFilter/resetButton.tpl.html'"></ng-include>
+    </div>
     <div class="weapon-filter"
          ng-repeat="(itemName, itemContent) in ::filter.hashToName"
          ng-show="::itemName !== 'subSource'"
@@ -13,7 +15,7 @@
             <span ng-switch-default>
                 {{::filter.text[itemName]}} 
                 <span ng-show="filter.includedItems[itemName]" class="selected">
-                    {{filter.includedItems[itemName]}}
+                    {{::filter.includedItems[itemName]}}
                 </span>
             </span>
         </div>
@@ -43,8 +45,8 @@
         </div>
     </div>
     <div class="filter-view">
-        <div class="filter-button" ng-click="filter.moveToList()">
-             <span class="icon-filter"></span> <span>{{::filter.text.apply}}</span> 
+        <div class="filter-button" ng-click="filter.moveToList(filter.itemsDetected)">
+            <span>{{filter.itemsDetected ? filter.text.apply : filter.text.notFound}}</span> 
         </div>
     </div>
 </div>

@@ -82,12 +82,17 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 frame: 'Frame',
                 perks: 'Perks',
                 cancel: 'Cancel',
-                apply: 'Apply',
+                apply: 'Show',
+                notFound: 'Not found',
                 source: 'Activity',
                 selected: 'Selected',
                 advanced: 'Search by perks',
                 advancedFilter: {
-                    frame: 'Frame'
+                    frame: 'Frame',
+                    weaponStatPerk1: '1st perk',
+                    weaponStatPerk2: '2nd perk',
+                    additionalPerk1: '3rd perk',
+                    additionalPerk2: '4th perk'
                 }
             },
             sorting: {
@@ -116,14 +121,14 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 }
             },
             home: {
-                newStuff: 'NEW STUFF',
-                sources: 'WEAPON SOURCES',
-                godRoll: 'GOD ROLL'
+                newStuff: 'SEARCH IN SEASONS',
+                sources: 'SEARCH IN SOURCES',
+                godRoll: 'SEARCH BY ...'
             },
             footerMenu: {
-                home: 'Home',
-                weapon: 'Weapon',
-                settings: 'Settings'
+                home: 'HOME',
+                weapon: 'WEAPON',
+                settings: 'SETTINGS'
             }
         }
     };
