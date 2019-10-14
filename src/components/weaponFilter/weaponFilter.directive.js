@@ -37,6 +37,8 @@ angular.module('d2RollsApp')
                 }
                 if (isShortList) {
                     element[0].style.backgroundSize = "40%"
+                } else if (scope.backgroundSection === 'rarity') {
+                    element[0].style.backgroundSize = 'contain';
                 } else {
                     element[0].style.backgroundSize = 'cover';
                 }
