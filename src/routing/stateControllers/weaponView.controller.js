@@ -37,7 +37,8 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
     }, function(incomingData) {
         var rarityHash = incomingData.primaryData.rarity.hash
         vm.rarityClass = rarityMap[rarityHash];
-        vm.data = incomingData;      
+        vm.data = incomingData;
+        console.log(incomingData);   
         setWeaponStats(vm.data.secondaryData.stats, vm.data.primaryData.hash); 
         getPerksBucket(vm.data.secondaryData.perks);
     });

@@ -548,7 +548,8 @@ angular.module('d2RollsApp').factory('languageMapService', [ function() {
                 4: 'Forsaken',
                 5: 'The Black Armory',
                 6: 'Joker\'\s Wild',
-                7: 'Opulence' 
+                7: 'Opulence',
+                8: 'Undying'
             },
             search: 'Search',
             filter: {
@@ -1206,6 +1207,7 @@ angular.module('d2RollsApp')
         };
     });
 angular.module('d2RollsApp').controller('weaponFilterCtrl', [
+    '$rootScope',
     '$scope',
     '$q',
     '$state',
@@ -1214,6 +1216,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     'languageMapService',
     'fetchManifestService',
     function (
+        $rootScope,
         $scope,
         $q,
         $state,
@@ -1233,6 +1236,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     vm.itemsDetected;
     vm.includedItems = {};
     vm.resetFilter = resetFilter;
+
     filterService.resetFilters();
     fetchManifestService.getHashToName(function(initialHashes) {
         vm.hashToName = initialHashes;
@@ -1243,6 +1247,10 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
         init();
     });
     
+    $rootScope.$on('changeStateFinish', function() {
+        vm.lastRendered = true;
+    });
+
     function init() {
         vm.text = languageMapService.getDictionary(lang, 'filter');
         filterService.getFilteredItems(function(data) {
@@ -1606,7 +1614,8 @@ angular.module('d2RollsApp').controller('weaponViewCtrl', ['$stateParams', 'fetc
     }, function(incomingData) {
         var rarityHash = incomingData.primaryData.rarity.hash
         vm.rarityClass = rarityMap[rarityHash];
-        vm.data = incomingData;      
+        vm.data = incomingData;
+        console.log(incomingData);   
         setWeaponStats(vm.data.secondaryData.stats, vm.data.primaryData.hash); 
         getPerksBucket(vm.data.secondaryData.perks);
     });

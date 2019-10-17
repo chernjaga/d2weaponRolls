@@ -1,4 +1,5 @@
 angular.module('d2RollsApp').controller('weaponFilterCtrl', [
+    '$rootScope',
     '$scope',
     '$q',
     '$state',
@@ -7,6 +8,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     'languageMapService',
     'fetchManifestService',
     function (
+        $rootScope,
         $scope,
         $q,
         $state,
@@ -26,6 +28,7 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
     vm.itemsDetected;
     vm.includedItems = {};
     vm.resetFilter = resetFilter;
+
     filterService.resetFilters();
     fetchManifestService.getHashToName(function(initialHashes) {
         vm.hashToName = initialHashes;
@@ -36,6 +39,10 @@ angular.module('d2RollsApp').controller('weaponFilterCtrl', [
         init();
     });
     
+    $rootScope.$on('changeStateFinish', function() {
+        vm.lastRendered = true;
+    });
+
     function init() {
         vm.text = languageMapService.getDictionary(lang, 'filter');
         filterService.getFilteredItems(function(data) {
