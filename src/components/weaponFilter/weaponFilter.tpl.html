@@ -8,11 +8,11 @@
          ng-if="::itemName !== 'frame'"
          loading-trigger="isFinishState">
         <div class="filter-section-title" ng-switch="::itemName">
-            <span ng-switch-when="perkSection">
+            <!-- <span ng-switch-when="perkSection">
                     <advanced-filter
                     ng-if="::filter.lastRendered"
                     found-items="filter.searchResults"></advanced-filter>
-            </span>
+            </span> -->
             <span ng-switch-default>
                 {{::filter.text[itemName]}} 
                 <span ng-show="filter.includedItems[itemName]" class="selected">

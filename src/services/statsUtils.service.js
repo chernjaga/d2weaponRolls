@@ -49,6 +49,9 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
         '3555269338': {
             order: 10
         }, //zoom
+        '2715839340': {
+            order: 11
+        }
         
     };
 

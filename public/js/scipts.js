@@ -317,8 +317,11 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
         additionalPerk1: 3,
         additionalPerk2: 4
     };
-
+    var p2h;
     //todo: language dependency
+    fetchManifestService.getPerk2hash(function(perk2hash, perksBucket, hash2perk){
+        p2h = perk2hash;
+    })
 
     function getFilteredItems(callback, filters, isFilterState, sortBy) {
         if (!sortBy) {
@@ -438,6 +441,9 @@ angular.module('d2RollsApp').factory('filterService', ['$q', '$stateParams', 'fe
             if (data[weaponHash].perks[index]) {
                 weaponPerks = data[weaponHash].perks[index].randomizedPerks;
                 weaponPerks.forEach(function(value) {
+                    var isInWeapon = p2h[value] ? !! p2h[value].includes(weaponHash) : false;
+                    
+                    hk1J9QKC
                     isBelong = valuesArray.includes(value.toString());
                 });
             } else {
@@ -692,6 +698,9 @@ angular.module('d2RollsApp').factory('utils', ['$q', function($q) {
         '3555269338': {
             order: 10
         }, //zoom
+        '2715839340': {
+            order: 11
+        }
         
     };
 
