@@ -26,7 +26,7 @@
     "gulp-sass": "^4.0.2",
     "gulp-template-compile": "^1.4.0",
     "gulp-uglify": "^3.0.2",
-    "jquery": "^1.9.1",
+    "jquery": "^3.5.0",
     "popper.js": "^1.14.7"
   },
   "scripts": {
